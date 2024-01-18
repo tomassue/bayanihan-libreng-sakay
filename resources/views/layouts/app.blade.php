@@ -42,7 +42,7 @@
 </head>
 
 <body>
-    <!-- <div id="app">
+    <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -52,16 +52,16 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent"> -->
-    <!-- Left Side Of Navbar -->
-    <!-- <ul class="navbar-nav me-auto">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav me-auto">
 
-                    </ul> -->
+                    </ul>
 
-    <!-- Right Side Of Navbar -->
-    <!-- <ul class="navbar-nav ms-auto"> -->
-    <!-- Authentication Links -->
-    <!-- @guest
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav ms-auto">
+                        <!-- Authentication Links -->
+                        @guest
                         @if (Route::has('login'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -94,12 +94,12 @@
                     </ul>
                 </div>
             </div>
-        </nav> -->
+        </nav>
 
-    <!-- <main> -->
-    @yield('content')
-    <!-- </main> -->
-    <!-- </div> -->
+        <main class="py-4">
+            @yield('content')
+        </main>
+    </div>
 
     <!-- Vendor JS Files -->
     <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
