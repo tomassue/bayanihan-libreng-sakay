@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_user'); // ids' from organization, individual, and clients
+            $table->string('user_id'); // system generated id and will be saved to the other user information tables as connection or reference
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

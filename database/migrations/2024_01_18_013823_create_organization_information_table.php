@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('organization_information', function (Blueprint $table) {
             $table->id();
+            $table->string('user_id'); // reference key to User table
             $table->string('organization_name');
             $table->date('date_established');
             $table->string('address');
