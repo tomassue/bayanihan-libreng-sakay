@@ -28,6 +28,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // This is somehow the 'landing page' of registration. Users are asked what account type they are going to register, then they will be routed to the registration form associated with the account type they prefer.
 Route::post('/registration', [RegistrationAccountTypeController::class, 'index'])->name('registration');
 Route::get('/registration/org', [RegistrationAccountTypeController::class, 'registerOrg'])->name('register.org');
+Route::get('/registration/ind', [RegistrationAccountTypeController::class, 'registerInd'])->name('register.ind');
 
 Route::group(['middleware' => 'auth'], function () {
     // Your authenticated routes go here

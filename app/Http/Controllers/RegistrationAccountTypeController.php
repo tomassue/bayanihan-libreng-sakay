@@ -18,7 +18,7 @@ class RegistrationAccountTypeController extends Controller
             return redirect()->route('register.org')->withInput();
         } elseif ($accountType == '2') {
             // Redirect to the Individual registration form.
-            return view('auth.registerIndividual');
+            return redirect()->route('register.ind')->withInput();
         } elseif ($accountType == '3') {
             // Redirect to the Client registration form.
             return view('auth.registerClient');
@@ -28,6 +28,11 @@ class RegistrationAccountTypeController extends Controller
     public function registerOrg()
     {
         return view('auth.registerOrganization');
+    }
+
+    public function registerInd()
+    {
+        return view('auth.registerIndividual');
     }
 
     /**
