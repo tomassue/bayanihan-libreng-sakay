@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\OrganizationInformationModel;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str; //THIS IS FOR THE str::random()
+
 
 class RegisterController extends Controller
 {
@@ -48,13 +51,11 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        dd($data['accountType']);
-
         return Validator::make($data, [
             // ORGANIZATION
             'accountType'           => ['required', 'string', 'max:1'],
             'organizationName'      => ['required', 'string', 'max:255'],
-            'dateEstablished'       => 'required',
+            'dateEstablished'       => ['required'],
             'address'               => ['required', 'string'],
             'contactNumber'         => ['required', 'string', 'max:11'],
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -70,10 +71,28 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        // Generate random letters and numbers for doctype_code
+        $timestamp = now()->timestamp;
+        $randomString = Str::random(10);
+        $user_id = $timestamp . $randomString;
+
+        // SAVE to organization information if the account type is 1.
+        if ($data['accountType'] == '1') {
+
+            $user = User::create([
+                'user_id'       =>      $user_id,
+                'email'         =>      $data['email'],
+                'password'      =>      Hash::make($data['password']),
+            ]);
+
+            OrganizationInformationModel::create([
+                'user_id'               =>          $user_id,
+                'organization_name'     =>          $data['organizationName'],
+                'date_established'      =>          $data['dateEstablished'],
+                'address'               =>          $data['address'],
+                'contact_number'        =>          $data['contactNumber'],
+            ]);
+        }
+        return $user;
     }
 }

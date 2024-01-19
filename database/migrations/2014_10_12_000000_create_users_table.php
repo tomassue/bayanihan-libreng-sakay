@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('status'); // 0 and 1, once approved (1), user can now login to the system
+            $table->integer('status')->default('0'); // with a default value of 0. 0 and 1, once approved (1), user can now login to the system
             $table->rememberToken();
             $table->timestamps();
         });
