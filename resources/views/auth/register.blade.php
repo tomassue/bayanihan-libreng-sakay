@@ -2,76 +2,37 @@
 
 @section('content')
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+<div class="container-fluid d-md-flex flex-md-equal">
+    <!-- Left Div -->
+    <div class="col-md-6 left-div">
+        <!-- Your content for the left div goes here -->
+        <h1 class="text-center">Left Div</h1>
+    </div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+    <!-- Right Div -->
+    <div class="col-md-6 right-div" style="background-color: #0A335D;">
+        <div class="form-container" style="background-color: #0A335D; color: white;">
+            <h1 class="text-center m-5 p-5 fw-bolder fs-1">REGISTRATION</h1>
+            <form method="POST" action="{{ route('registration') }}">
+                <!-- You need @csrf when using POST as the form method -->
+                @csrf
+                <div class="mb-1 row">
+                    <label for="inputAccountType" class="col-sm-3 col-form-label">Account Type</label>
+                    <div class="col-sm-7">
+                        <select name="accountType" id="accountType" class="form-select" aria-label="Default select example" required>
+                            <option value="" selected disabled>Select...</option>
+                            @foreach(\App\Models\AccountTypeModel::all() as $accountType)
+                            <option value="{{ $accountType['id'] }}">{{ $accountType['account_type_name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-            </div>
+
+                <div class="text-center pt-2">
+                    <button type="submit" class="btn btn-primary">PROCEED</button>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>

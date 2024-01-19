@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\RegistrationAccountTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +23,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// This is somehow the 'landing page' of registration. Users are asked what account type they are going to register, then they will be routed to the registration form associated with the account type they prefer.
+Route::post('/registration', [RegistrationAccountTypeController::class, 'index'])->name('registration');
+
+Route::group(['middleware' => 'auth'], function () {
+    // Your authenticated routes go here
+
+});
