@@ -21,8 +21,8 @@
                 <div class="mb-1 row">
                     <label for="accnt_type" class="col-sm-3 col-form-label">Account Type</label>
                     <div class="col-sm-7">
-                        <select class="form-select" name="accnt_type" aria-label="Account Type" disabled>
-                            <option value="1" selected>Organization</option>
+                        <select class="form-select" name="accountType" aria-label="Account Type">
+                            <option value="1">Organization</option>
                         </select>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                 <div class="mb-1 row">
                     <label for="dateEstablished" class="col-sm-3 col-form-label">Date Established</label>
                     <div class="col-sm-5">
-                        <input type="date" name="date" class="form-control" id="dateEstablished">
+                        <input type="date" name="dateEstablished" class="form-control" id="dateEstablished">
                     </div>
                 </div>
 
