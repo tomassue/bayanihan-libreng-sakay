@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\IndividualInformationModel;
 use App\Models\User;
 use App\Models\OrganizationInformationModel;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -51,16 +52,33 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        if ($data['accountType'] == '1') {
             // ORGANIZATION
-            'accountType'           => ['required', 'string', 'max:1'],
-            'organizationName'      => ['required', 'string', 'max:255'],
-            'dateEstablished'       => ['required'],
-            'address'               => ['required', 'string'],
-            'contactNumber'         => ['required', 'string', 'max:11'],
-            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password'              => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+            return Validator::make($data, [
+                'accountType'           => ['required', 'string', 'max:1'],
+                'organizationName'      => ['required', 'string', 'max:255'],
+                'dateEstablished'       => ['required'],
+                'address'               => ['required', 'string'],
+                'contactNumber'         => ['required', 'string', 'max:11'],
+
+                'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password'              => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
+        } elseif ($data['accountType'] == '2') {
+            // INDIVIDUAL
+            return Validator::make($data, [
+                'accountType'           => ['required', 'string', 'max:1'],
+                'lastName'              => ['required', 'string'],
+                'firstName'             => ['required', 'string'],
+                'middleName'            => ['string'],
+                'contactNumber'         => ['required'],
+                'address'               => ['required'],
+                'organization'          => ['required'],
+
+                'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password'              => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
+        }
     }
 
     /**
@@ -91,6 +109,24 @@ class RegisterController extends Controller
                 'date_established'      =>          $data['dateEstablished'],
                 'address'               =>          $data['address'],
                 'contact_number'        =>          $data['contactNumber'],
+            ]);
+        } elseif ($data['accountType'] == '2') {
+            // dd($data['accountType']);
+            $user = User::create([
+                'user_id'       =>      $user_id,
+                'email'         =>      $data['email'],
+                'password'      =>      Hash::make($data['password']),
+            ]);
+
+            IndividualInformationModel::create([
+                'user_id' => $user_id,
+                'last_name' => $data['lastName'],
+                'first_name' => $data['firstName'],
+                'middle_name' => $data['middleName'],
+                'ext_name' => $data['extensionName'],
+                'contact_number' => $data['contactNumber'],
+                'address' => $data['address'],
+                'id_organization' => $data['organization'],
             ]);
         }
         return $user;
