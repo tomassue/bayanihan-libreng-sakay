@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\IndividualInformationModel;
 use App\Models\User;
 use App\Models\OrganizationInformationModel;
+use App\Models\ClientInformationModel;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -78,6 +79,24 @@ class RegisterController extends Controller
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password'              => ['required', 'string', 'min:8', 'confirmed'],
             ]);
+        } elseif ($data['accountType'] == '3') {
+            // dd('WAKA WAKA 3');
+            // CLIENT
+            return Validator::make($data, [
+                'accountType'           => ['required', 'string', 'max:1'],
+                'lastName'              => ['required', 'string'],
+                'firstName'             => ['required', 'string'],
+                'middleName'            => ['string'],
+                'birthday'              => ['required'],
+                'contactNumber'         => ['required'],
+                'address'               => ['required'],
+                'school'                => ['required'],
+                'guardianName'          => ['required'],
+                'guardianNumber'        => ['required'],
+
+                'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password'              => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
         }
     }
 
@@ -110,8 +129,9 @@ class RegisterController extends Controller
                 'address'               =>          $data['address'],
                 'contact_number'        =>          $data['contactNumber'],
             ]);
+            // SAVE to individual information if the account type is 2.
         } elseif ($data['accountType'] == '2') {
-            // dd($data['accountType']);
+
             $user = User::create([
                 'user_id'       =>      $user_id,
                 'email'         =>      $data['email'],
@@ -119,14 +139,36 @@ class RegisterController extends Controller
             ]);
 
             IndividualInformationModel::create([
-                'user_id' => $user_id,
-                'last_name' => $data['lastName'],
-                'first_name' => $data['firstName'],
-                'middle_name' => $data['middleName'],
-                'ext_name' => $data['extensionName'],
-                'contact_number' => $data['contactNumber'],
-                'address' => $data['address'],
-                'id_organization' => $data['organization'],
+                'user_id'               => $user_id,
+                'last_name'             => $data['lastName'],
+                'first_name'            => $data['firstName'],
+                'middle_name'           => $data['middleName'],
+                'ext_name'              => $data['extensionName'],
+                'contact_number'        => $data['contactNumber'],
+                'address'               => $data['address'],
+                'id_organization'       => $data['organization'],
+            ]);
+            // SAVE to client information if the account type is 3.
+        } elseif ($data['accountType'] == '3') {
+
+            $user = User::create([
+                'user_id'       =>      $user_id,
+                'email'         =>      $data['email'],
+                'password'      =>      Hash::make($data['password']),
+            ]);
+
+            ClientInformationModel::create([
+                'user_id'                  => $user_id,
+                'last_name'                => $data['lastName'],
+                'first_name'               => $data['firstName'],
+                'middle_name'              => $data['middleName'],
+                'ext_name'                 => $data['extensionName'],
+                'birthday'                 => $data['birthday'],
+                'contact_number'           => $data['contactNumber'],
+                'address'                  => $data['address'],
+                'id_school'                => $data['school'],
+                'guardian_name'            => $data['guardianName'],
+                'guardian_contact_number'  => $data['guardianNumber'],
             ]);
         }
         return $user;

@@ -29,6 +29,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::post('/registration', [RegistrationAccountTypeController::class, 'index'])->name('registration');
 Route::get('/registration/org', [RegistrationAccountTypeController::class, 'registerOrg'])->name('register.org');
 Route::get('/registration/ind', [RegistrationAccountTypeController::class, 'registerInd'])->name('register.ind');
+Route::get('/registration/client', [RegistrationAccountTypeController::class, 'registerClient'])->name('register.client');
 
 Route::group(['middleware' => 'auth'], function () {
     // Your authenticated routes go here
