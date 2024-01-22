@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\RegistrationAccountTypeController;
-use App\Http\Controllers\RegisterOrganizationController;
+use App\Livewire\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +34,5 @@ Route::get('/registration/client', [RegistrationAccountTypeController::class, 'r
 Route::group(['middleware' => 'auth'], function () {
     // Your authenticated routes go here
 
+    Route::get('/dashboard', Dashboard::class);
 });
