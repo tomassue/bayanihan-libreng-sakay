@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\RegistrationAccountTypeController;
 use App\Livewire\Dashboard;
+use App\Livewire\Registration;
+use App\Livewire\Events;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +37,6 @@ Route::group(['middleware' => 'auth'], function () {
     // Your authenticated routes go here
 
     Route::get('/dashboard', Dashboard::class);
+    Route::get('/registration', Registration::class);
+    Route::get('/events', Events::class);
 });

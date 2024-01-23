@@ -84,7 +84,7 @@
                 </div>
             </div>
 
-            <div class="row mx-5 mt-4">
+            <div class="row mx-5 mt-4 mb-4">
                 <div class="col text-center table-responsive">
                     <table class="table">
                         <thead>

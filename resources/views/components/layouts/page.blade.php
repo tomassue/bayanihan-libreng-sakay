@@ -124,39 +124,10 @@
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li class="dropdown-header">
-                            <h6>Kevin Anderson</h6>
-                            <span>Web Designer</span>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
+                            <h6>{{ Auth::user()->user_id }}</h6>
+                            <span>{{ Auth::user()->user_id == 'ADMIN' ? 'Super Administrator' : Auth::user()->user_id }}</span>
                         </li>
 
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                <i class="bi bi-person"></i>
-                                <span>My Profile</span>
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                <i class="bi bi-gear"></i>
-                                <span>Account Settings</span>
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                                <i class="bi bi-question-circle"></i>
-                                <span>Need Help?</span>
-                            </a>
-                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -184,14 +155,26 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link" href="/dashboard" style="border-radius: unset;">
+                <a class="nav-link {{ request()->is('dashboard') ? '' : 'collapsed' }}" href="/dashboard" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Dashboard</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="index.html" style="border-radius: unset;">
+                <a class="nav-link {{ request()->is('registration') ? '' : 'collapsed' }}" href="/registration" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Registration</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('events') ? '' : 'collapsed' }}" href="/events" style="border-radius: unset;">
+                    <span class="fs-5 fw-bold">Events</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('reports') ? '' : 'collapsed' }}" href="#" style="border-radius: unset;">
+                    <span class="fs-5 fw-bold">Reports</span>
                 </a>
             </li>
         </ul>
