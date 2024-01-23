@@ -85,14 +85,14 @@
             </div>
 
             <div class="row mx-5 mt-4">
-                <div class="col text-center">
+                <div class="col text-center table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">First</th>
-                                <th scope="col">Last</th>
-                                <th scope="col">Handle</th>
+                                <th scope="col">NAME</th>
+                                <th scope="col">ADDRESS</th>
+                                <th scope="col">TYPE</th>
+                                <th scope="col">RIDER</th>
                             </tr>
                         </thead>
                         <tbody>

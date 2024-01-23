@@ -684,7 +684,8 @@ h6 {
     align-items: center;
     font-size: 15px;
     font-weight: 600;
-    color: #4154f1;
+    /* color: #4154f1; */
+    color: #0a335d;
     transition: 0.3;
     background: #f6f9ff;
     padding: 10px 15px;
@@ -698,8 +699,10 @@ h6 {
 }
 
 .sidebar-nav .nav-link.collapsed {
-    color: #012970;
-    background: #fff;
+    /* color: #012970; */
+    /* background: #fff; */
+    color: white;
+    background: #0a335d;
 }
 
 .sidebar-nav .nav-link.collapsed i {
@@ -707,7 +710,8 @@ h6 {
 }
 
 .sidebar-nav .nav-link:hover {
-    color: #4154f1;
+    /* color: #4154f1; */
+    color: #0a335d;
     background: #f6f9ff;
 }
 
