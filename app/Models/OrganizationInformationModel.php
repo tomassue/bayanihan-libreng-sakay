@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class OrganizationInformationModel extends Model
 {
@@ -19,4 +20,10 @@ class OrganizationInformationModel extends Model
         'contact_number',
         'status',
     ];
+
+    // Join user table
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
