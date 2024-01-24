@@ -4,36 +4,36 @@
 
             <div class="row mx-5 mt-4">
                 <div class="col">
-                    <div class="card border border-secondary">
+                    <div class="card h-100 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
                             <div class=" container">
                                 <div class="row">
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body" style="background-color: #228B22;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">EVENTS</h1>
                                                 <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">145</h6>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body" style="background-color: #2E8B57;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">STUDENTS</h1>
                                                 <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">145</h6>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body" style="background-color: #50C878;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">STAFFS</h1>
                                                 <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">145</h6>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body" style="background-color: #98FF98;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">OTHER CLIENTS</h1>
                                                 <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">145</h6>
@@ -49,28 +49,28 @@
 
             <div class="row mx-5 mt-4">
                 <div class="col">
-                    <div class="card border border-secondary">
+                    <div class="card h-100 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
                             <div class=" container">
                                 <div class="row">
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">REGISTERED ORGANIZATION</h1>
                                                 <h6 class="text-center">145</h6>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
                                                 <h6 class="text-center">145</h6>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">RIDERS</h1>
                                                 <h6 class="text-center">145</h6>

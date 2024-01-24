@@ -4,28 +4,28 @@
 
             <div class="row mx-5 mt-4">
                 <div class="col">
-                    <div class="card border border-secondary">
+                    <div class="card h-100 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
                             <div class=" container">
                                 <div class="row">
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary" style="cursor: pointer;" wire:click="pageOne">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageOne">
                                             <div class="card-body" @if( $filter=='' || $filter=='one' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='one' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">TOTAL NO. OF EVENTS</h1>
                                                 <h6 class="text-center">145</h6>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary" style="cursor: pointer;" wire:click="pageTwo">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageTwo">
                                             <div class="card-body" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='two' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">ON-GOING</h1>
                                                 <h6 class="text-center">145</h6>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="card m-3 border border-secondary" style="cursor: pointer;" wire:click="pageThree">
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageThree">
                                             <div class="card-body" @if( $filter=='' || $filter=='three' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='three' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">DONE</h1>
                                                 <h6 class="text-center">145</h6>
@@ -73,6 +73,7 @@
                     </table>
                 </div>
                 <div class="text-end mt-2">
+                    <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD EVENT</button>
                 </div>
             </div>
@@ -146,7 +147,6 @@
             </div>
             @endif
 
-            <!-- Button trigger modal -->
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">

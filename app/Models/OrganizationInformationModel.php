@@ -17,5 +17,6 @@ class OrganizationInformationModel extends Model
         'date_established',
         'address',
         'contact_number',
+        'status',
     ];
 }
