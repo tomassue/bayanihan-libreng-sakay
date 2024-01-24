@@ -2,20 +2,30 @@
 
 namespace App\Livewire;
 
+use App\Models\OrganizationInformationModel;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('components.layouts.page')]
 #[Title('Registration')]
+
 class Registration extends Component
 {
+    use WithPagination;
+
     //FILTERS
     public $filter;
 
     public function render()
     {
-        return view('livewire.registration');
+        $organization_information = OrganizationInformationModel::orderBy('organization_name', 'ASC')
+            ->paginate(5);
+
+        return view('livewire.registration', [
+            'org_data'      =>      $organization_information,
+        ]);
     }
 
     public function mount()

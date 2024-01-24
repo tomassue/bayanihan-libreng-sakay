@@ -80,15 +80,17 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
-                    <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle me-2" style="height: 50px; width: 50px;">
-                    {{ Auth::user()->user_id == 'ADMIN' ? 'Super Administrator' : Auth::user()->user_id }}
+                <a class="nav-link collapsed fs-5" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#" aria-expanded="false" style="border-radius: unset;">
+                    <img src=" assets/img/profile-img.jpg" alt="Profile" class="rounded-circle me-2" style="height: 50px; width: 50px;">
+                    <span class="text-truncate col-9">
+                        {{ Auth::user()->user_id == 'ADMIN' ? 'Administrator' : Auth::user()->user_id }}
+                    </span>
                 </a>
                 <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     <li class="nav-item">
                         <a class="align-items-center fs-5" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                     document.getElementById('logout-form').submit();" style="color: white;">
-                            <span>> Sign Out</span>
+                            <span>> &nbsp; Sign Out</span>
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf

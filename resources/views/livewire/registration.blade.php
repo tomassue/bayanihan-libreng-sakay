@@ -85,20 +85,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+                            @foreach($org_data as $org)
+                            <tr wire:key="{{ $org['user_id'] }}">
+                                <th scope="row">{{ $org['organization_name'] }}</th>
+                                <td>{{ $org['contact_number'] }}</td>
+                                <td>{{ $org['address'] }}</td>
+                                <td>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;">APPROVE </span>
+                                    <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;">DECLINE</span>
+                                </td>
                             </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
+                    {{ $org_data->links('vendor.livewire.custom-pagination') }}
                 </div>
             </div>
             @elseif($filter == 'three')

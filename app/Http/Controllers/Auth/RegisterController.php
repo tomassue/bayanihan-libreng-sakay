@@ -71,7 +71,7 @@ class RegisterController extends Controller
                 'accountType'           => ['required', 'string', 'max:1'],
                 'lastName'              => ['required', 'string'],
                 'firstName'             => ['required', 'string'],
-                'middleName'            => ['string'],
+                'middleName'            => ['string', 'nullable'],
                 'contactNumber'         => ['required'],
                 'address'               => ['required'],
                 'organization'          => ['required'],
@@ -86,7 +86,7 @@ class RegisterController extends Controller
                 'accountType'           => ['required', 'string', 'max:1'],
                 'lastName'              => ['required', 'string'],
                 'firstName'             => ['required', 'string'],
-                'middleName'            => ['string'],
+                'middleName'            => ['string', 'nullable'],
                 'birthday'              => ['required'],
                 'contactNumber'         => ['required'],
                 'address'               => ['required'],
@@ -116,10 +116,13 @@ class RegisterController extends Controller
         // SAVE to organization information if the account type is 1.
         if ($data['accountType'] == '1') {
 
+            // dd($data['accountType']);
+
             $user = User::create([
-                'user_id'       =>      $user_id,
-                'email'         =>      $data['email'],
-                'password'      =>      Hash::make($data['password']),
+                'user_id'           =>      $user_id,
+                'email'             =>      $data['email'],
+                'id_account_type'   =>      $data['accountType'],
+                'password'          =>      Hash::make($data['password']),
             ]);
 
             OrganizationInformationModel::create([
@@ -133,9 +136,10 @@ class RegisterController extends Controller
         } elseif ($data['accountType'] == '2') {
 
             $user = User::create([
-                'user_id'       =>      $user_id,
-                'email'         =>      $data['email'],
-                'password'      =>      Hash::make($data['password']),
+                'user_id'           =>      $user_id,
+                'email'             =>      $data['email'],
+                'id_account_type'   =>      $data['accountType'],
+                'password'          =>      Hash::make($data['password']),
             ]);
 
             IndividualInformationModel::create([
@@ -152,9 +156,10 @@ class RegisterController extends Controller
         } elseif ($data['accountType'] == '3') {
 
             $user = User::create([
-                'user_id'       =>      $user_id,
-                'email'         =>      $data['email'],
-                'password'      =>      Hash::make($data['password']),
+                'user_id'           =>      $user_id,
+                'email'             =>      $data['email'],
+                'id_account_type'   =>      $data['accountType'],
+                'password'          =>      Hash::make($data['password']),
             ]);
 
             ClientInformationModel::create([
