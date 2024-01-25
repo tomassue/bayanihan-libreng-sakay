@@ -99,7 +99,7 @@ class Registration extends Component
             $item = User::where('user_id', $userID)->first();
             $item->update([
                 'status'    =>      1,
-                'tag'       =>      'Approved',
+                'tag'       =>      1, // 1 - approved
             ]);
 
             session()->flash('status', 'Approved successully.');
@@ -117,10 +117,10 @@ class Registration extends Component
             $item = User::where('user_id', $userID)->first();
             $item->update([
                 'status'    =>      0,
-                'tag'       =>      'Declined',
+                'tag'       =>      2, // 2 - declined
             ]);
 
-            session()->flash('status', 'Approved successully.');
+            session()->flash('status', 'User declined.');
 
             // We need to close the modal after the process.
             $this->dispatch('close-modal');

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         // Adding new column to an existing table.
         Schema::table('users', function (Blueprint $table) {
-            $table->string('tag')->nullable()->after('status'); // Will update if admin [organization] or organization [individual] APPROVE or DISAPPROVE users.
+            $table->integer('tag')->default(0)->after('status'); // 0 - pending, 1 - approved, 2 - declined.
         });
     }
 
