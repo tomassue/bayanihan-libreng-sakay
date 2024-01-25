@@ -132,8 +132,8 @@
                                 <td>{{ $orgtwo['contact_number'] }}</td>
                                 <td>{{ $orgtwo['address'] }}</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal" wire:click="confirmOrg('{{ $orgtwo['user_id'] }}')">APPROVE </span>
-                                    <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;">DECLINE</span>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal" wire:click="confirmApproveOrg('{{ $orgtwo['user_id'] }}')">APPROVE </span>
+                                    <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal" wire:click="confirmDeclineOrg('{{ $orgtwo['user_id'] }}')">DECLINE</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -145,7 +145,19 @@
             </div>
             @elseif($filter == 'three')
             <div class="row mx-5 mt-4 mb-4">
+
+                @if($noRecordsEvents)
+                <div class="pagination-info pt-4">
+                    <p class="text-center">No records found.</p>
+                </div>
+                @else
+
                 <div class="col text-center table-responsive">
+
+                    <div class="pagination-info pb-2 text-start">
+                        Page {{ $currentPageEvents }} out of {{ $totalPagesEvents }}, Total Records: {{ $totalRecordsEvents }}
+                    </div>
+
                     <table class="table">
                         <thead>
                             <tr>
@@ -156,24 +168,22 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($events as $event)
                             <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
+                                <th scope="row">{{ $event['event_name'] }}</th>
+                                <td>Organization ID</td>
+                                <td>No. of Riders</td>
                                 <td>
                                     <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;">APPROVE </span>
                                     <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;">DECLINE</span>
                                 </td>
                             </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
+                    {{ $events->links('vendor.livewire.custom-pagination') }}
                 </div>
+                @endif
             </div>
             @endif
 
@@ -193,7 +203,7 @@
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
                     <div class="row fw-bolder justify-content-center">
-                        <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 95px;" wire:click="approveOrg('{{ $userID }}')">Proceed</button>
+                        <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveOrg' : 'declineOrg' }}('{{ $userID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
                     </div>
                 </div>
             </div>
@@ -204,6 +214,7 @@
 
 @script
 <script>
+    // Back in the component, we dispatched an event called 'close-modal'. This code will listen to that dispatch and execute the script.
     $wire.on('close-modal', () => {
         $('#confirmModal').modal('hide');
     });

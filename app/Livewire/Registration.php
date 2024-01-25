@@ -4,10 +4,12 @@ namespace App\Livewire;
 
 use App\Models\OrganizationInformationModel;
 use App\Models\User;
+use App\Models\EventModel;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Locked;
 
 #[Layout('components.layouts.page')]
 #[Title('Registration')]
@@ -17,7 +19,9 @@ class Registration extends Component
     use WithPagination;
 
     public $filter; // FILTERS
-    public $userID; // This will store the user_id and will be returned to the variable and will be accessible to the blade.
+
+    #[Locked]
+    public $userID, $approve; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
 
     public function render()
     {
@@ -31,6 +35,8 @@ class Registration extends Component
             ->where('status', '0')
             ->paginate(5, pageName: 'for-approval'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
+        $events = EventModel::paginate(5, pageName: 'event-registration');
+
         return view('livewire.registration', [
             'org_one'          =>      $organization_one,
             'currentPageOne'   =>      $organization_one->currentPage(),
@@ -43,6 +49,12 @@ class Registration extends Component
             'totalPages'       =>      $organization_two->lastPage(),
             'totalRecords'     =>      $organization_two->total(),
             'noRecords'        =>      $organization_two->isEmpty(),
+
+            'events'                 =>      $events,
+            'currentPageEvents'      =>      $events->currentPage(),
+            'totalPagesEvents'       =>      $events->lastPage(),
+            'totalRecordsEvents'     =>      $events->total(),
+            'noRecordsEvents'        =>      $events->isEmpty(),
         ]);
     }
 
@@ -69,9 +81,15 @@ class Registration extends Component
     }
 
     // Confirmation Message
-    public function confirmOrg($user_id) // Organization's reference ID = $user_id
+    public function confirmApproveOrg($user_id) // Organization's reference ID = $user_id
     {
         $this->userID = $user_id;
+        $this->approve = true; // If true, it will choose the method it's designated to. Like, if `true`, it will proceed to the method approveOrg. 
+    }
+    public function confirmDeclineOrg($user_id) // Organization's reference ID = $user_id
+    {
+        $this->userID = $user_id;
+        $this->approve = false; // If true, it will choose the method it's designated to. Like, if `false`, it will proceed to the method declineOrg. 
     }
 
     public function approveOrg($userID)
@@ -81,13 +99,32 @@ class Registration extends Component
             $item = User::where('user_id', $userID)->first();
             $item->update([
                 'status'    =>      1,
+                'tag'       =>      'Approved',
             ]);
 
             session()->flash('status', 'Approved successully.');
 
-            // // We need to close the modal after the process.
+            // We need to close the modal after the process.
             $this->dispatch('close-modal');
-            $this->reset('userID');
+            $this->reset('userID', 'approve');
+            $this->resetPage();
+        }
+    }
+
+    public function declineOrg($userID)
+    {
+        if ($userID) {
+            $item = User::where('user_id', $userID)->first();
+            $item->update([
+                'status'    =>      0,
+                'tag'       =>      'Declined',
+            ]);
+
+            session()->flash('status', 'Approved successully.');
+
+            // We need to close the modal after the process.
+            $this->dispatch('close-modal');
+            $this->reset('userID', 'approve');
             $this->resetPage();
         }
     }

@@ -1,8 +1,16 @@
 <div>
     <div class="col-12">
-        <div class="card border border-secondary">
-
+        <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree">
             <div class="row mx-5 mt-4">
+
+                @if(session('status'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-1"></i>
+                    {{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+
                 <div class="col">
                     <div class="card h-100 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
@@ -74,7 +82,7 @@
                 </div>
                 <div class="text-end mt-2">
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#exampleModal">ADD EVENT</button>
+                    <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#eventSaveModal">ADD EVENT</button>
                 </div>
             </div>
             @elseif($filter == 'two')
@@ -148,30 +156,38 @@
             @endif
 
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div wire:ignore.self class="modal fade" id="eventSaveModal" tabindex="-1" aria-labelledby="eventSaveModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                            <h1 class="modal-title fs-5 fw-bolder" id="exampleModalLabel">Event Details</h1>
+                            <h1 class="modal-title fs-5 fw-bolder" id="eventSaveModalLabel">Event Details</h1>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                         </div>
-                        <div class="modal-body">
-                            <div class="row mb-3 fw-bolder" style="color: #0A335D;">
-                                <label for="inputText" class="col-sm-3 col-form-label">Event Name</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control">
+                        <form wire:submit="save">
+                            <div class="modal-body">
+                                <div class="row mb-3 fw-bolder" style="color: #0A335D;">
+                                    <label for="inputText" class="col-sm-3 col-form-label">Event Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control @error('eventName') is-invalid @enderror" wire:model.blur="eventName">
+                                        @error('eventName')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row mb-3 fw-bolder" style="color: #0A335D;">
+                                    <label for="inputText" class="col-sm-3 col-form-label">Date</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" class="form-control @error('eventDate') is-invalid @enderror" wire:model.blur="eventDate">
+                                        @error('eventDate')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row fw-bolder justify-content-center">
+                                    <button type="submit" class="btn btn-danger fw-bolder mt-2" style="width: 80px;">SAVE</button>
                                 </div>
                             </div>
-                            <div class="row mb-3 fw-bolder" style="color: #0A335D;">
-                                <label for="inputText" class="col-sm-3 col-form-label">Date</label>
-                                <div class="col-sm-9">
-                                    <input type="date" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row fw-bolder justify-content-center">
-                                <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 80px;">SAVE</button>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -179,3 +195,11 @@
         </div>
     </div>
 </div>
+
+@script
+<script>
+    $wire.on('close-eventSave-Modal', () => {
+        $('#eventSaveModal').modal('hide');
+    });
+</script>
+@endscript

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'id_account_type',
         'password',
         'status',
+        'tag',
     ];
 
     /**
