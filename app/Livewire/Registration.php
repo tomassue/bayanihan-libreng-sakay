@@ -19,7 +19,7 @@ class Registration extends Component
 {
     use WithPagination;
 
-    public $filter; // FILTERS
+    public $filter, $pagetwo; // FILTERS
 
     #[Locked]
     public $userID, $approve; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
@@ -36,6 +36,11 @@ class Registration extends Component
             ->where('status', 0)
             ->paginate(5, pageName: 'for-approval'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
+        $organization_declined = OrganizationInformationModel::orderBy('organization_name', 'ASC')
+            ->join('users', 'organization_information.user_id', '=', 'users.user_id')
+            ->where('status', 2)
+            ->paginate(5, pageName: 'declined-organization');
+
         $events = EventModel::paginate(5, pageName: 'event-registration');
 
         return view('livewire.registration', [
@@ -50,6 +55,12 @@ class Registration extends Component
             'totalPages'       =>      $organization_two->lastPage(),
             'totalRecords'     =>      $organization_two->total(),
             'noRecords'        =>      $organization_two->isEmpty(),
+
+            'org_declined'                =>      $organization_declined,
+            'currentPageOrgDeclined'      =>      $organization_declined->currentPage(),
+            'totalPagesOrgDeclined'       =>      $organization_declined->lastPage(),
+            'totalRecordsOrgDeclined'     =>      $organization_declined->total(),
+            'noRecordsOrgDeclined'        =>      $organization_declined->isEmpty(),
 
             'events'                 =>      $events,
             'currentPageEvents'      =>      $events->currentPage(),
@@ -76,15 +87,19 @@ class Registration extends Component
         $this->filter = 'two';
     }
 
+    public function pageTwoPending()
+    {
+        $this->pagetwo = 'twopending';
+    }
+
+    public function pageTwoDeclined()
+    {
+        $this->pagetwo = 'twodeclined';
+    }
+
     public function pageThree()
     {
         $this->filter = 'three';
-    }
-
-    #[On('no-records')]
-    public function goBack()
-    {
-        $this->resetPage(pageName: 'for-approval');
     }
 
     // Confirmation Message
@@ -92,6 +107,10 @@ class Registration extends Component
     {
         $this->userID = $user_id;
         $this->approve = true; // If true, it will choose the method it's designated to. Like, if `true`, it will proceed to the method approveOrg. 
+    }
+    public function confirmApproveOrg2($user_id) // Organization's reference ID = $user_id
+    {
+        $this->userID = $user_id;
     }
     public function confirmDeclineOrg($user_id) // Organization's reference ID = $user_id
     {
@@ -113,6 +132,28 @@ class Registration extends Component
             // We need to close the modal after the process.
             $this->dispatch('close-modal');
             $this->reset('userID', 'approve');
+
+            $this->resetPage(pageName: 'registered-organization');
+            $this->resetPage(pageName: 'for-approval');
+            $this->resetPage(pageName: 'event-registration');
+        }
+    }
+
+    public function approveOrg2($userID)
+    {
+        if ($userID) {
+            // $item = User::findOrFail($userID); findOrFail will automatically look in the primary key. In case you refer to other columns not the primary key. You must put protected $primaryKey = 'column_name' and the application will automatically consider the column_name as the primary key.
+            $item = User::where('user_id', $userID)->first();
+            $item->update([
+                'status'    =>      1,
+            ]);
+
+            session()->flash('status', 'Approved successully.');
+
+            // We need to close the modal after the process.
+            $this->dispatch('close-modal2');
+            $this->reset('userID', 'approve');
+            $this->resetPage(pageName: 'declined-organization');
         }
     }
 
@@ -129,6 +170,10 @@ class Registration extends Component
             // We need to close the modal after the process.
             $this->dispatch('close-modal');
             $this->reset('userID', 'approve');
+
+            $this->resetPage(pageName: 'registered-organization');
+            $this->resetPage(pageName: 'for-approval');
+            $this->resetPage(pageName: 'event-registration');
         }
     }
 }

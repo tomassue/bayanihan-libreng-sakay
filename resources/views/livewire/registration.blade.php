@@ -65,7 +65,7 @@
 
                 @if($noRecordsOne)
                 <div class="pagination-info pt-4">
-                    <p class="text-center">No records found. <a href="#" wire:click.prevent="goBack" class="link-underline-primary">Go Back</a></p>
+                    <p class="text-center">No records found.</p>
                 </div>
                 @else
 
@@ -81,7 +81,7 @@
                                 <th scope="col">ORGANIZATION</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
-                                <th scope="col">MEMBERS</th>
+                                <th scope="col">DETAILS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -91,7 +91,7 @@
                                 <td>{{ $orgone['contact_number'] }}</td>
                                 <td>{{ $orgone['address'] }}</td>
                                 <td>
-                                    NUMBER OF MEMBERS?
+                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                 </td>
                             </tr>
                             @endforeach
@@ -104,22 +104,26 @@
             @elseif($filter == 'two')
             <div class="row mx-5 mt-4 mb-4">
 
-                @if($noRecords)
-                <div class="pagination-info pt-4" id="NoRecord">
-                    <p class="text-center">No records found. <a href="#" wire:click.prevent="goBack" class="link-underline-primary">Go Back</a></p>
+                <div class="pagination-info my-2 text-end">
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <button type="button" class="btn {{ $pagetwo == '' || $pagetwo == 'twopending' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageTwoPending">Pending</button>
+                        <button type="button" class="btn {{ $pagetwo == 'twodeclined' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageTwoDeclined">Declined</button>
+                    </div>
                 </div>
 
-                @script
-                <script>
-                    $wire.dispatch('no-records');
-                </script>
-                @endscript
+                @if($pagetwo == '' || $pagetwo == 'twopending')
+                @if($noRecordsOne)
+                <div class="pagination-info pt-4">
+                    <p class="text-center">No records found.</p>
+                </div>
                 @else
-
                 <div class="col text-center table-responsive">
-
                     <div class="pagination-info pb-2 text-start">
-                        Page {{ $currentPage }} out of {{ $totalPages }}, Total Records: {{ $totalRecords }}
+                        <div class="row">
+                            <div class="col my-auto">
+                                Page {{ $currentPageOne }} out of {{ $totalPagesOne }}, Total Records: {{ $totalRecordsOne }}
+                            </div>
+                        </div>
                     </div>
 
                     <table class="table">
@@ -127,8 +131,8 @@
                             <tr>
                                 <th scope="col">ORGANIZATION</th>
                                 <th scope="col">CONTACT NUMBER</th>
+                                <th scope="col">ADDRESS</th>
                                 <th scope="col">DETAILS</th>
-                                <th scope="col">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -148,13 +152,56 @@
                     {{ $org_two->links('vendor.livewire.custom-pagination') }}
                 </div>
                 @endif
+                @elseif($pagetwo == 'twodeclined')
+                @if($noRecordsOrgDeclined)
+                <div class="pagination-info pt-4">
+                    <p class="text-center">No records found.</p>
+                </div>
+                @else
+                <div class="col text-center table-responsive">
+                    <div class="pagination-info pb-2 text-start">
+                        <div class="row">
+                            <div class="col my-auto">
+                                Page {{ $currentPageOrgDeclined }} out of {{ $totalPagesOrgDeclined }}, Total Records: {{ $totalRecordsOrgDeclined }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">ORGANIZATION</th>
+                                <th scope="col">CONTACT NUMBER</th>
+                                <th scope="col">ADDRESS</th>
+                                <th scope="col">DETAILS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($org_declined as $orgdeclined)
+                            <tr wire:key="{{ $orgdeclined['user_id'] }}">
+                                <th scope="row">{{ $orgdeclined['organization_name'] }}</th>
+                                <td>{{ $orgdeclined['contact_number'] }}</td>
+                                <td>{{ $orgdeclined['address'] }}</td>
+                                <td>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal2" wire:click="confirmApproveOrg2('{{ $orgdeclined['user_id'] }}')">APPROVE </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{ $org_declined->links('vendor.livewire.custom-pagination') }}
+                </div>
+                @endif
+                @endif
             </div>
+            @elseif($filter == 'twodeclined')
+            <h1>declined</h1>
             @elseif($filter == 'three')
-            <div class="row mx-5 mt-4 mb-4">
+            <div class=" row mx-5 mt-4 mb-4">
 
                 @if($noRecordsEvents)
                 <div class="pagination-info pt-4">
-                    <p class="text-center">No records found. <a href="#" wire:click.prevent="goBack" class="link-underline-primary">Go Back</a></p>
+                    <p class="text-center">No records found.</p>
                 </div>
                 @else
 
@@ -216,6 +263,26 @@
         </div>
     </div>
 
+    <!-- CONFIRMATION MESSAGE for the declined organization -->
+    <div wire:ignore.self class="modal fade" id="confirmModal2" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
+                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Warning!</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3 fw-bolder" style="color: #0A335D;">
+                        <h4>Are you sure you want to proceed?</h4>
+                    </div>
+                    <div class="row fw-bolder justify-content-center">
+                        <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 100px;" wire:click="approveOrg2('{{ $userID }}')">Approve</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 @script
@@ -223,6 +290,10 @@
     // Back in the component, we dispatched an event called 'close-modal'. This code will listen to that dispatch and execute the script.
     $wire.on('close-modal', () => {
         $('#confirmModal').modal('hide');
+    });
+
+    $wire.on('close-modal2', () => {
+        $('#confirmModal2').modal('hide');
     });
 </script>
 @endscript
