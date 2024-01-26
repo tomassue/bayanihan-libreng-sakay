@@ -10,6 +10,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
 
 #[Layout('components.layouts.page')]
 #[Title('Registration')]
@@ -27,12 +28,12 @@ class Registration extends Component
     {
         $organization_one = OrganizationInformationModel::orderBy('organization_name', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
-            ->where('status', '1')
+            ->where('status', 1)
             ->paginate(5, pageName: 'registered-organization'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
         $organization_two = OrganizationInformationModel::orderBy('organization_name', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
-            ->where('status', '0')
+            ->where('status', 0)
             ->paginate(5, pageName: 'for-approval'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
         $events = EventModel::paginate(5, pageName: 'event-registration');
@@ -80,6 +81,12 @@ class Registration extends Component
         $this->filter = 'three';
     }
 
+    #[On('no-records')]
+    public function goBack()
+    {
+        $this->resetPage(pageName: 'for-approval');
+    }
+
     // Confirmation Message
     public function confirmApproveOrg($user_id) // Organization's reference ID = $user_id
     {
@@ -99,7 +106,6 @@ class Registration extends Component
             $item = User::where('user_id', $userID)->first();
             $item->update([
                 'status'    =>      1,
-                'tag'       =>      1, // 1 - approved
             ]);
 
             session()->flash('status', 'Approved successully.');
@@ -107,7 +113,6 @@ class Registration extends Component
             // We need to close the modal after the process.
             $this->dispatch('close-modal');
             $this->reset('userID', 'approve');
-            $this->resetPage();
         }
     }
 
@@ -116,8 +121,7 @@ class Registration extends Component
         if ($userID) {
             $item = User::where('user_id', $userID)->first();
             $item->update([
-                'status'    =>      0,
-                'tag'       =>      2, // 2 - declined
+                'status'    =>      2,
             ]);
 
             session()->flash('status', 'User declined.');
@@ -125,7 +129,6 @@ class Registration extends Component
             // We need to close the modal after the process.
             $this->dispatch('close-modal');
             $this->reset('userID', 'approve');
-            $this->resetPage();
         }
     }
 }

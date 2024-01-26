@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('id_account_type'); // from account_type table. This will determine if the user is an organization or administrator.
             $table->string('password');
-            $table->integer('status')->default('0'); // with a default value of 0. 0 and 1, once approved (1), user can now login to the system.
+            $table->integer('status')->default('0'); // with a default value of 0. 0 - pending, 1 - approved, 2 - declined.
             $table->rememberToken();
             $table->timestamps();
         });

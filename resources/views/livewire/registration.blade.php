@@ -65,7 +65,7 @@
 
                 @if($noRecordsOne)
                 <div class="pagination-info pt-4">
-                    <p class="text-center">No records found.</p>
+                    <p class="text-center">No records found. <a href="#" wire:click.prevent="goBack" class="link-underline-primary">Go Back</a></p>
                 </div>
                 @else
 
@@ -105,9 +105,15 @@
             <div class="row mx-5 mt-4 mb-4">
 
                 @if($noRecords)
-                <div class="pagination-info pt-4">
-                    <p class="text-center">No records found.</p>
+                <div class="pagination-info pt-4" id="NoRecord">
+                    <p class="text-center">No records found. <a href="#" wire:click.prevent="goBack" class="link-underline-primary">Go Back</a></p>
                 </div>
+
+                @script
+                <script>
+                    $wire.dispatch('no-records');
+                </script>
+                @endscript
                 @else
 
                 <div class="col text-center table-responsive">
@@ -148,7 +154,7 @@
 
                 @if($noRecordsEvents)
                 <div class="pagination-info pt-4">
-                    <p class="text-center">No records found.</p>
+                    <p class="text-center">No records found. <a href="#" wire:click.prevent="goBack" class="link-underline-primary">Go Back</a></p>
                 </div>
                 @else
 
