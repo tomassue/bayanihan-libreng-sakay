@@ -86,12 +86,12 @@
                         </thead>
                         <tbody>
                             @foreach($org_one as $orgone)
-                            <tr wire:key="{{ $orgone['user_id'] }}">
+                            <tr wire:key="{{ $orgone['org_id'] }}">
                                 <th scope="row">{{ $orgone['organization_name'] }}</th>
                                 <td>{{ $orgone['contact_number'] }}</td>
                                 <td>{{ $orgone['address'] }}</td>
                                 <td>
-                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    <a href="/registration/organization-details/{{ $orgone['id'] }}"><img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;"></a>
                                 </td>
                             </tr>
                             @endforeach
@@ -112,7 +112,7 @@
                 </div>
 
                 @if($pagetwo == '' || $pagetwo == 'twopending')
-                @if($noRecordsOne)
+                @if($noRecords)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
                 </div>
@@ -121,7 +121,7 @@
                     <div class="pagination-info pb-2 text-start">
                         <div class="row">
                             <div class="col my-auto">
-                                Page {{ $currentPageOne }} out of {{ $totalPagesOne }}, Total Records: {{ $totalRecordsOne }}
+                                Page {{ $currentPage }} out of {{ $totalPages }}, Total Records: {{ $totalRecords }}
                             </div>
                         </div>
                     </div>

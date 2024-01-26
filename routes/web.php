@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\OrganizationDetails;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,4 +40,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', Dashboard::class);
     Route::get('/registration', Registration::class);
     Route::get('/events', Events::class);
+
+    Route::get('/registration/organization-details/{$id_organization}', OrganizationDetails::class);
 });
