@@ -20,8 +20,8 @@ class OrganizationDetails extends Component
         ]);
     }
 
-    public function mount($id_organization)
+    public function mount(OrganizationInformationModel $id_organization) // It's like, OrganizationInformationModel::findOrFail($id_organization);
     {
-        $this->id_org = OrganizationInformationModel::findOrFail($id_organization);
+        $this->id_org = $id_organization;
     }
 }
