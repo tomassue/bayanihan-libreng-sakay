@@ -159,7 +159,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('registration', 'registration/organization-details') ? '' : 'collapsed' }}" href="/registration" style="border-radius: unset;">
+                <a class="nav-link {{ request()->is('registration') ? '' : 'collapsed' }}" href="/registration" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Registration</span>
                 </a>
             </li>
