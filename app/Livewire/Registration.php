@@ -28,6 +28,7 @@ class Registration extends Component
     {
         $organization_one = OrganizationInformationModel::orderBy('organization_name', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
+            ->select('users.id AS user_id', 'organization_information.*') // In my case, i have two different tables and their primary key's name are the same. I put an alias to the id of the other table so that it will distinguish from the other one. his renames the 'name' column from the 'tags' table to 'tag_name' in the result set. This is often done when you have multiple columns with the same name from different tables to avoid naming conflicts. 'products.*': This selects all columns from the 'products' table.
             ->where('status', 1)
             ->paginate(5, pageName: 'registered-organization'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 

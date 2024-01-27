@@ -86,7 +86,7 @@
                         </thead>
                         <tbody>
                             @foreach($org_one as $orgone)
-                            <tr wire:key="{{ $orgone['org_id'] }}">
+                            <tr wire:key="{{ $orgone['id'] }}">
                                 <th scope="row">{{ $orgone['organization_name'] }}</th>
                                 <td>{{ $orgone['contact_number'] }}</td>
                                 <td>{{ $orgone['address'] }}</td>

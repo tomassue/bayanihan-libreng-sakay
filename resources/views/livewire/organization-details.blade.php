@@ -13,15 +13,7 @@
             /* Remove border for the last row in tbody */
         }
     </style>
-    @php
-    $registeredOrganization = App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
-    ->where('status', 1)
-    ->count();
 
-    $forApprovalOrganization = App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
-    ->where('status', 0)
-    ->count();
-    @endphp
     <div class="col-12">
         <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree">
             <div class="row mx-5 mt-4">
@@ -39,8 +31,9 @@
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
                             <div class=" container">
                                 <div class="row">
-
-                                    <!-- <button wire:click="$refresh">Refresh</button> -->
+                                    <div class="col">
+                                        <h1>{{ $id_org['organization_name'] }}</h1>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -41,5 +41,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/registration', Registration::class);
     Route::get('/events', Events::class);
 
-    Route::get('/registration/organization-details/{$id_organization}', OrganizationDetails::class);
+    Route::get('/registration/organization-details/{id_organization}', OrganizationDetails::class);
 });
