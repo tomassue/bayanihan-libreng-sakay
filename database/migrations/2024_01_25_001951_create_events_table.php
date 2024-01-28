@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('event_name');
             $table->date('event_date');
+            $table->integer('status')->default(0);
+            $table->integer('tag')->default(0);
             $table->timestamps();
         });
     }

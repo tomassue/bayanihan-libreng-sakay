@@ -7,6 +7,10 @@
     $forApprovalOrganization = App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
     ->where('status', 0)
     ->count();
+
+    $forApprovalEvents = App\Models\EventModel::where('status', 0)
+    ->where('tag', 0)
+    ->count();
     @endphp
     <div class="col-12">
         <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree">
@@ -48,7 +52,7 @@
                                         <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageThree">
                                             <div class="card-body" @if( $filter=='' || $filter=='three' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='three' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">EVENT REGISTRATION</h1>
-                                                <h6 class="text-center">145</h6>
+                                                <h6 class="text-center">{{ $forApprovalEvents }}</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -194,11 +198,17 @@
                 @endif
                 @endif
             </div>
-            @elseif($filter == 'twodeclined')
-            <h1>declined</h1>
             @elseif($filter == 'three')
             <div class=" row mx-5 mt-4 mb-4">
 
+                <div class="pagination-info my-2 text-end">
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <button type="button" class="btn {{ $pagethree == '' || $pagethree == 'threepending' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageThreePending">Pending</button>
+                        <button type="button" class="btn {{ $pagethree == 'threedeclined' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageThreeDeclined">Declined</button>
+                    </div>
+                </div>
+
+                @if($pagethree == '' || $pagethree == 'threepending')
                 @if($noRecordsEvents)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -222,13 +232,13 @@
                         </thead>
                         <tbody>
                             @foreach($events as $event)
-                            <tr>
+                            <tr wire:key="{{ $event['id'] }}">
                                 <th scope="row">{{ $event['event_name'] }}</th>
                                 <td>Organization ID</td>
                                 <td>No. of Riders</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;">APPROVE </span>
-                                    <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;">DECLINE</span>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmApproveEvent('{{ $event['id'] }}')">APPROVE </span>
+                                    <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmDeclineEvent('{{ $event['id'] }}')">DECLINE</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -236,6 +246,45 @@
                     </table>
                     {{ $events->links('vendor.livewire.custom-pagination') }}
                 </div>
+                @endif
+                @elseif($pagethree == 'threedeclined')
+                @if($noRecordsEventsDeclined)
+                <div class="pagination-info pt-4">
+                    <p class="text-center">No records found.</p>
+                </div>
+                @else
+
+                <div class="col text-center table-responsive">
+
+                    <div class="pagination-info pb-2 text-start">
+                        Page {{ $currentPageEventsDeclined }} out of {{ $totalPagesEventsDeclined }}, Total Records: {{ $totalRecordsEventsDeclined }}
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">EVENT NAME</th>
+                                <th scope="col">ORGANIZATION</th>
+                                <th scope="col">NO. OF RIDERS</th>
+                                <th scope="col">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($events_declined as $eventdeclined)
+                            <tr wire:key="{{ $eventdeclined['id'] }}">
+                                <th scope="row">{{ $eventdeclined['event_name'] }}</th>
+                                <td>Organization ID</td>
+                                <td>No. of Riders</td>
+                                <td>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmApproveEvent('{{ $eventdeclined['id'] }}')">APPROVE </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{ $events_declined->links('vendor.livewire.custom-pagination') }}
+                </div>
+                @endif
                 @endif
             </div>
             @endif
@@ -283,6 +332,26 @@
         </div>
     </div>
 
+    <!-- CONFIRMATION MESSAGE for the approving events -->
+    <div wire:ignore.self class="modal fade" id="confirmModal3" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
+                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Warning!</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3 fw-bolder" style="color: #0A335D;">
+                        <h4>Are you sure you want to proceed?</h4>
+                    </div>
+                    <div class="row fw-bolder justify-content-center">
+                        <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveEvent' : 'declineEvent' }}('{{ $eventID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 @script
@@ -294,6 +363,10 @@
 
     $wire.on('close-modal2', () => {
         $('#confirmModal2').modal('hide');
+    });
+
+    $wire.on('close-modal3', () => {
+        $('#confirmModal3').modal('hide');
     });
 </script>
 @endscript

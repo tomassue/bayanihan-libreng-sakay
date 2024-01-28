@@ -14,5 +14,7 @@ class EventModel extends Model
     protected $fillable = [
         'event_name',
         'event_date',
+        'status',
+        'tag',
     ];
 }

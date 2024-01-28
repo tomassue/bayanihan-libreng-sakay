@@ -26,6 +26,10 @@
                 </div>
                 @endif
 
+                <div class="col-12 mb-2">
+                    <a href="/registration"><button type="button" class="btn btn-primary"><i class="bi bi-arrow-bar-left"></i> Go Back</button></a>
+                </div>
+
                 <div class="col">
                     <div class="card h-100 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
