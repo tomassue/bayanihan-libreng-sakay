@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Models\OrganizationInformationModel;
 use App\Models\User;
 use App\Models\EventModel;
+use App\Models\IndividualInformationModel;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -21,7 +23,7 @@ class Registration extends Component
     public $filter, $pagetwo, $pagethree; // FILTERS
 
     #[Locked]
-    public $userID, $approve, $eventID; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
+    public $userID, $approve, $eventID, $individualID; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
 
     public function render()
     {
@@ -48,6 +50,26 @@ class Registration extends Component
         $events_declined = EventModel::where('status', 2)
             ->where('tag', 0)
             ->paginate(5, pageName: 'declined_events');
+
+        if (Auth::user()->user_id !== 'ADMIN') {
+            $individual_one = IndividualInformationModel::orderBy('last_name', 'ASC')
+                ->where('id_organization', Auth::user()->organization_information->id)
+                ->join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->where('status', 1)
+                ->paginate(5, pageName: 'total-registered-members');
+
+            $individual_two = IndividualInformationModel::orderBy('last_name', 'ASC')
+                ->where('id_organization', Auth::user()->organization_information->id)
+                ->join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->where('status', 0)
+                ->paginate(5, pageName: 'for-approval-members');
+
+            $individual_two_declined = IndividualInformationModel::orderBy('last_name', 'ASC')
+                ->where('id_organization', Auth::user()->organization_information->id)
+                ->join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->where('status', 2)
+                ->paginate(5, pageName: 'declined-members');
+        }
 
         return view('livewire.registration', [
             'org_one'          =>      $organization_one,
@@ -79,6 +101,24 @@ class Registration extends Component
             'totalPagesEventsDeclined'       =>      $events_declined->lastPage(),
             'totalRecordsEventsDeclined'     =>      $events_declined->total(),
             'noRecordsEventsDeclined'        =>      $events_declined->isEmpty(),
+
+            'registered_members'            => (Auth::user()->user_id !== 'ADMIN') ? $individual_one : null,
+            'currentPageRegisteredMembers'  => (Auth::user()->user_id !== 'ADMIN') ? $individual_one->currentPage() : null,
+            'totalPagesRegisteredMembers'   => (Auth::user()->user_id !== 'ADMIN') ? $individual_one->lastPage() : null,
+            'totalRecordsRegisteredMembers' => (Auth::user()->user_id !== 'ADMIN') ? $individual_one->total() : null,
+            'noRecordsRegisteredMembers'    => (Auth::user()->user_id !== 'ADMIN') ? $individual_one->isEmpty() : null,
+
+            'for_approval_members'              => (Auth::user()->user_id !== 'ADMIN') ? $individual_two : null,
+            'currentPagefor_approval_members'   => (Auth::user()->user_id !== 'ADMIN') ? $individual_two->currentPage() : null,
+            'totalPagesfor_approval_members'    => (Auth::user()->user_id !== 'ADMIN') ? $individual_two->lastPage() : null,
+            'totalRecordsfor_approval_members'  => (Auth::user()->user_id !== 'ADMIN') ? $individual_two->total() : null,
+            'noRecordsfor_approval_members'     => (Auth::user()->user_id !== 'ADMIN') ? $individual_two->isEmpty() : null,
+
+            'declined_members'                   => (Auth::user()->user_id !== 'ADMIN') ? $individual_two_declined : null,
+            'currentPagedeclined_members'        => (Auth::user()->user_id !== 'ADMIN') ? $individual_two_declined->currentPage() : null,
+            'totalPagesdeclined_members'         => (Auth::user()->user_id !== 'ADMIN') ? $individual_two_declined->lastPage() : null,
+            'totalRecordsdeclined_members'       => (Auth::user()->user_id !== 'ADMIN') ? $individual_two_declined->total() : null,
+            'noRecordsdeclined_members'          => (Auth::user()->user_id !== 'ADMIN') ? $individual_two_declined->isEmpty() : null,
         ]);
     }
 
@@ -142,14 +182,26 @@ class Registration extends Component
 
     public function confirmApproveEvent($event_id) // Organization's reference ID = $user_id
     {
-        $this->approve = true; // If true, it will choose the method it's designated to. Like, if `true`, it will proceed to the method approveOrg. 
+        $this->approve = true;
         $this->eventID = $event_id;
     }
 
     public function confirmDeclineEvent($event_id) // Organization's reference ID = $user_id
     {
-        $this->approve = false; // If true, it will choose the method it's designated to. Like, if `true`, it will proceed to the method approveOrg. 
+        $this->approve = false;
         $this->eventID = $event_id;
+    }
+
+    public function confirmApproveMember($individual_id) // Organization's reference ID = $user_id
+    {
+        $this->approve = true;
+        $this->individualID = $individual_id;
+    }
+
+    public function confirmDeclineMember($individual_id) // Organization's reference ID = $user_id
+    {
+        $this->approve = false;
+        $this->individualID = $individual_id;
     }
 
     public function approveOrg($userID)
@@ -243,6 +295,46 @@ class Registration extends Component
 
             $this->dispatch('close-modal3');
             $this->reset('eventID', 'approve');
+
+            $this->resetPage(pageName: 'registered-organization');
+            $this->resetPage(pageName: 'for-approval');
+            $this->resetPage(pageName: 'event-registration');
+        }
+    }
+
+    public function approveMember($individualID)
+    {
+        if ($individualID) {
+            $item = User::where('user_id', $individualID)->first();
+            $item->update([
+                'status'    =>     1,
+            ]);
+
+            session()->flash('status', 'Member is approved.');
+
+            // We need to close the modal after the process.
+            $this->dispatch('close-individualModal');
+            $this->reset('individualID', 'approve');
+
+            $this->resetPage(pageName: 'registered-organization');
+            $this->resetPage(pageName: 'for-approval');
+            $this->resetPage(pageName: 'event-registration');
+        }
+    }
+
+    public function declineMember($individualID)
+    {
+        if ($individualID) {
+            $item = User::where('user_id', $individualID)->first();
+            $item->update([
+                'status'    =>     2,
+            ]);
+
+            session()->flash('status', 'Member is declined.');
+
+            // We need to close the modal after the process.
+            $this->dispatch('close-individualModal');
+            $this->reset('individualID', 'approve');
 
             $this->resetPage(pageName: 'registered-organization');
             $this->resetPage(pageName: 'for-approval');

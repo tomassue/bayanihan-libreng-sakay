@@ -17,16 +17,19 @@ class Events extends Component
 
     // Input fields
     #[Validate('required')]
-    public $eventName;
-    #[Validate('required')]
-    public $eventDate;
+    public $eventName, $eventDate;
 
     public function render()
     {
-        $data = EventModel::all();
+        $totalevents = EventModel::where('status', 1)
+            ->paginate(5, pageName: 'total-events');
 
         return view('livewire.events', [
-            'event'    =>      $data,
+            'totalevents'                      =>      $totalevents,
+            'currentPageOnetotalevents'        =>      $totalevents->currentPage(),
+            'totalPagesOnetotalevents'         =>      $totalevents->lastPage(),
+            'totalRecordsOnetotalevents'       =>      $totalevents->total(),
+            'noRecordsOnetotalevents'          =>      $totalevents->isEmpty(),
         ]);
     }
 

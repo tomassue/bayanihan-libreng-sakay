@@ -46,4 +46,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Define the relationship
+    /**
+     * In Laravel, when you define a belongsTo relationship, Laravel assumes that the foreign key is the primary key of the related model unless you specify it explicitly. If the foreign key is not the primary key, you need to inform Laravel about it.
+     * 
+     * Alternatively, you can specify the foreign key in the belongsTo relationship method. 
+     * 
+     * Below, the second argument is the foreign key on the current model, and the third argument is the related key on the related model (OrganizationInformationModel).
+     */
+    public function organization_information()
+    {
+        return $this->belongsTo(OrganizationInformationModel::class, 'user_id', 'user_id');
+    }
 }

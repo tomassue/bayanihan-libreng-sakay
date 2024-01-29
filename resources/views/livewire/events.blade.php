@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-            @if($filter == '' || $filter == 'one')
+            @if($filter == '' || $filter == 'one') <!-- This should show all ongoing and done events -->
             <div class="row mx-5 mt-4 mb-4">
                 <div class="col text-center table-responsive">
                     <table class="table">
@@ -61,22 +61,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($totalevents as $total_events)
                             <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+                                <th scope="row">{{ $total_events['event_name'] }}</th>
+                                <td>{{ $total_events['event_date'] }}</td>
+                                <td>number of clients</td>
+                                <td>number of riders</td>
                                 <td>
                                     <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                 </td>
                             </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@mdo</td>
-                                <td>@fat</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -85,7 +80,7 @@
                     <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#eventSaveModal">ADD EVENT</button>
                 </div>
             </div>
-            @elseif($filter == 'two')
+            @elseif($filter == 'two') <!-- Should show only ongoing events-->
             <div class="row mx-5 mt-4 mb-4">
                 <div class="col text-center table-responsive">
                     <table class="table">
@@ -99,27 +94,22 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($totalevents as $event)
                             <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+                                <th scope="row">{{ $event['event_name'] }}</th>
+                                <td>{{ $event['event_date'] }}</td>
+                                <td>number of clients</td>
+                                <td>number of riders</td>
                                 <td>
                                     <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                 </td>
                             </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@mdo</td>
-                                <td>@fat</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
-            @elseif($filter == 'three')
+            @elseif($filter == 'three') <!-- Should show only those that are already done -->
             <div class="row mx-5 mt-4 mb-4">
                 <div class="col text-center table-responsive">
                     <table class="table">
