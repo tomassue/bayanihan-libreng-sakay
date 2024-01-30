@@ -1,17 +1,4 @@
 <div>
-    @php
-    $registeredOrganization = App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
-    ->where('status', 1)
-    ->count();
-
-    $forApprovalOrganization = App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
-    ->where('status', 0)
-    ->count();
-
-    $forApprovalEvents = App\Models\EventModel::where('status', 0)
-    ->where('tag', 0)
-    ->count();
-    @endphp
     <div class="col-12">
         <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree">
             <div class="row mx-5 mt-4">
@@ -54,19 +41,37 @@
                                         <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageTwo">
                                             <div class="card-body" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='two' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
-                                                <h6 class="text-center">{{ $forApprovalOrganization }}</h6>
+                                                <h6 class="text-center">
+                                                    @if(Auth::user()->user_id !== 'ADMIN')
+                                                    {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
+                                                        ->join('users', 'individual_information.user_id', 'users.user_id')
+                                                        ->where('status', 0)
+                                                        ->count() }}
+                                                    @else
+                                                    {{ App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
+                                                    ->where('status', 0)
+                                                    ->count() }}
+                                                    @endif
+                                                </h6>
                                             </div>
                                         </div>
                                     </div>
 
+                                    @if(Auth::user()->user_id == 'ADMIN')
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageThree">
                                             <div class="card-body" @if( $filter=='' || $filter=='three' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='three' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">EVENT REGISTRATION</h1>
-                                                <h6 class="text-center">{{ $forApprovalEvents }}</h6>
+                                                <h6 class="text-center">
+                                                    {{ App\Models\EventModel::where('status', 0)
+                                                    ->where('tag', 0)
+                                                    ->count() }}
+                                                </h6>
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
+
                                     <!-- <button wire:click="$refresh">Refresh</button> -->
                                 </div>
                             </div>
@@ -240,12 +245,12 @@
                         </thead>
                         <tbody>
                             @foreach($declined_members as $dec_members)
-                            <tr>
+                            <tr wire:key="{{ $dec_members['user_id'] }}">
                                 <th scope="row">{{ $dec_members['last_name'] . ', ' . $dec_members['first_name'] . ($dec_members['middle_name'] ? ' ' . $dec_members['middle_name'] : '') . ($dec_members['ext_name'] ? ' ' . $dec_members['middle_name'] . '.' : '') }}</th>
                                 <td>{{ $dec_members['contact_number'] }}</td>
                                 <td>{{ $dec_members['address'] }}</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#editModal">ACTIVE</span>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#individualModal" wire:click="confirmApproveMember('{{ $dec_members['user_id'] }}')">APPROVE</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -352,6 +357,7 @@
             @endif
 
             @elseif($filter == 'three')
+
             <div class=" row mx-5 mt-4 mb-4">
 
                 <div class="pagination-info my-2 text-end">
@@ -440,6 +446,7 @@
                 @endif
                 @endif
             </div>
+
             @endif
 
         </div>
@@ -515,7 +522,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
-                        <h4>Are you sure you want to proceed?</h4>{{ $individualID }}
+                        <h4>Are you sure you want to proceed?</h4>
                     </div>
                     <div class="row fw-bolder justify-content-center">
                         <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveMember' : 'declineMember' }}('{{ $individualID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>

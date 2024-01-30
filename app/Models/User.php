@@ -54,6 +54,8 @@ class User extends Authenticatable
      * Alternatively, you can specify the foreign key in the belongsTo relationship method. 
      * 
      * Below, the second argument is the foreign key on the current model, and the third argument is the related key on the related model (OrganizationInformationModel).
+     * 
+     * Then you can use this to call any data based on the other table's column, Auth::user()->organization_information->column_name.
      */
     public function organization_information()
     {

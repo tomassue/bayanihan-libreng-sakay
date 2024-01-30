@@ -1,6 +1,6 @@
 <div>
     <div class="col-12">
-        <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree">
+        <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree, pageFour">
             <div class="row mx-5 mt-4">
 
                 @if(session('status'))
@@ -24,6 +24,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if(Auth::user()->user_id !== 'ADMIN')
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageFour">
+                                            <div class="card-body" @if( $filter=='' || $filter=='four' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
+                                                <h1 class="card-title text-center" @if( $filter=='' || $filter=='four' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">LIST OF EVENTS</h1>
+                                                <h6 class="text-center">{{ $listOfEvents->count() }}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageTwo">
                                             <div class="card-body" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
@@ -48,6 +58,7 @@
             </div>
 
             @if($filter == '' || $filter == 'one') <!-- This should show all ongoing and done events -->
+
             <div class="row mx-5 mt-4 mb-4">
                 <div class="col text-center table-responsive">
                     <table class="table">
@@ -61,26 +72,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($totalevents as $total_events)
-                            <tr>
-                                <th scope="row">{{ $total_events['event_name'] }}</th>
-                                <td>{{ $total_events['event_date'] }}</td>
-                                <td>number of clients</td>
-                                <td>number of riders</td>
-                                <td>
-                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
-                                </td>
-                            </tr>
-                            @endforeach
+
                         </tbody>
                     </table>
                 </div>
                 <div class="text-end mt-2">
+                    @if(Auth::user()->user_id == 'ADMIN')
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#eventSaveModal">ADD EVENT</button>
+                    @endif
                 </div>
             </div>
+
             @elseif($filter == 'two') <!-- Should show only ongoing events-->
+
             <div class="row mx-5 mt-4 mb-4">
                 <div class="col text-center table-responsive">
                     <table class="table">
@@ -94,22 +99,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($totalevents as $event)
-                            <tr>
-                                <th scope="row">{{ $event['event_name'] }}</th>
-                                <td>{{ $event['event_date'] }}</td>
-                                <td>number of clients</td>
-                                <td>number of riders</td>
-                                <td>
-                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
-                                </td>
-                            </tr>
-                            @endforeach
+
                         </tbody>
                     </table>
                 </div>
             </div>
+
             @elseif($filter == 'three') <!-- Should show only those that are already done -->
+
             <div class="row mx-5 mt-4 mb-4">
                 <div class="col text-center table-responsive">
                     <table class="table">
@@ -143,53 +140,70 @@
                     </table>
                 </div>
             </div>
-            @endif
 
-            <!-- Modal -->
-            <div wire:ignore.self class="modal fade" id="eventSaveModal" tabindex="-1" aria-labelledby="eventSaveModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                            <h1 class="modal-title fs-5 fw-bolder" id="eventSaveModalLabel">Event Details</h1>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
-                        </div>
-                        <form wire:submit="save">
-                            <div class="modal-body">
-                                <div class="row mb-3 fw-bolder" style="color: #0A335D;">
-                                    <label for="inputText" class="col-sm-3 col-form-label">Event Name</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control @error('eventName') is-invalid @enderror" wire:model.blur="eventName">
-                                        @error('eventName')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row mb-3 fw-bolder" style="color: #0A335D;">
-                                    <label for="inputText" class="col-sm-3 col-form-label">Date</label>
-                                    <div class="col-sm-9">
-                                        <input type="date" class="form-control @error('eventDate') is-invalid @enderror" wire:model.blur="eventDate">
-                                        @error('eventDate')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row fw-bolder justify-content-center">
-                                    <button type="submit" class="btn btn-danger fw-bolder mt-2" style="width: 80px;">SAVE</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+            @elseif($filter == 'four')
+
+            <div class="row mx-5 mt-4 mb-4">
+
+                @if($noRecordsOnelistOfEvents)
+                <div class="pagination-info pt-4">
+                    <p class="text-center">No records found.</p>
                 </div>
+                @else
+
+                <div class="col text-center table-responsive">
+
+                    <div class="pagination-info pb-2 text-start">
+                        Page {{ $currentPageOnelistOfEvents }} out of {{ $totalPagesOnelistOfEvents }}, Total Records: {{ $totalRecordsOnelistOfEvents }}
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">EVENT NAME</th>
+                                <th scope="col">DATE</th>
+                                <th scope="col">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($listOfEvents as $list_of_events)
+                            <tr wire:key="{{ $list_of_events['id'] }}">
+                                <th scope="row">{{ $list_of_events['event_name'] }}</th>
+                                <td>{{ $list_of_events['event_date'] }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-success fw-bold mx-auto" style="width: 100px;padding-right: 0px;padding-top: 0px;padding-left: 0px;padding-bottom: 0px;" data-bs-toggle="modal" data-bs-target="#confirmJoinModal" wire:click="confirmJoinEvent('{{ $list_of_events['id'] }}')">JOIN</button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end mt-2">
+                    @if(Auth::user()->user_id == 'ADMIN')
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#eventSaveModal">ADD EVENT</button>
+                    @endif
+                </div>
+                {{ $listOfEvents->links('vendor.livewire.custom-pagination') }}
+                @endif
+
             </div>
+
+            @endif
 
         </div>
     </div>
+    @include('other-modals')
 </div>
 
 @script
 <script>
     $wire.on('close-eventSave-Modal', () => {
         $('#eventSaveModal').modal('hide');
+    });
+
+    $wire.on('close-confirmJoin-Modal', () => {
+        $('#confirmJoinModal').modal('hide');
     });
 </script>
 @endscript
