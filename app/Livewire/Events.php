@@ -33,32 +33,97 @@ class Events extends Component
 
     public function render()
     {
-        /**
-         * LIST OF EVENTS (Organization)
-         * It filters out events that have corresponding records in the event_organizations table with the specified conditions, 
-         * which exclude events associated with the organization of the currently authenticated user.
-         */
-        $listOfEvents = EventModel::where('status', 1)
-            ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('event_organizations')
-                    ->whereRaw('event_organizations.id_event = events.id');
+        /** ORGANIZATION */
+        if (Auth::user()->user_id !== 'ADMIN') {
+            $totalNoOfEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                ->paginate(5, pageName: 'organization-total-no-of-events');
 
-                if (Auth::user()->user_id !== 'ADMIN') {
+            /**
+             * LIST OF EVENTS (FOR Organization)
+             * It filters out events that have corresponding records in the event_organizations table with the specified conditions, 
+             * which exclude events associated with the organization of the currently authenticated user.
+             */
+            $listOfEvents = EventModel::where('status', 1)
+                ->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('event_organizations')
+                        ->whereRaw('event_organizations.id_event = events.id');
+
+                    // if (Auth::user()->user_id !== 'ADMIN') {
                     $query->whereRaw('event_organizations.id_organization = ?', [Auth::user()->organization_information->id]);
-                }
-            })
-            ->paginate(5, ['*'], pageName: 'total-events');
-        /**END LIST OF EVENTS */
+                    // }
+                })
+                ->paginate(5, ['*'], pageName: 'list-of-events');
 
-        $totalNoOfEvents = EventModel::all();
+            $onGoingEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                ->where('events.tag', 0)
+                ->paginate(5, pageName: 'organization-ongoing-events');
+
+            $doneEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                ->where('events.tag', 1)
+                ->paginate(5, pageName: 'organization-ongoing-events');
+        }
+        /** END ORGANIZATION */
+
+        /** ADMINISTRATION */
+        $totalNoOfEvents = EventModel::paginate(5, pageName: 'total-no-of-events');
+
+        $onGoingEvents = EventModel::where('tag', 0)
+            ->paginate(5, pageName: 'ongoing-events');
+
+        $doneEvents = EventModel::where('tag', 1)
+            ->paginate(5, pageName: 'done-events');
+        /** END ADMINISTRATION */
 
         return view('livewire.events', [
-            'listOfEvents'                      =>      $listOfEvents,
-            'currentPageOnelistOfEvents'        =>      $listOfEvents->currentPage(),
-            'totalPagesOnelistOfEvents'         =>      $listOfEvents->lastPage(),
-            'totalRecordsOnelistOfEvents'       =>      $listOfEvents->total(),
-            'noRecordsOnelistOfEvents'          =>      $listOfEvents->isEmpty(),
+            // ORGANIZATION
+            'totalNoOfEvents_org'                      => (Auth::user()->user_id !== 'ADMIN') ? $totalNoOfEvents_org : null,
+            'currentPageOnetotalNoOfEvents_org'        => (Auth::user()->user_id !== 'ADMIN') ? $totalNoOfEvents_org->currentPage() : null,
+            'totalPagesOnetotalNoOfEvents_org'         => (Auth::user()->user_id !== 'ADMIN') ? $totalNoOfEvents_org->lastPage() : null,
+            'totalRecordsOnetotalNoOfEvents_org'       => (Auth::user()->user_id !== 'ADMIN') ? $totalNoOfEvents_org->total() : null,
+            'noRecordsOnetotalNoOfEvents_org'          => (Auth::user()->user_id !== 'ADMIN') ? $totalNoOfEvents_org->isEmpty() : null,
+
+            'listOfEvents'                      => (Auth::user()->user_id !== 'ADMIN') ? $listOfEvents : null,
+            'currentPageOnelistOfEvents'        => (Auth::user()->user_id !== 'ADMIN') ? $listOfEvents->currentPage() : null,
+            'totalPagesOnelistOfEvents'         => (Auth::user()->user_id !== 'ADMIN') ? $listOfEvents->lastPage() : null,
+            'totalRecordsOnelistOfEvents'       => (Auth::user()->user_id !== 'ADMIN') ? $listOfEvents->total() : null,
+            'noRecordsOnelistOfEvents'          => (Auth::user()->user_id !== 'ADMIN') ? $listOfEvents->isEmpty() : null,
+
+            'onGoingEvents_org'                      => (Auth::user()->user_id !== 'ADMIN') ? $onGoingEvents_org : null,
+            'currentPageOneonGoingEvents_org'        => (Auth::user()->user_id !== 'ADMIN') ? $onGoingEvents_org->currentPage() : null,
+            'totalPagesOneonGoingEvents_org'         => (Auth::user()->user_id !== 'ADMIN') ? $onGoingEvents_org->lastPage() : null,
+            'totalRecordsOneonGoingEvents_org'       => (Auth::user()->user_id !== 'ADMIN') ? $onGoingEvents_org->total() : null,
+            'noRecordsOneonGoingEvents_org'          => (Auth::user()->user_id !== 'ADMIN') ? $onGoingEvents_org->isEmpty() : null,
+
+            'doneEvents_org'                      => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org : null,
+            'currentPageOnedoneEvents_org'        => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org->currentPage() : null,
+            'totalPagesOnedoneEvents_org'         => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org->lastPage() : null,
+            'totalRecordsOnedoneEvents_org'       => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org->total() : null,
+            'noRecordsOnedoneEvents_org'          => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org->isEmpty() : null,
+            // END ORGANIZATION
+
+            // ADMINISTRATION
+            'totalNoOfEvents'                   =>      $totalNoOfEvents,
+            'currentPagetotalNoOfEvents'        =>      $totalNoOfEvents->currentPage(),
+            'totalPagestotalNoOfEvents'         =>      $totalNoOfEvents->lastPage(),
+            'totalRecordstotalNoOfEvents'       =>      $totalNoOfEvents->total(),
+            'noRecordstotalNoOfEvents'          =>      $totalNoOfEvents->isEmpty(),
+
+            'onGoingEvents'                   =>      $onGoingEvents,
+            'currentPageonGoingEvents'        =>      $onGoingEvents->currentPage(),
+            'totalPagesonGoingEvents'         =>      $onGoingEvents->lastPage(),
+            'totalRecordsonGoingEvents'       =>      $onGoingEvents->total(),
+            'noRecordsonGoingEvents'          =>      $onGoingEvents->isEmpty(),
+
+            'doneEvents'                   =>      $doneEvents,
+            'currentPagedoneEvents'        =>      $doneEvents->currentPage(),
+            'totalPagesdoneEvents'         =>      $doneEvents->lastPage(),
+            'totalRecordsdoneEvents'       =>      $doneEvents->total(),
+            'noRecordsdoneEvents'          =>      $doneEvents->isEmpty(),
+            // END ADMINISTRATION
         ]);
     }
 
