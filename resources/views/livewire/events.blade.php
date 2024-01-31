@@ -24,7 +24,7 @@
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ $totalNoOfEvents_org->count() }}
                                                     @else
-                                                    {{ $totalNoOfEvents->count() }}
+                                                    {{ App\Models\EventModel::all()->count() }}
                                                     @endif
                                                 </h6>
                                             </div>
@@ -48,7 +48,7 @@
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ $onGoingEvents_org->count() }}
                                                     @else
-                                                    {{ $onGoingEvents->count() }}
+                                                    {{ App\Models\EventModel::where('tag', 0)->count() }}
                                                     @endif
                                                 </h6>
                                             </div>
@@ -62,7 +62,7 @@
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ $doneEvents_org->count() }}
                                                     @else
-                                                    {{ $doneEvents->count() }}
+                                                    {{ App\Models\EventModel::where('tag', 1)->count() }}
                                                     @endif
                                                 </h6>
                                             </div>
@@ -145,7 +145,9 @@
                                 <td>###</td>
                                 <td>###</td>
                                 <td>
-                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    <a href="/registration/event-details/{{ $total_no_of_events['id'] }}">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach

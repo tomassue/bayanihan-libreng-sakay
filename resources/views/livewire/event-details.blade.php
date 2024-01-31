@@ -27,7 +27,7 @@
                 @endif
 
                 <div class="col-12 mb-2">
-                    <a href="/registration"><button type="button" class="btn btn-primary"><i class="bi bi-arrow-bar-left"></i> Go Back</button></a>
+                    <a href="/events"><button type="button" class="btn btn-primary"><i class="bi bi-arrow-bar-left"></i> Go Back</button></a>
                 </div>
 
                 <div class="col">
@@ -35,77 +35,69 @@
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
                             <div class=" container">
                                 <div class="row">
-
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body" style="background-color: #2E8B57; color: #FFFFFF;">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" style="font-size: 23px; font-weight: 1000 !important;">REGISTERED {{ Auth::user()->user_id !== 'ADMIN' ? 'MEMBERS' : 'ORGANIZATION' }}</h1>
-                                                <h6 class=" text-center">
+                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" style="font-size: 23px; font-weight: 1000 !important;">TOTAL NO. OF EVENTS</h1>
+                                                <h6 class="text-center">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
-                                                        ->join('users', 'individual_information.user_id', 'users.user_id')
-                                                        ->where('status', 1)
-                                                        ->count() }}
+                                                    {{ $totalNoOfEvents_org->count() }}
                                                     @else
-                                                    {{ $registeredOrganization = App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
-                                                    ->where('status', 1)
-                                                    ->count() }}
+                                                    {{ App\Models\EventModel::all()->count() }}
                                                     @endif
                                                 </h6>
                                             </div>
                                         </div>
                                     </div>
-
+                                    @if(Auth::user()->user_id !== 'ADMIN')
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
-                                                <h6 class="text-center">
-                                                    @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
-                                                        ->join('users', 'individual_information.user_id', 'users.user_id')
-                                                        ->where('status', 0)
-                                                        ->count() }}
-                                                    @else
-                                                    {{ App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
-                                                    ->where('status', 0)
-                                                    ->count() }}
-                                                    @endif
-                                                </h6>
+                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;">LIST OF EVENTS</h1>
+                                                <h6 class="text-center">{{ $listOfEvents->count() }}</h6>
                                             </div>
                                         </div>
                                     </div>
-
+                                    @endif
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
+                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">ON-GOING</h1>
                                                 <h6 class="text-center">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
-                                                        ->join('users', 'individual_information.user_id', 'users.user_id')
-                                                        ->where('status', 0)
-                                                        ->count() }}
+                                                    {{ $onGoingEvents_org->count() }}
                                                     @else
-                                                    {{ App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
-                                                    ->where('status', 0)
-                                                    ->count() }}
+                                                    {{ App\Models\EventModel::where('tag', 0)->count() }}
                                                     @endif
                                                 </h6>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- <button wire:click="$refresh">Refresh</button> -->
+                                    <div class="col mb-3">
+                                        <div class="card h-100 m-3 border border-secondary">
+                                            <div class="card-body">
+                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">DONE</h1>
+                                                <h6 class="text-center">
+                                                    @if(Auth::user()->user_id !== 'ADMIN')
+                                                    {{ $doneEvents_org->count() }}
+                                                    @else
+                                                    {{ App\Models\EventModel::where('tag', 1)->count() }}
+                                                    @endif
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div class="row mx-5 mt-4 mb-4">
+                @if(Auth::user()->user_id !== 'ADMIN')
+
+                @else
                 @if($noRecords)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -118,38 +110,29 @@
                     <table class="table table-borderless">
                         <thead>
                             <tr>
-                                <th scope="col">NAME</th>
-                                <th scope="col">CONTACT NUMBER</th>
-                                <th scope="col">ADDRESS</th>
-                                <th scope="col">STATUS</th>
+                                <th scope="col">EVENT'S NAME</th>
+                                <th scope="col">RIDER'S NAME</th>
+                                <th scope="col">NO. OF CLIENTS</th>
+                                <th scope="col">ORGANIZATION</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="text-start" style="border-top: 1px solid black; border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black; border-radius: 10px;">
                                 <td colspan="5" style="background-image: linear-gradient(#2E8B57 53%, #0A335D 100%);"><span style="font-size:larger; font-weight:bolder; color:#FFFFFF">LIST</span></td>
                             </tr>
-                            @foreach($individual as $rider)
+                            @foreach($event as $event_detail)
                             <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;">
-                                <th scope="row">{{ $rider['last_name'] . ', ' . $rider['first_name'] . ($rider['middle_name'] ? ' ' . $rider['middle_name'] : '') . ($rider['ext_name'] ? ' ' . $rider['middle_name'] . '.' : '') }}</th>
-                                <td>{{ $rider['contact_number'] }}</td>
-                                <td>{{ $rider['address'] }}</td>
-                                <td>
-                                    @if($rider['status'] == 0)
-                                    <span style="color: #343541;">
-                                        Inactive
-                                    </span>
-                                    @else
-                                    <span style="color: #2E8B57;">
-                                        Active
-                                    </span>
-                                    @endif
-                                </td>
+                                <th scope="row">{{ $event_detail['event_name'] }}</th>
+                                <td>{{ $event_detail['last_name'] . ', ' . $event_detail['first_name'] . ($event_detail['middle_name'] ? ' ' . $event_detail['middle_name'] : '') . ($event_detail['ext_name'] ? ' ' . $event_detail['middle_name'] . '.' : '') }}</td>
+                                <td>###</td>
+                                <td>###</td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $individual->links('vendor.livewire.custom-pagination') }}
+                    {{ $event->links('vendor.livewire.custom-pagination') }}
                 </div>
+                @endif
                 @endif
             </div>
 

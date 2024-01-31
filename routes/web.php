@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\RegistrationAccountTypeController;
 use App\Livewire\Dashboard;
+use App\Livewire\EventDetails;
 use App\Livewire\Registration;
 use App\Livewire\Events;
 
@@ -42,4 +43,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/events', Events::class);
 
     Route::get('/registration/organization-details/{id_organization}', OrganizationDetails::class);
+
+    Route::get('/registration/event-details/{eventID}', EventDetails::class);
 });
