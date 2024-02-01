@@ -22,7 +22,9 @@
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='one' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">TOTAL NO. OF EVENTS</h1>
                                                 <h6 class="text-center">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ $totalNoOfEvents_org->count() }}
+                                                    {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                                                        ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                                        ->count() }}
                                                     @else
                                                     {{ App\Models\EventModel::all()->count() }}
                                                     @endif
@@ -35,7 +37,9 @@
                                         <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageFour">
                                             <div class="card-body" @if( $filter=='' || $filter=='four' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='four' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">LIST OF EVENTS</h1>
-                                                <h6 class="text-center">{{ $listOfEvents->count() }}</h6>
+                                                <h6 class="text-center">
+                                                    {{ $listOfEvents->count() }}
+                                                </h6>
                                             </div>
                                         </div>
                                     </div>
@@ -46,7 +50,10 @@
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='two' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">ON-GOING</h1>
                                                 <h6 class="text-center">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ $onGoingEvents_org->count() }}
+                                                    {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                                                    ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                                    ->where('events.tag', 0)
+                                                    ->count() }}
                                                     @else
                                                     {{ App\Models\EventModel::where('tag', 0)->count() }}
                                                     @endif
@@ -60,7 +67,10 @@
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='three' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">DONE</h1>
                                                 <h6 class="text-center">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ $doneEvents_org->count() }}
+                                                    {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                                                        ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                                        ->where('events.tag', 1)
+                                                        ->count() }}
                                                     @else
                                                     {{ App\Models\EventModel::where('tag', 1)->count() }}
                                                     @endif
@@ -106,7 +116,9 @@
                                 <td>###</td>
                                 <td>###</td>
                                 <td>
-                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    <a href="/registration/event-details/{{ $total_no_of_events_org['id'] }}">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach

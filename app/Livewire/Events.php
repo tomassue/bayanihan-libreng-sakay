@@ -49,10 +49,7 @@ class Events extends Component
                     $query->select(DB::raw(1))
                         ->from('event_organizations')
                         ->whereRaw('event_organizations.id_event = events.id');
-
-                    // if (Auth::user()->user_id !== 'ADMIN') {
                     $query->whereRaw('event_organizations.id_organization = ?', [Auth::user()->organization_information->id]);
-                    // }
                 })
                 ->paginate(5, ['*'], pageName: 'list-of-events');
 

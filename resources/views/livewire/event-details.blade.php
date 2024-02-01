@@ -41,7 +41,9 @@
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" style="font-size: 23px; font-weight: 1000 !important;">TOTAL NO. OF EVENTS</h1>
                                                 <h6 class="text-center">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ $totalNoOfEvents_org->count() }}
+                                                    {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                                                        ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                                        ->count() }}
                                                     @else
                                                     {{ App\Models\EventModel::all()->count() }}
                                                     @endif
@@ -53,8 +55,17 @@
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;">LIST OF EVENTS</h1>
-                                                <h6 class="text-center">{{ $listOfEvents->count() }}</h6>
+                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">LIST OF EVENTS</h1>
+                                                <h6 class="text-center">
+                                                    {{ App\Models\EventModel::where('status', 1)
+                                                        ->whereNotExists(function ($query) {
+                                                            $query->select(DB::raw(1))
+                                                                ->from('event_organizations')
+                                                                ->whereRaw('event_organizations.id_event = events.id');
+                                                            $query->whereRaw('event_organizations.id_organization = ?', [Auth::user()->organization_information->id]);
+                                                        })
+                                                        ->count() }}
+                                                </h6>
                                             </div>
                                         </div>
                                     </div>
@@ -65,7 +76,10 @@
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">ON-GOING</h1>
                                                 <h6 class="text-center">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ $onGoingEvents_org->count() }}
+                                                    {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                                                        ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                                        ->where('events.tag', 0)
+                                                        ->count() }}
                                                     @else
                                                     {{ App\Models\EventModel::where('tag', 0)->count() }}
                                                     @endif
@@ -79,7 +93,10 @@
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">DONE</h1>
                                                 <h6 class="text-center">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ $doneEvents_org->count() }}
+                                                    {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                                                        ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                                        ->where('events.tag', 1)
+                                                        ->count() }}
                                                     @else
                                                     {{ App\Models\EventModel::where('tag', 1)->count() }}
                                                     @endif
@@ -96,7 +113,41 @@
 
             <div class="row mx-5 mt-4 mb-4">
                 @if(Auth::user()->user_id !== 'ADMIN')
-
+                @if($noRecordsorg_event_details)
+                <div class="pagination-info pt-4">
+                    <p class="text-center">No records found.</p>
+                </div>
+                @else
+                <div class="col text-center table-responsive">
+                    <div class="pagination-info pb-2 text-start">
+                        Page {{ $currentPageorg_event_details }} out of {{ $totalPagesorg_event_details }}, Total Records: {{ $totalRecordsorg_event_details }}
+                    </div>
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th scope="col">EVENT'S NAME</th>
+                                <th scope="col">DATE</th>
+                                <th scope="col">RIDER'S NAME</th>
+                                <th scope="col">CONTACT NO.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-start" style="border-top: 1px solid black; border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black; border-radius: 10px;">
+                                <td colspan="5" style="background-image: linear-gradient(#2E8B57 53%, #0A335D 100%);"><span style="font-size:larger; font-weight:bolder; color:#FFFFFF">LIST</span></td>
+                            </tr>
+                            @foreach($org_event_details as $orgeventdetails)
+                            <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;">
+                                <th scope="row">{{ $orgeventdetails['event_name'] }}</th>
+                                <td>{{ $orgeventdetails['event_date'] }}</td>
+                                <td>{{ $orgeventdetails['last_name'] . ', ' . $orgeventdetails['first_name'] . ($orgeventdetails['middle_name'] ? ' ' . $orgeventdetails['middle_name'] : '') . ($orgeventdetails['ext_name'] ? ' ' . $orgeventdetails['middle_name'] . '.' : '') }}</td>
+                                <td>{{ $orgeventdetails['organization_name'] }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{ $org_event_details->links('vendor.livewire.custom-pagination') }}
+                </div>
+                @endif
                 @else
                 @if($noRecords)
                 <div class="pagination-info pt-4">
@@ -125,7 +176,7 @@
                                 <th scope="row">{{ $event_detail['event_name'] }}</th>
                                 <td>{{ $event_detail['last_name'] . ', ' . $event_detail['first_name'] . ($event_detail['middle_name'] ? ' ' . $event_detail['middle_name'] : '') . ($event_detail['ext_name'] ? ' ' . $event_detail['middle_name'] . '.' : '') }}</td>
                                 <td>###</td>
-                                <td>###</td>
+                                <td>{{ $event_detail['organization_name'] }}</td>
                             </tr>
                             @endforeach
                         </tbody>
