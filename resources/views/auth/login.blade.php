@@ -2,15 +2,24 @@
 
 @section('content')
 
-<div class="container-fluid d-md-flex flex-md-equal">
+<div class="container-fluid d-md-flex flex-md-equal" style="padding-left: var(--bs-gutter-x,.0);padding-right: var(--bs-gutter-x,.0);">
     <!-- Left Div -->
-    <div class="col-md-6 left-div">
+    <div class="col-md-7 left-div">
         <!-- Your content for the left div goes here -->
-        <h1 class="text-center">Left Div</h1>
+        <!-- <h1 class="text-center">Left Div</h1> -->
+        <div class="col bg-primary" style="height: 100px;">
+            sfferge
+        </div>
+        <div class="col" style="height: 50px;">
+            <img src="assets/img/BAYANIHAN 1.png" alt="logo">
+        </div>
+        <div class="col">
+            <img src="assets/img/Group 7.png" alt="triangles">
+        </div>
     </div>
 
     <!-- Right Div -->
-    <div class="col-md-6 right-div" style="background-color: #FFFF;">
+    <div class="col-md-5 right-div" style="background-color: #FFFF;">
         <div class="form-container" style="background-color: #FFFF; color: white;">
 
             <div class="mt-5 mb-5 py-5 px-5 text-center" style="display: block; width: auto;">
