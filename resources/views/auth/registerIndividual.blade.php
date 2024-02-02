@@ -109,8 +109,11 @@
                     <div class="col-sm-7">
                         <select name="organization" id="organization" class="form-select @error('organization') is-invalid @enderror" value="{{ old('organization') }}" autocomplete="organization" autofocus aria-label="Default select example">
                             <option selected disabled>Select...</option>
-                            @foreach(\App\Models\OrganizationInformationModel::all() as $organization)
-                            <option value="{{ $organization['id'] }}">{{ $organization['organization_name'] }}</option>
+                            @foreach(\App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
+                            ->where('users.status', 1)
+                            ->select('organization_information.id AS org_id', 'organization_information.*')
+                            ->get() as $organization)
+                            <option value="{{ $organization['org_id'] }}">{{ $organization['organization_name'] }}</option>
                             @endforeach
                         </select>
 

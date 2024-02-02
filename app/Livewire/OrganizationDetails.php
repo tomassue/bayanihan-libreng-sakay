@@ -22,6 +22,7 @@ class OrganizationDetails extends Component
     {
         $individual = IndividualInformationModel::where('id_organization', $this->id_org['id'])
             ->join('users', 'individual_information.user_id', '=', 'users.user_id')
+            // ->where('users.status', 1)
             ->orderBy('status', 'DESC')
             ->orderBy('last_name', 'ASC')
             ->paginate(5);
