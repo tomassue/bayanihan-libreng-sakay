@@ -37,6 +37,7 @@ class Events extends Component
         if (Auth::user()->user_id !== 'ADMIN') {
             $totalNoOfEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                ->select('event_organizations.id AS event_organizations_id', 'events.*')
                 ->paginate(5, pageName: 'organization-total-no-of-events');
 
             /**

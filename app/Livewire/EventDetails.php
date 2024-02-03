@@ -37,7 +37,9 @@ class EventDetails extends Component
                 ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
                 ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
                 ->select('individual_information.contact_number AS indi_contact_number', 'event_organizations.*', 'events.*', 'organization_information.*', 'individual_information.*')
-                ->where('event_organizations.id_organization', Auth::user()->organization_information->id)
+                // ->where('event_organizations.id_organization', Auth::user()->organization_information->id)
+                // ->where('event_organizations.id_event', $this->id_event['id'])
+                ->where('event_organization_riders.id_event_organization', $this->id_event['id'])
                 ->paginate(5, pageName: 'organization-event-details');
         }
 

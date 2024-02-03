@@ -110,13 +110,25 @@
                         </thead>
                         <tbody>
                             @foreach($totalNoOfEvents_org as $total_no_of_events_org)
-                            <tr wire:key="{{ $total_no_of_events_org['id'] }}">
+                            <tr wire:key="{{ $total_no_of_events_org['event_organizations_id'] }}">
                                 <th scope="row">{{ $total_no_of_events_org['event_name'] }}</th>
                                 <td>{{ $total_no_of_events_org['event_date'] }}</td>
-                                <td>###</td>
-                                <td>###</td>
                                 <td>
-                                    <a href="/registration/event-details/{{ $total_no_of_events_org['id'] }}">
+                                    {{
+                                        <!-- App\Models\TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                                        ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                                        ->where('transactions.id_event_organization_riders', $total_no_of_events_org['event_organizations_id'])
+                                        ->count() -->
+                                    }}
+                                </td>
+                                <td>
+                                    {{
+                                        App\Models\EventOrganizationRidersModel::where('id_event_organization', $total_no_of_events_org['event_organizations_id'])
+                                        ->count()
+                                    }}
+                                </td>
+                                <td>
+                                    <a href="/registration/event-details/{{ $total_no_of_events_org['event_organizations_id'] }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </a>
                                 </td>

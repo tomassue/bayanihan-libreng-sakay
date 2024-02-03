@@ -136,7 +136,7 @@
                                 <td colspan="5" style="background-image: linear-gradient(#2E8B57 53%, #0A335D 100%);"><span style="font-size:larger; font-weight:bolder; color:#FFFFFF">LIST</span></td>
                             </tr>
                             @foreach($org_event_details as $orgeventdetails)
-                            <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;">
+                            <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;" wire:key="{{ $orgeventdetails['id'] }}">
                                 <th scope="row">{{ $orgeventdetails['event_name'] }}</th>
                                 <td>{{ $orgeventdetails['event_date'] }}</td>
                                 <td>{{ $orgeventdetails['last_name'] . ', ' . $orgeventdetails['first_name'] . ($orgeventdetails['middle_name'] ? ' ' . $orgeventdetails['middle_name'] : '') . ($orgeventdetails['ext_name'] ? ' ' . $orgeventdetails['middle_name'] . '.' : '') }}</td>
