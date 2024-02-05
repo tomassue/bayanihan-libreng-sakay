@@ -115,10 +115,10 @@
                                 <td>{{ $total_no_of_events_org['event_date'] }}</td>
                                 <td>
                                     {{
-                                        <!-- App\Models\TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                                        App\Models\TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
                                         ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
                                         ->where('transactions.id_event_organization_riders', $total_no_of_events_org['event_organizations_id'])
-                                        ->count() -->
+                                        ->count()
                                     }}
                                 </td>
                                 <td>
@@ -166,8 +166,34 @@
                             <tr wire:key="{{ $total_no_of_events['id'] }}">
                                 <th scope="row">{{ $total_no_of_events['event_name'] }}</th>
                                 <td>{{ $total_no_of_events['event_date'] }}</td>
-                                <td>###</td>
-                                <td>###</td>
+                                <td>
+                                    @php
+                                    $one = App\Models\EventOrganizationsModel::where('id_event', $total_no_of_events['id'])
+                                    ->pluck('id');
+
+                                    $onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
+                                    ->pluck('id');
+
+                                    $onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
+                                    ->count();
+
+                                    echo $onethree;
+                                    @endphp
+                                </td>
+                                <td>
+                                    @php
+                                    // We want to get all records on a specific column that satisfies the where condition through pluck('column_name')
+                                    $two = App\Models\EventOrganizationsModel::where('id_event', $total_no_of_events['id'])
+                                    ->pluck('id');
+
+                                    // whereIn() method is used to check if the 'id_event_organization' column is in the array of values in $two.
+                                    echo App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organizations.id', 'event_organization_riders.id_event_organization')
+                                    ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                    ->select('events.id AS id_event', 'events.*', 'event_organizations.id AS id_event_organization', 'event_organizations.*', 'event_organization_riders.id AS id_event_organization_riders', 'event_organization_riders.*')
+                                    ->whereIn('id_event_organization', $two)
+                                    ->count();
+                                    @endphp
+                                </td>
                                 <td>
                                     <a href="/registration/event-details/{{ $total_no_of_events['id'] }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
@@ -217,10 +243,24 @@
                             <tr wire:key="{{ $ongoing_events_org['id'] }}">
                                 <th scope="row">{{ $ongoing_events_org['event_name'] }}</th>
                                 <td>{{ $ongoing_events_org['event_date'] }}</td>
-                                <td>###</td>
-                                <td>###</td>
                                 <td>
-                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    {{
+                                        App\Models\TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                                        ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                                        ->where('transactions.id_event_organization_riders', $ongoing_events_org['event_organizations_id'])
+                                        ->count()
+                                    }}
+                                </td>
+                                <td>
+                                    {{
+                                        App\Models\EventOrganizationRidersModel::where('id_event_organization', $ongoing_events_org['event_organizations_id'])
+                                        ->count()
+                                    }}
+                                </td>
+                                <td>
+                                    <a href="/registration/event-details/{{ $ongoing_events_org['event_organizations_id'] }}">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach
@@ -256,10 +296,38 @@
                             <tr wire:key="{{ $ongoing_events['id'] }}">
                                 <th scope="row">{{ $ongoing_events['event_name'] }}</th>
                                 <td>{{ $ongoing_events['event_date'] }}</td>
-                                <td>###</td>
-                                <td>###</td>
                                 <td>
-                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    @php
+                                    $one = App\Models\EventOrganizationsModel::where('id_event', $ongoing_events['id'])
+                                    ->pluck('id');
+
+                                    $onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
+                                    ->pluck('id');
+
+                                    $onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
+                                    ->count();
+
+                                    echo $onethree;
+                                    @endphp
+                                </td>
+                                <td>
+                                    @php
+                                    // We want to get all records on a specific column that satisfies the where condition through pluck('column_name')
+                                    $two = App\Models\EventOrganizationsModel::where('id_event', $ongoing_events['id'])
+                                    ->pluck('id');
+
+                                    // whereIn() method is used to check if the 'id_event_organization' column is in the array of values in $two.
+                                    echo App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organizations.id', 'event_organization_riders.id_event_organization')
+                                    ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                    ->select('events.id AS id_event', 'events.*', 'event_organizations.id AS id_event_organization', 'event_organizations.*', 'event_organization_riders.id AS id_event_organization_riders', 'event_organization_riders.*')
+                                    ->whereIn('id_event_organization', $two)
+                                    ->count();
+                                    @endphp
+                                </td>
+                                <td>
+                                    <a href="/registration/event-details/{{ $ongoing_events['id'] }}">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach
@@ -299,10 +367,24 @@
                             <tr wire:key="{{ $done_Events_org['id'] }}">
                                 <th scope="row">{{ $done_Events_org['event_name'] }}</th>
                                 <td>{{ $done_Events_org['event_date'] }}</td>
-                                <td>###</td>
-                                <td>###</td>
                                 <td>
-                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    {{
+                                        App\Models\TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                                        ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                                        ->where('transactions.id_event_organization_riders', $ongoing_events_org['event_organizations_id'])
+                                        ->count()
+                                    }}
+                                </td>
+                                <td>
+                                    {{
+                                        App\Models\EventOrganizationRidersModel::where('id_event_organization', $ongoing_events_org['event_organizations_id'])
+                                        ->count()
+                                    }}
+                                </td>
+                                <td>
+                                    <a href="/registration/event-details/{{ $done_Events_org['event_organizations_id'] }}">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach
@@ -338,10 +420,38 @@
                             <tr wire:key="{{ $done_Events['id'] }}">
                                 <th scope="row">{{ $done_Events['event_name'] }}</th>
                                 <td>{{ $done_Events['event_date'] }}</td>
-                                <td>###</td>
-                                <td>###</td>
                                 <td>
-                                    <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    @php
+                                    $one = App\Models\EventOrganizationsModel::where('id_event', $done_Events['id'])
+                                    ->pluck('id');
+
+                                    $onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
+                                    ->pluck('id');
+
+                                    $onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
+                                    ->count();
+
+                                    echo $onethree;
+                                    @endphp
+                                </td>
+                                <td>
+                                    @php
+                                    // We want to get all records on a specific column that satisfies the where condition through pluck('column_name')
+                                    $two = App\Models\EventOrganizationsModel::where('id_event', $done_Events['id'])
+                                    ->pluck('id');
+
+                                    // whereIn() method is used to check if the 'id_event_organization' column is in the array of values in $two.
+                                    echo App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organizations.id', 'event_organization_riders.id_event_organization')
+                                    ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                    ->select('events.id AS id_event', 'events.*', 'event_organizations.id AS id_event_organization', 'event_organizations.*', 'event_organization_riders.id AS id_event_organization_riders', 'event_organization_riders.*')
+                                    ->whereIn('id_event_organization', $two)
+                                    ->count();
+                                    @endphp
+                                </td>
+                                <td>
+                                    <a href="/registration/event-details/{{ $done_Events['id'] }}">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach

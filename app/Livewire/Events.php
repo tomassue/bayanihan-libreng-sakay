@@ -57,11 +57,13 @@ class Events extends Component
             $onGoingEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 0)
+                ->select('event_organizations.id AS event_organizations_id', 'events.*')
                 ->paginate(5, pageName: 'organization-ongoing-events');
 
             $doneEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 1)
+                ->select('event_organizations.id AS event_organizations_id', 'events.*')
                 ->paginate(5, pageName: 'organization-ongoing-events');
         }
         /** END ORGANIZATION */

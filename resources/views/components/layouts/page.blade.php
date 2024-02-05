@@ -195,15 +195,15 @@
 
     <footer id="footer" class="footer">
         <div class="copyright">
-            © Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+            <img src="{{ asset('assets/img/ict-logo.png') }}" alt="ICT LOGO">&nbsp;&nbsp;POWERED BY: CITY MANAGEMENT INFORMATION SYSTEMS AND INNOVATION DEPARTMENT
         </div>
-        <div class="credits">
-            <!-- All the links in the footer should remain intact. -->
-            <!-- You can delete the links only if you purchased the pro version. -->
-            <!-- Licensing information: https://bootstrapmade.com/license/ -->
-            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        <!-- <div class="credits">
+            All the links in the footer should remain intact.
+            You can delete the links only if you purchased the pro version.
+            Licensing information: https://bootstrapmade.com/license/
+            Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
             Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
+        </div> -->
     </footer>
 
     <!-- Vendor JS Files -->
