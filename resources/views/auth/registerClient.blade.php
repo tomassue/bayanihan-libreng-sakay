@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container-fluid d-md-flex flex-md-equal">
+<div class="container-fluid d-md-flex flex-md-equal" style="padding-left: 0px;padding-right: 0px;">
     <!-- Left Div -->
     <div class="col-md-6 left-div">
         <!-- Your content for the left div goes here -->
@@ -23,6 +23,24 @@
                         <select class="form-select" name="accountType" id="accountType" aria-label="Account Type" style="pointer-events: none; background-color: #f4f4f4;">
                             <option value="3" selected>Client</option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="inputUserType" class="col-sm-3 col-form-label">User Type</label>
+                    <div class="col-sm-7">
+                        <select name="userType" id="userType" class="form-select @error('userType') is-invalid @enderror" value="{{ old('userType') }}" autocomplete="userType" autofocus aria-label="Default select example">
+                            <option selected disabled>Select...</option>
+                            <option value="student">Student</option>
+                            <option value="staff">Staff</option>
+                            <option value="other">Other</option>
+                        </select>
+
+                        @error('userType')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                 </div>
 
@@ -136,7 +154,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputGuardiansName" class="col-sm-3 col-form-label">Guardian's Name</label>
+                    <label for="inputGuardiansName" class="col-sm-3 col-form-label" style="font-size: small;">In case of emergency</label>
                     <div class="col-sm-7">
                         <input type="text" name="guardianName" class="form-control @error('guardianName') is-invalid @enderror" id="guardianName" value="{{ old('guardianName') }}" autocomplete="address" autofocus>
 
@@ -149,7 +167,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputGuardiansNumber" class="col-sm-3 col-form-label">Guardian's No.</label>
+                    <label for="inputGuardiansNumber" class="col-sm-3 col-form-label" style="font-size: small;">Emergency contact no.</label>
                     <div class="col-sm-7">
                         <input type="text" name="guardianNumber" class="form-control @error('guardianNumber') is-invalid @enderror" id="guardianNumber" value="{{ old('guardianNumber') }}" autocomplete="address" autofocus>
 

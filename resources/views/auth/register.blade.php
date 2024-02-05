@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container-fluid d-md-flex flex-md-equal">
+<div class="container-fluid d-md-flex flex-md-equal" style="padding-left: 0px;padding-right: 0px;">
     <!-- Left Div -->
     <div class="col-md-6 left-div">
         <!-- Your content for the left div goes here -->

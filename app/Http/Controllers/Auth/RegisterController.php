@@ -60,7 +60,7 @@ class RegisterController extends Controller
                 'organizationName'      => ['required', 'string', 'max:255'],
                 'dateEstablished'       => ['required'],
                 'address'               => ['required', 'string'],
-                'contactNumber'         => ['required', 'string', 'max:11'],
+                'contactNumber'         => ['required', 'numeric', 'digits:11'],
 
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password'              => ['required', 'string', 'min:8', 'confirmed'],
@@ -72,7 +72,7 @@ class RegisterController extends Controller
                 'lastName'              => ['required', 'string'],
                 'firstName'             => ['required', 'string'],
                 'middleName'            => ['string', 'nullable'],
-                'contactNumber'         => ['required'],
+                'contactNumber'         => ['required', 'numeric', 'digits:11'],
                 'address'               => ['required'],
                 'organization'          => ['required'],
 
@@ -84,15 +84,16 @@ class RegisterController extends Controller
             // CLIENT
             return Validator::make($data, [
                 'accountType'           => ['required', 'string', 'max:1'],
+                'userType'              => ['required', 'string'],
                 'lastName'              => ['required', 'string'],
                 'firstName'             => ['required', 'string'],
                 'middleName'            => ['string', 'nullable'],
                 'birthday'              => ['required'],
-                'contactNumber'         => ['required'],
+                'contactNumber'         => ['required', 'numeric', 'digits:11'],
                 'address'               => ['required'],
                 'school'                => ['required'],
                 'guardianName'          => ['required'],
-                'guardianNumber'        => ['required'],
+                'guardianNumber'        => ['required', 'numeric', 'digits:11'],
 
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password'              => ['required', 'string', 'min:8', 'confirmed'],
@@ -164,6 +165,7 @@ class RegisterController extends Controller
 
             ClientInformationModel::create([
                 'user_id'                  => $user_id,
+                'user_type'                => $data['userType'],
                 'last_name'                => $data['lastName'],
                 'first_name'               => $data['firstName'],
                 'middle_name'              => $data['middleName'],

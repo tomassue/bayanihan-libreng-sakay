@@ -13,6 +13,7 @@ class ClientInformationModel extends Model
 
     protected $fillable = [
         'user_id',
+        'user_type',
         'last_name',
         'last_name',
         'first_name',
