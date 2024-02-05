@@ -175,7 +175,24 @@
                             <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;">
                                 <th scope="row">{{ $event_detail['event_name'] }}</th>
                                 <td>{{ $event_detail['last_name'] . ', ' . $event_detail['first_name'] . ($event_detail['middle_name'] ? ' ' . $event_detail['middle_name'] : '') . ($event_detail['ext_name'] ? ' ' . $event_detail['middle_name'] . '.' : '') }}</td>
-                                <td>###</td>
+                                <td>
+                                    @php
+                                    //$event_detail['indi_id']
+
+                                    $getEventOrg = App\Models\EventOrganizationsModel::where('id_event', $id_event['id'])
+                                    ->pluck('id');
+
+                                    $getEventOrgRiders = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $getEventOrg)
+                                    ->where('id_individual', $event_detail['indi_id'])
+                                    ->pluck('id');
+
+                                    $getTransactions = App\Models\TransactionModel::whereIn('id_event_organization_riders', $getEventOrgRiders)
+                                    ->pluck('id_client')
+                                    ->count();
+
+                                    echo $getTransactions;
+                                    @endphp
+                                </td>
                                 <td>{{ $event_detail['organization_name'] }}</td>
                             </tr>
                             @endforeach

@@ -28,6 +28,7 @@ class EventDetails extends Component
             ->join('event_organization_riders', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
             ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
             ->join('organization_information', 'organization_information.id', '=', 'event_organizations.id_organization')
+            ->select('individual_information.id AS indi_id', 'individual_information.*', 'events.*', 'event_organizations.*', 'event_organization_riders.*', 'organization_information.*')
             ->where('event_organizations.id_event', $this->id_event['id'])
             ->paginate(5, pageName: 'event-details');
 
@@ -36,7 +37,7 @@ class EventDetails extends Component
                 ->join('events', 'event_organizations.id_event', '=', 'events.id')
                 ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
                 ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
-                ->select('individual_information.contact_number AS indi_contact_number', 'event_organizations.*', 'events.*', 'organization_information.*', 'individual_information.*')
+                ->select('individual_information.contact_number AS indi_contact_number', 'individual_information.*', 'event_organizations.*', 'events.*', 'organization_information.*')
                 // ->where('event_organizations.id_organization', Auth::user()->organization_information->id)
                 // ->where('event_organizations.id_event', $this->id_event['id'])
                 ->where('event_organization_riders.id_event_organization', $this->id_event['id'])
