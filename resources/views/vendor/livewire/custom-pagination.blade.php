@@ -19,7 +19,7 @@
             @if ($paginator->onFirstPage())
             <li class="page-item disabled"><a class="page-link">Previous</a></li>
             @else
-            <li class="page-item"><a class="page-link" wire:click="previousPage" wire:loading.attr="disabled" rel="prev">Previous</a></li>
+            <li class="page-item"><a class="page-link" wire:click="previousPage('{{ $paginator->getPageName() }}')" wire:loading.attr="disabled" rel="prev">Previous</a></li>
             @endif
             <!-- Previous end -->
 
@@ -46,7 +46,7 @@
             @if ($paginator->onLastPage())
             <li class="page-item disabled"><a class="page-link">Next</a></li>
             @else
-            <li class="page-item"><a class="page-link" wire:click="nextPage" wire:loading.attr="disabled" rel="next">Next</a></li>
+            <li class="page-item"><a class="page-link" wire:click="nextPage('{{ $paginator->getPageName() }}')" wire:loading.attr="disabled" rel="next">Next</a></li>
             @endif
             <!-- Next end -->
         </ul>
