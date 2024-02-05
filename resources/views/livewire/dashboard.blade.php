@@ -12,7 +12,15 @@
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body" style="background-color: #228B22;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">EVENTS</h1>
-                                                <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">145</h6>
+                                                <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">
+                                                    @if(Auth::user()->user_id !== 'ADMIN')
+                                                    {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                                                        ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                                        ->count() }}
+                                                    @else
+                                                    {{ App\Models\EventModel::all()->count() }}
+                                                    @endif
+                                                </h6>
                                             </div>
                                         </div>
                                     </div>
