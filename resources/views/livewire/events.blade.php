@@ -141,7 +141,7 @@
                 @endif
             </div>
             @else
-            <div class="row mx-5 mt-4 mb-4">
+            <div class="row mx-5 mt-4 mb-4" wire:loading.class="opacity-50">
                 @if($noRecordstotalNoOfEvents)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
