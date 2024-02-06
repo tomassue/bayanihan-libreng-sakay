@@ -5,7 +5,7 @@
 <style>
     /* LEFT DIV */
     @media screen and (max-width: 767px) {
-        div.example {
+        div.left {
             display: none;
         }
     }
@@ -82,9 +82,7 @@
 
 <div class="container-fluid d-md-flex flex-md-equal" style="padding-left: var(--bs-gutter-x,.0);padding-right: var(--bs-gutter-x,.0);">
     <!-- Left Div -->
-    <div class="example col-md-7 left-div">
-        <!-- Your content for the left div goes here -->
-        <!-- <h1 class="text-center">Left Div</h1> -->
+    <div class="left col-md-7 left-div">
         <div class="col" style="height: 98px;">
 
         </div>

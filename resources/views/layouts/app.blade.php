@@ -51,15 +51,6 @@
             border-style: solid;
             border-color: #A8A6A6 !important;
         }
-
-        /* .left-div {
-            background-image: url("assets/img/Frame 1.png");
-            background-repeat: no-repeat;
-            background-position: left center;
-            background-attachment: fixed;
-            background-size: contain;
-            background-size: 300px 200px;
-        } */
     </style>
 
 </head>

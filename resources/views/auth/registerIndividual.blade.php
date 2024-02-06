@@ -3,25 +3,39 @@
 @section('content')
 
 <style>
+    /* Left Div */
+    .left-div {
+        background-image: url("{{ asset('assets/img/Group 2.png') }}"),
+        url("{{ asset('assets/img/Group 8.png') }}");
+        background-repeat: no-repeat, no-repeat;
+        /* background-size: contain, contain; */
+        background-size: 70%, 80%;
+        background-position: center top, left bottom;
+        height: 100%;
+    }
+
+    /* Right Div */
     .right-div {
         background-image: url("{{ asset('assets/img/Polygon 6.png') }}");
         background-repeat: no-repeat;
         background-size: cover;
-        /* background-attachment: fixed; */
+        /* background-position: center; */
+        height: 100%;
     }
 </style>
 
 <div class="container-fluid d-md-flex flex-md-equal" style="padding-left: 0px;padding-right: 0px;">
     <!-- Left Div -->
     <div class="col-md-6 left-div">
-        <!-- Your content for the left div goes here -->
-        <h1 class="text-center">Left Div</h1>
+        <div class="col" style="height: 916px;">
+
+        </div>
     </div>
 
     <!-- Right Div -->
     <div class="col-md-6 right-div">
         <div class="form-container" style="background-color: unset; color: white;">
-            <h1 class="text-center m-5 p-5 fw-bolder fs-1">REGISTRATION</h1>
+            <h1 class="text-center fw-bolder fs-1 py-5 mt-5">REGISTRATION</h1>
 
             <form method="POST" action="{{ route('register') }}">
                 @csrf
