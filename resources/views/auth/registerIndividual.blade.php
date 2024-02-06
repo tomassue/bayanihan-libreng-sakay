@@ -9,7 +9,7 @@
         url("{{ asset('assets/img/Group 8.png') }}");
         background-repeat: no-repeat, no-repeat;
         /* background-size: contain, contain; */
-        background-size: 70%, 80%;
+        background-size: 80%, 80%;
         background-position: center top, left bottom;
         height: 100%;
     }
@@ -22,26 +22,53 @@
         /* background-position: center; */
         height: 100%;
     }
+
+    /* Ensure equal heights for right and left divs */
+    .container-fluid {
+        display: flex;
+    }
+
+    /* Adjust column widths for equal heights */
+    .col-md-6 {
+        flex: 1;
+    }
+
+    @media screen and (max-width: 425px) {
+        .left-div {
+            display: none;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .left-div {
+            background-image: url("{{ asset('assets/img/Group 2.png') }}"),
+            url("{{ asset('assets/img/Group 8.png') }}");
+            background-repeat: no-repeat, no-repeat;
+            /* background-size: contain, contain; */
+            background-size: 110%, 200%;
+            background-position: center top, left 400px;
+            height: 100%;
+        }
+    }
 </style>
 
-<div class="container-fluid d-md-flex flex-md-equal" style="padding-left: 0px;padding-right: 0px;">
-    <!-- Left Div -->
-    <div class="col-md-6 left-div">
-        <div class="col" style="height: 916px;">
+<div class="container-fluid d-md-flex flex-md-equal" style="padding-left: 0px;padding-right: 0px; height: fit-content;">
+
+    <div class="col-md-6 left-div" style="height: 750px;">
+        <div class="col">
 
         </div>
     </div>
 
-    <!-- Right Div -->
-    <div class="col-md-6 right-div">
-        <div class="form-container" style="background-color: unset; color: white;">
+    <div class="col-md-6 right-div" style="height: 100%;">
+        <div class="form-container wew" style="background-color: unset; color: white;">
             <h1 class="text-center fw-bolder fs-1 py-5 mt-5">REGISTRATION</h1>
 
             <form method="POST" action="{{ route('register') }}">
                 @csrf
 
                 <div class="mb-1 row">
-                    <label for="inputOrganizationName" class="col-sm-3 col-form-label">Account Type</label>
+                    <label for="inputOrganizationName" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Account Type</label>
                     <div class="col-sm-7">
                         <select class="form-select" name="accountType" id="accountType" aria-label="Account Type" style="pointer-events: none; background-color: #f4f4f4;">
                             <option value="2">Individual</option>
@@ -50,7 +77,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputLastName" class="col-sm-3 col-form-label">Last Name</label>
+                    <label for="inputLastName" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Last Name</label>
                     <div class="col-sm-7">
                         <input type="text" name="lastName" class="form-control @error('lastName') is-invalid @enderror" id="lastName" value="{{ old('lastName') }}" autocomplete="lastName" autofocus>
 
@@ -63,7 +90,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputFirstName" class="col-sm-3 col-form-label">First Name</label>
+                    <label for="inputFirstName" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">First Name</label>
                     <div class="col-sm-7">
                         <input type="text" name="firstName" class="form-control @error('firstName') is-invalid @enderror" id="firstName" value="{{ old('firstName') }}" autocomplete="firstName" autofocus>
 
@@ -76,7 +103,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputMiddleName" class="col-sm-3 col-form-label">Middle Name</label>
+                    <label for="inputMiddleName" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Middle Name</label>
                     <div class="col-sm-7">
                         <input type="text" name="middleName" class="form-control @error('middleName') is-invalid @enderror" id="middleName" value="{{ old('middleName') }}" autocomplete="middleName" autofocus>
 
@@ -89,8 +116,8 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputExtensionName" class="col-sm-3 col-form-label">Extension Name</label>
-                    <div class="col-sm-3">
+                    <label for="inputExtensionName" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Extension Name</label>
+                    <div class="col-sm-3 col-lg-5">
                         <input type="text" name="extensionName" class="form-control @error('extensionName') is-invalid @enderror" id="extensionName" value="{{ old('extensionName') }}" autocomplete="extensionName" autofocus>
 
                         @error('extensionName')
@@ -102,7 +129,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputContactNumber" class="col-sm-3 col-form-label">Contact Number</label>
+                    <label for="inputContactNumber" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Contact Number</label>
                     <div class="col-sm-7">
                         <input type="text" name="contactNumber" class="form-control @error('contactNumber') is-invalid @enderror" id="contactNumber" value="{{ old('contactNumber') }}" autocomplete="contactNumber" autofocus>
 
@@ -115,7 +142,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputAddress" class="col-sm-3 col-form-label">Address</label>
+                    <label for="inputAddress" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Address</label>
                     <div class="col-sm-7">
                         <input type="text" name="address" class="form-control @error('address') is-invalid @enderror" id="address" value="{{ old('address') }}" autocomplete="address" autofocus>
 
@@ -128,7 +155,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputOrganization" class="col-sm-3 col-form-label">Organization</label>
+                    <label for="inputOrganization" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Organization</label>
                     <div class="col-sm-7">
                         <select name="organization" id="organization" class="form-select @error('organization') is-invalid @enderror" value="{{ old('organization') }}" autocomplete="organization" autofocus aria-label="Default select example">
                             <option selected disabled>Select...</option>
@@ -149,7 +176,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputEmail" class="col-sm-3 col-form-label">Email</label>
+                    <label for="inputEmail" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Email</label>
                     <div class="col-sm-7">
                         <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" id="email" value="{{ old('email') }}" autocomplete="email" autofocus>
 
@@ -162,7 +189,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputPassword" class="col-sm-3 col-form-label">Password</label>
+                    <label for="inputPassword" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Password</label>
                     <div class="col-sm-7">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
 
@@ -175,7 +202,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="password_confirmation" class="col-sm-3 col-form-label">Confirm Password</label>
+                    <label for="password_confirmation" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Confirm Password</label>
                     <div class="col-sm-7">
                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
                     </div>
@@ -189,6 +216,7 @@
 
         </div>
     </div>
+
 </div>
 
 @endsection

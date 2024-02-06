@@ -9,7 +9,7 @@
         url("{{ asset('assets/img/Group 8.png') }}");
         background-repeat: no-repeat, no-repeat;
         /* background-size: contain, contain; */
-        background-size: 70%, 80%;
+        background-size: 80%, 80%;
         background-position: center top, left bottom;
         height: 100%;
     }
@@ -21,8 +21,6 @@
         background-size: cover;
         background-position: center;
         height: 100%;
-        overflow-y: auto;
-        /* Add this line for scrollable content */
     }
 
     /* Ensure equal heights for right and left divs */
@@ -34,21 +32,54 @@
     .col-md-6 {
         flex: 1;
     }
+
+    @media screen and (max-width: 425px) {
+        .left-div {
+            display: none;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .left-div {
+            background-image: url("{{ asset('assets/img/Group 2.png') }}"),
+            url("{{ asset('assets/img/Group 8.png') }}");
+            background-repeat: no-repeat, no-repeat;
+            /* background-size: contain, contain; */
+            background-size: 110%, 200%;
+            background-position: center top, left 400px;
+            height: 100%;
+        }
+    }
+
+    @media screen and (max-width: 1024px) {
+        .left-div {
+            background-image: url("{{ asset('assets/img/Group 2.png') }}"),
+            url("{{ asset('assets/img/Group 8.png') }}");
+            background-repeat: no-repeat, no-repeat;
+            /* background-size: contain, contain; */
+            background-size: 95%, 180%;
+            background-position: center top, left bottom;
+            height: 100%;
+        }
+    }
+
+    @media screen and (min-width: 1024px) and (max-width: 2560px) {
+        .wew {
+            height: 800px !important;
+        }
+    }
 </style>
-
-
 
 <div class="container-fluid d-md-flex flex-md-equal" style="padding-left: 0px; padding-right: 0px; height: fit-content;">
 
-    <div class="col-md-6 left-div" style="height: 100%;">
-        <div class="col" style="height: 916px;">
+    <div class="col-md-6 left-div" style="height: 800px;">
+        <div class="col">
 
         </div>
     </div>
 
-
     <div class="col-md-6 right-div" style="height: 100%;">
-        <div class="form-container" style="background-color: unset; color: white;">
+        <div class="form-container wew" style="background-color: unset; color: white;">
             <h1 class="text-center fw-bolder fs-1 py-5 mt-5">REGISTRATION</h1>
 
             <form method="POST" action="{{ route('register') }}">
@@ -257,7 +288,6 @@
     </div>
 
 </div>
-
 
 
 @endsection
