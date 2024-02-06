@@ -1,20 +1,97 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    /* LEFT DIV */
+    @media screen and (max-width: 767px) {
+        div.example {
+            display: none;
+        }
+    }
+
+    /* RIGHT DIV */
+    .small-image {
+        height: 185px;
+        width: 180px;
+    }
+
+    .medium-image {
+        height: 135px;
+        width: 250px;
+    }
+
+    @media screen and (max-width: 1440px) {
+        .small-image {
+            height: 185px;
+            width: 180px;
+        }
+
+        .medium-image {
+            height: 135px;
+            width: 250px;
+        }
+    }
+
+    @media screen and (max-width: 1024px) {
+        .small-image {
+            height: 100px;
+            width: 100px;
+        }
+
+        .medium-image {
+            height: 100px;
+            width: 180px;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .small-image {
+            height: 80px;
+            width: 80px;
+        }
+
+        .medium-image {
+            height: 80px;
+            width: 160px;
+        }
+
+        .right {
+            padding-left: unset !important;
+            padding-right: unset !important;
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        .small-image {
+            height: 70px;
+            width: 70px;
+        }
+
+        .medium-image {
+            height: 60px;
+            width: 120px;
+        }
+
+        .right {
+            padding-left: unset !important;
+            padding-right: unset !important;
+        }
+    }
+</style>
 
 <div class="container-fluid d-md-flex flex-md-equal" style="padding-left: var(--bs-gutter-x,.0);padding-right: var(--bs-gutter-x,.0);">
     <!-- Left Div -->
-    <div class="col-md-7 left-div">
+    <div class="example col-md-7 left-div">
         <!-- Your content for the left div goes here -->
         <!-- <h1 class="text-center">Left Div</h1> -->
-        <div class="col bg-primary" style="height: 100px;">
-            sfferge
+        <div class="col" style="height: 98px;">
+
         </div>
-        <div class="col" style="height: 50px;">
-            <img src="assets/img/BAYANIHAN 1.png" alt="logo">
+        <div class="col px-5 pb-4">
+            <img src="assets/img/copy2.png" alt="logo" style="max-height: 100%; max-width: 100%;">
         </div>
-        <div class="col">
-            <img src="assets/img/Group 7.png" alt="triangles">
+        <div class="col pt-2">
+            <img src="assets/img/copy.png" alt="triangles" style="max-height: 100%; max-width: 100%;">
         </div>
     </div>
 
@@ -22,9 +99,14 @@
     <div class="col-md-5 right-div" style="background-color: #FFFF;">
         <div class="form-container" style="background-color: #FFFF; color: white;">
 
-            <div class="mt-5 mb-5 py-5 px-5 text-center" style="display: block; width: auto;">
+            <!-- <div class="mt-5 mb-5 py-5 px-5 text-center" style="display: block; width: auto;">
                 <img src="{{ asset('assets/img/cdo-seal.png') }}" alt="cdo-seal" style="height: 185px; width: 180px;">
                 <img src="{{ asset('assets/img/rise.png') }}" alt="cdo-seal" style="height: 135px; width: 250px;">
+            </div> -->
+
+            <div class="mt-5 mb-5 py-5 px-5 text-center right" style="display: block; width: auto;">
+                <img src="{{ asset('assets/img/cdo-seal.png') }}" alt="cdo-seal" class="small-image">
+                <img src="{{ asset('assets/img/rise.png') }}" alt="cdo-seal" class="medium-image">
             </div>
 
             <form method="POST" action="{{ route('login') }}">
