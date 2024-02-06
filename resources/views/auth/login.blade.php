@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <style>
     /* LEFT DIV */
     @media screen and (max-width: 767px) {
@@ -99,11 +100,6 @@
     <div class="col-md-5 right-div" style="background-color: #FFFF;">
         <div class="form-container" style="background-color: #FFFF; color: white;">
 
-            <!-- <div class="mt-5 mb-5 py-5 px-5 text-center" style="display: block; width: auto;">
-                <img src="{{ asset('assets/img/cdo-seal.png') }}" alt="cdo-seal" style="height: 185px; width: 180px;">
-                <img src="{{ asset('assets/img/rise.png') }}" alt="cdo-seal" style="height: 135px; width: 250px;">
-            </div> -->
-
             <div class="mt-5 mb-5 py-5 px-5 text-center right" style="display: block; width: auto;">
                 <img src="{{ asset('assets/img/cdo-seal.png') }}" alt="cdo-seal" class="small-image">
                 <img src="{{ asset('assets/img/rise.png') }}" alt="cdo-seal" class="medium-image">
@@ -112,7 +108,6 @@
             <form method="POST" action="{{ route('login') }}">
                 <!-- You need @csrf when using POST as the form method -->
                 @csrf
-
 
                 <div class="mb-1 row">
                     <div class="d-flex justify-content-center mb-2">

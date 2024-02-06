@@ -2,7 +2,16 @@
 
 @section('content')
 
-<div class="container-fluid d-md-flex flex-md-equal">
+<style>
+    .right-div {
+        background-image: url("{{ asset('assets/img/Polygon 6.png') }}");
+        background-repeat: no-repeat;
+        background-size: cover;
+        /* background-attachment: fixed; */
+    }
+</style>
+
+<div class="container-fluid d-md-flex flex-md-equal" style="padding-left: 0px;padding-right: 0px;">
     <!-- Left Div -->
     <div class="col-md-6 left-div">
         <!-- Your content for the left div goes here -->
@@ -10,8 +19,8 @@
     </div>
 
     <!-- Right Div -->
-    <div class="col-md-6 right-div" style="background-color: #0A335D;">
-        <div class="form-container" style="background-color: #0A335D; color: white;">
+    <div class="col-md-6 right-div">
+        <div class="form-container" style="background-color: unset; color: white;">
             <h1 class="text-center m-5 p-5 fw-bolder fs-1">REGISTRATION</h1>
 
             <form method="POST" action="{{ route('register') }}">
