@@ -26,4 +26,10 @@ class OrganizationInformationModel extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    //search
+    public function scopeSearch($query, $value)
+    {
+        return $query->where('organization_name', 'like', "%{$value}%");
+    }
 }

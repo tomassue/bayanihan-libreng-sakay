@@ -25,30 +25,38 @@ class Registration extends Component
     #[Locked]
     public $userID, $approve, $eventID, $individualID; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
 
+    // Search
+    public $search_one = '', $search_twopending_admin = '', $search_twodeclined_admin = '', $search_threepending_admin = '', $search_threedeclined_admin = '';
+
     public function render()
     {
         $organization_one = OrganizationInformationModel::orderBy('organization_name', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
-            ->select('users.id AS user_id', 'organization_information.*') // In my case, i have two different tables and their primary key's name are the same. I put an alias to the id of the other table so that it will distinguish from the other one. his renames the 'name' column from the 'tags' table to 'tag_name' in the result set. This is often done when you have multiple columns with the same name from different tables to avoid naming conflicts. 'products.*': This selects all columns from the 'products' table.
+            ->select('users.id AS user_id', 'organization_information.*') // In my case, I have two different tables and their primary key's name are the same. I put an alias to the id of the other table so that it will distinguish from the other one. his renames the 'name' column from the 'tags' table to 'tag_name' in the result set. This is often done when you have multiple columns with the same name from different tables to avoid naming conflicts. 'products.*': This selects all columns from the 'products' table.
             ->where('status', 1)
+            ->search($this->search_one)
             ->paginate(5, pageName: 'registered-organizations'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
         $organization_two = OrganizationInformationModel::orderBy('organization_name', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
             ->where('status', 0)
+            ->search($this->search_twopending_admin)
             ->paginate(5, pageName: 'for-approval'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
         $organization_declined = OrganizationInformationModel::orderBy('organization_name', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
             ->where('status', 2)
+            ->search($this->search_twodeclined_admin)
             ->paginate(5, pageName: 'declined-organizations');
 
         $events = EventModel::where('status', 0)
             ->where('tag', 0)
+            ->search($this->search_threepending_admin)
             ->paginate(5, pageName: 'event-registrations');
 
         $events_declined = EventModel::where('status', 2)
             ->where('tag', 0)
+            ->search($this->search_threedeclined_admin)
             ->paginate(5, pageName: 'declined_events');
 
         if (Auth::user()->user_id !== 'ADMIN') {

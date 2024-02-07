@@ -126,6 +126,11 @@
             @else <!-- If ADMIN -->
             <div class="row mx-5 mt-4 mb-4">
 
+                <div class="input-group mb-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Organization" wire:model.live.debounce.300ms="search_one">
+                </div>
+
                 @if($noRecordsOne)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -272,6 +277,10 @@
                 </div>
 
                 @if($pagetwo == '' || $pagetwo == 'twopending')
+                <div class="input-group mb-4 mt-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Organization" wire:model.live.debounce.300ms="search_twopending_admin">
+                </div>
                 @if($noRecords)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -313,6 +322,10 @@
                 </div>
                 @endif
                 @elseif($pagetwo == 'twodeclined')
+                <div class="input-group mb-4 mt-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Organization" wire:model.live.debounce.300ms="search_twodeclined_admin">
+                </div>
                 @if($noRecordsOrgDeclined)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -368,6 +381,10 @@
                 </div>
 
                 @if($pagethree == '' || $pagethree == 'threepending')
+                <div class="input-group mb-4 mt-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Event" wire:model.live.debounce.300ms="search_threepending_admin">
+                </div>
                 @if($noRecordsEvents)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -407,6 +424,10 @@
                 </div>
                 @endif
                 @elseif($pagethree == 'threedeclined')
+                <div class="input-group mb-4 mt-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Event" wire:model.live.debounce.300ms="search_threedeclined_admin">
+                </div>
                 @if($noRecordsEventsDeclined)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>

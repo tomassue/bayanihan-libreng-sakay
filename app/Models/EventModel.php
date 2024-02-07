@@ -17,4 +17,9 @@ class EventModel extends Model
         'status',
         'tag',
     ];
+
+    public function scopeSearch($query, $value)
+    {
+        return $query->where('event_name', 'like', "%{$value}%");
+    }
 }
