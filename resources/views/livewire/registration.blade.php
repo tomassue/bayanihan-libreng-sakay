@@ -84,7 +84,10 @@
 
             @if(Auth::user()->user_id !== 'ADMIN') <!-- If NOT Admin -->
             <div class="row mx-5 mt-4 mb-4">
-
+                <div class="input-group mb-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Rider" wire:model.live.debounce.300ms="search_one">
+                </div>
                 @if($noRecordsRegisteredMembers)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -184,6 +187,10 @@
                 </div>
 
                 @if($pagetwo == '' || $pagetwo == 'twopending')
+                <div class="input-group mb-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Rider" wire:model.live.debounce.300ms="search_twopending_org">
+                </div>
                 @if($noRecordsfor_approval_members)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -225,6 +232,10 @@
                 </div>
                 @endif
                 @elseif($pagetwo == 'twodeclined')
+                <div class="input-group mb-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Rider" wire:model.live.debounce.300ms="search_twodeclined_org">
+                </div>
                 @if($noRecordsdeclined_members)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>

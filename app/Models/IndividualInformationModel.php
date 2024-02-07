@@ -21,4 +21,11 @@ class IndividualInformationModel extends Model
         'address',
         'id_organization',
     ];
+
+    public function scopeSearch($query, $value)
+    {
+        return $query->where('last_name', 'like', "%{$value}%")
+            ->orWhere('first_name', 'like', "%{$value}%")
+            ->orWhere('middle_name', 'like', "%{$value}%");
+    }
 }

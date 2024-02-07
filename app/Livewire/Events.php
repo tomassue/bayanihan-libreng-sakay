@@ -33,7 +33,7 @@ class Events extends Component
     public $eventName, $eventDate;
 
     // Search
-    public $search_totalNoOfEvents_admin = '', $search_onGoingEvents_admin = '', $search_doneEvents_admin = '';
+    public $search_totalNoOfEvents_admin = '', $search_onGoingEvents_admin = '', $search_doneEvents_admin = '', $search_totalNoOfEvents_org = '';
 
     public function render()
     {
@@ -42,6 +42,7 @@ class Events extends Component
             $totalNoOfEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
+                ->search($this->search_totalNoOfEvents_org)
                 ->paginate(5, pageName: 'organization-total-no-of-events');
 
             /**

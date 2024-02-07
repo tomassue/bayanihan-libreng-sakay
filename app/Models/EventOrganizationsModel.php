@@ -15,4 +15,14 @@ class EventOrganizationsModel extends Model
         'id_event',
         'id_organization',
     ];
+
+    public function events()
+    {
+        return $this->belongsTo(EventModel::class, 'id', 'id_event');
+    }
+
+    public function scopeSearch($query, $value)
+    {
+        return $query->where('id_event', 'like', "%{$value}");
+    }
 }

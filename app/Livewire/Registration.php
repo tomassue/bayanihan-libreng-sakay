@@ -26,7 +26,7 @@ class Registration extends Component
     public $userID, $approve, $eventID, $individualID; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
 
     // Search
-    public $search_one = '', $search_twopending_admin = '', $search_twodeclined_admin = '', $search_threepending_admin = '', $search_threedeclined_admin = '';
+    public $search_one = '', $search_twopending_admin = '', $search_twodeclined_admin = '', $search_threepending_admin = '', $search_threedeclined_admin = '', $search_one_org = '', $search_twopending_org = '', $search_twodeclined_org = '';
 
     public function render()
     {
@@ -64,18 +64,21 @@ class Registration extends Component
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
                 ->where('status', 1)
+                ->search($this->search_one_org)
                 ->paginate(5, pageName: 'total-registered-members');
 
             $individual_two = IndividualInformationModel::orderBy('last_name', 'ASC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
                 ->where('status', 0)
+                ->search($this->search_twopending_org)
                 ->paginate(5, pageName: 'for-approval-members');
 
             $individual_two_declined = IndividualInformationModel::orderBy('last_name', 'ASC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
                 ->where('status', 2)
+                ->search($this->search_twodeclined_org)
                 ->paginate(5, pageName: 'declined-members');
         }
 
@@ -137,6 +140,10 @@ class Registration extends Component
         $this->resetPage('declined-organizations');
         $this->resetPage('event-registrations');
         $this->resetPage('declined_events');
+
+        $this->resetPage('total-registered-members');
+        $this->resetPage('for-approval-members');
+        $this->resetPage('declined-members');
     }
 
     // FILTER PAGES
