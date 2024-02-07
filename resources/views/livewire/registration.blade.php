@@ -86,7 +86,7 @@
             <div class="row mx-5 mt-4 mb-4">
                 <div class="input-group mb-4">
                     <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Rider" wire:model.live.debounce.300ms="search_one">
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Rider" wire:model.live.debounce.300ms="search_one_org">
                 </div>
                 @if($noRecordsRegisteredMembers)
                 <div class="pagination-info pt-4">
