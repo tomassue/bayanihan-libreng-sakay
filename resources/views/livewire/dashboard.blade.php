@@ -144,6 +144,31 @@
                 </div>
             </div>
 
+            @if(Auth::user()->user_id !== 'ADMIN')
+            <div class="row mx-5 mt-4 mb-4">
+                <div class="col text-center table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">NAME</th>
+                                <th scope="col">ADDRESS</th>
+                                <th scope="col">TYPE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($individual_information as $indi_info)
+                            <tr wire:key="{{ $indi_info->user_id }}">
+                                <th scope="row">{{ $indi_info['last_name'] . ', ' . $indi_info['first_name'] . ($indi_info['middle_name'] ? ' ' . $indi_info['middle_name'] : '') . ($indi_info['ext_name'] ? ' ' . $indi_info['middle_name'] . '.' : '') }}</th>
+                                <td>{{ $indi_info->address }}</td>
+                                <!-- I used the syntax below since we are accessing data to access the property id_account_type of the related User model through the relationship defined in the OrganizationInformationModel -->
+                                <td>{{ $indi_info->account_type_name }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @else
             <div class="row mx-5 mt-4 mb-4">
                 <div class="col text-center table-responsive">
                     <table class="table">
@@ -156,23 +181,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+                            @foreach($organization_information as $org_info)
+                            <tr wire:key="{{ $org_info->user_id }}">
+                                <th scope="row">{{ $org_info->organization_name }}</th>
+                                <td>{{ $org_info->address }}</td>
+                                <!-- I used the syntax below since we are accessing data to access the property id_account_type of the related User model through the relationship defined in the OrganizationInformationModel -->
+                                <td>{{ $org_info->account_type_name }}</td>
+                                <td>
+                                    {{
+                                        App\Models\IndividualInformationModel::where('id_organization', $org_info->id)
+                                        ->count();
+                                    }}
+                                </td>
                             </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
-
+            @endif
         </div>
     </div>
 </div>

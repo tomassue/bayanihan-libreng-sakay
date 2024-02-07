@@ -24,7 +24,8 @@ class OrganizationInformationModel extends Model
     // Join user table
     public function users()
     {
-        return $this->belongsTo(User::class);
+        // return $this->belongsTo(User::class);
+        // return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     //search
