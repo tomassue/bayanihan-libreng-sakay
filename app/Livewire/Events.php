@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\EventModel;
 use App\Models\EventOrganizationsModel;
 use Livewire\WithPagination;
+use Livewire\Attributes\On;
 
 #[Layout('components.layouts.page')]
 #[Title('Events')]
@@ -30,6 +31,16 @@ class Events extends Component
     // Input fields
     #[Validate('required')]
     public $eventName, $eventDate;
+
+    // Search
+    public $search_totalNoOfEvents_admin = '', $search_onGoingEvents_admin = '', $search_doneEvents_admin = '';
+
+    public function updating()
+    {
+        $this->resetPage('total-no-of-events');
+        $this->resetPage('ongoing-events');
+        $this->resetPage('done-events');
+    }
 
     public function render()
     {
@@ -69,12 +80,15 @@ class Events extends Component
         /** END ORGANIZATION */
 
         /** ADMINISTRATION */
-        $totalNoOfEvents = EventModel::paginate(5, pageName: 'total-no-of-events');
+        $totalNoOfEvents = EventModel::search($this->search_totalNoOfEvents_admin)
+            ->paginate(5, pageName: 'total-no-of-events');
 
         $onGoingEvents = EventModel::where('tag', 0)
+            ->search($this->search_onGoingEvents_admin)
             ->paginate(5, pageName: 'ongoing-events');
 
         $doneEvents = EventModel::where('tag', 1)
+            ->search($this->search_doneEvents_admin)
             ->paginate(5, pageName: 'done-events');
         /** END ADMINISTRATION */
 
