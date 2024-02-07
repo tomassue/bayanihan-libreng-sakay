@@ -33,7 +33,7 @@
         flex: 1;
     }
 
-    @media screen and (max-width: 425px) {
+    @media screen and (max-width: 430px) {
         .left-div {
             display: none;
         }
@@ -64,22 +64,22 @@
     }
 
     @media screen and (min-width: 1024px) and (max-width: 2560px) {
-        .wew {
-            height: 800px !important;
+        .wews {
+            height: 914px !important;
         }
     }
 </style>
 
 <div class="container-fluid d-md-flex flex-md-equal" style="padding-left: 0px; padding-right: 0px; height: fit-content;">
 
-    <div class="col-md-6 left-div" style="height: 800px;">
+    <div class="col-md-6 left-div wews" style="height: 800px;">
         <div class="col">
 
         </div>
     </div>
 
     <div class="col-md-6 right-div" style="height: 100%;">
-        <div class="form-container wew" style="background-color: unset; color: white;">
+        <div class="form-container" style="background-color: unset; color: white;">
             <h1 class="text-center fw-bolder fs-1 py-5 mt-5">REGISTRATION</h1>
 
             <form method="POST" action="{{ route('register') }}">
