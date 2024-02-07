@@ -130,6 +130,15 @@ class Registration extends Component
         ]);
     }
 
+    public function updating()
+    {
+        $this->resetPage('registered-organizations');
+        $this->resetPage('for-approval');
+        $this->resetPage('declined-organizations');
+        $this->resetPage('event-registrations');
+        $this->resetPage('declined_events');
+    }
+
     // FILTER PAGES
     public function mount()
     {

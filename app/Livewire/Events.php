@@ -35,13 +35,6 @@ class Events extends Component
     // Search
     public $search_totalNoOfEvents_admin = '', $search_onGoingEvents_admin = '', $search_doneEvents_admin = '';
 
-    public function updating()
-    {
-        $this->resetPage('total-no-of-events');
-        $this->resetPage('ongoing-events');
-        $this->resetPage('done-events');
-    }
-
     public function render()
     {
         /** ORGANIZATION */
@@ -139,6 +132,14 @@ class Events extends Component
             'noRecordsdoneEvents'          =>      $doneEvents->isEmpty(),
             // END ADMINISTRATION
         ]);
+    }
+
+    // This method will refresh the page to page one when we update the table like search.
+    public function updating()
+    {
+        $this->resetPage('total-no-of-events');
+        $this->resetPage('ongoing-events');
+        $this->resetPage('done-events');
     }
 
     public function mount()
