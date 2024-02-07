@@ -227,6 +227,10 @@
 
             @if(Auth::user()->user_id !== 'ADMIN')
             <div class="row mx-5 mt-4 mb-4">
+                <div class="input-group mb-4 mt-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Events" wire:model.live.debounce.300ms="search_onGoingEvents_org">
+                </div>
                 @if($noRecordsOneonGoingEvents_org)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -355,6 +359,10 @@
 
             @if(Auth::user()->user_id !== 'ADMIN')
             <div class="row mx-5 mt-4 mb-4">
+                <div class="input-group mb-4 mt-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Events" wire:model.live.debounce.300ms="search_doneEvents_org">
+                </div>
                 @if($noRecordsOnedoneEvents_org)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -383,13 +391,13 @@
                                     {{
                                         App\Models\TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
                                         ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
-                                        ->where('transactions.id_event_organization_riders', $ongoing_events_org['event_organizations_id'])
+                                        ->where('transactions.id_event_organization_riders', $done_Events_org['event_organizations_id'])
                                         ->count()
                                     }}
                                 </td>
                                 <td>
                                     {{
-                                        App\Models\EventOrganizationRidersModel::where('id_event_organization', $ongoing_events_org['event_organizations_id'])
+                                        App\Models\EventOrganizationRidersModel::where('id_event_organization', $done_Events_org['event_organizations_id'])
                                         ->count()
                                     }}
                                 </td>
@@ -482,7 +490,10 @@
             @elseif($filter == 'four')
 
             <div class="row mx-5 mt-4 mb-4">
-
+                <div class="input-group mb-4 mt-4">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Events" wire:model.live.debounce.300ms="search_listOfEvents_org">
+                </div>
                 @if($noRecordsOnelistOfEvents)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>

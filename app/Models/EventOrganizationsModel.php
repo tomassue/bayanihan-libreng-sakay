@@ -23,6 +23,7 @@ class EventOrganizationsModel extends Model
 
     public function scopeSearch($query, $value)
     {
-        return $query->where('id_event', 'like', "%{$value}");
+        // I directly called the `event_name` from events table since I made a join in the events() method.
+        return $query->where('event_name', 'like', "%{$value}%");
     }
 }

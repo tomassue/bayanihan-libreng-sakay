@@ -33,7 +33,7 @@ class Events extends Component
     public $eventName, $eventDate;
 
     // Search
-    public $search_totalNoOfEvents_admin = '', $search_onGoingEvents_admin = '', $search_doneEvents_admin = '', $search_totalNoOfEvents_org = '';
+    public $search_totalNoOfEvents_admin = '', $search_onGoingEvents_admin = '', $search_doneEvents_admin = '', $search_totalNoOfEvents_org = '', $search_listOfEvents_org = '', $search_onGoingEvents_org = '', $search_doneEvents_org = '';
 
     public function render()
     {
@@ -57,18 +57,21 @@ class Events extends Component
                         ->whereRaw('event_organizations.id_event = events.id');
                     $query->whereRaw('event_organizations.id_organization = ?', [Auth::user()->organization_information->id]);
                 })
+                ->search($this->search_listOfEvents_org)
                 ->paginate(5, ['*'], pageName: 'list-of-events');
 
             $onGoingEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 0)
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
+                ->search($this->search_onGoingEvents_org)
                 ->paginate(5, pageName: 'organization-ongoing-events');
 
             $doneEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 1)
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
+                ->search($this->search_doneEvents_org)
                 ->paginate(5, pageName: 'organization-ongoing-events');
         }
         /** END ORGANIZATION */
@@ -141,6 +144,9 @@ class Events extends Component
         $this->resetPage('total-no-of-events');
         $this->resetPage('ongoing-events');
         $this->resetPage('done-events');
+
+        $this->resetPage('organization-total-no-of-events');
+        $this->resetPage('list-of-events');
     }
 
     public function mount()
