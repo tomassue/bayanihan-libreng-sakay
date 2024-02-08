@@ -27,6 +27,7 @@
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
+
     <style>
         .nav-pills .nav-link.active,
         .nav-pills .show>.nav-link {
@@ -221,6 +222,7 @@
 
     <!-- You need this to perform scripts -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 </body>
 
 </html>

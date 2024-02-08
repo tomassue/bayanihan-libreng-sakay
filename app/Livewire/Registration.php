@@ -20,13 +20,13 @@ class Registration extends Component
 {
     use WithPagination;
 
-    public $filter, $pagetwo, $pagethree; // FILTERS
+    public $filter, $pageone, $pagetwo, $pagethree; // FILTERS
 
     #[Locked]
     public $userID, $approve, $eventID, $individualID; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
 
     // Search
-    public $search_one = '', $search_twopending_admin = '', $search_twodeclined_admin = '', $search_threepending_admin = '', $search_threedeclined_admin = '', $search_one_org = '', $search_twopending_org = '', $search_twodeclined_org = '';
+    public $search_one = '', $search_twopending_admin = '', $search_twodeclined_admin = '', $search_threepending_admin = '', $search_threedeclined_admin = '', $search_one_org = '', $search_twopending_org = '', $search_twodeclined_org = '', $search_one_org_inactive = '';
 
     public function render()
     {
@@ -66,6 +66,13 @@ class Registration extends Component
                 ->where('status', 1)
                 ->search($this->search_one_org)
                 ->paginate(5, pageName: 'total-registered-members');
+
+            $individual_one_inactive = IndividualInformationModel::orderBy('last_name', 'ASC')
+                ->where('id_organization', Auth::user()->organization_information->id)
+                ->join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->where('status', 3)
+                ->search($this->search_one_org_inactive)
+                ->paginate(5, pageName: 'total-inactive-members');
 
             $individual_two = IndividualInformationModel::orderBy('last_name', 'ASC')
                 ->where('id_organization', Auth::user()->organization_information->id)
@@ -118,6 +125,12 @@ class Registration extends Component
             'totalPagesRegisteredMembers'   => (Auth::user()->user_id !== 'ADMIN') ? $individual_one->lastPage() : null,
             'totalRecordsRegisteredMembers' => (Auth::user()->user_id !== 'ADMIN') ? $individual_one->total() : null,
             'noRecordsRegisteredMembers'    => (Auth::user()->user_id !== 'ADMIN') ? $individual_one->isEmpty() : null,
+
+            'registered_membersInactive'            => (Auth::user()->user_id !== 'ADMIN') ? $individual_one_inactive : null,
+            'currentPageRegisteredMembersInactive'  => (Auth::user()->user_id !== 'ADMIN') ? $individual_one_inactive->currentPage() : null,
+            'totalPagesRegisteredMembersInactive'   => (Auth::user()->user_id !== 'ADMIN') ? $individual_one_inactive->lastPage() : null,
+            'totalRecordsRegisteredMembersInactive' => (Auth::user()->user_id !== 'ADMIN') ? $individual_one_inactive->total() : null,
+            'noRecordsRegisteredMembersInactive'    => (Auth::user()->user_id !== 'ADMIN') ? $individual_one_inactive->isEmpty() : null,
 
             'for_approval_members'              => (Auth::user()->user_id !== 'ADMIN') ? $individual_two : null,
             'currentPagefor_approval_members'   => (Auth::user()->user_id !== 'ADMIN') ? $individual_two->currentPage() : null,
@@ -186,6 +199,16 @@ class Registration extends Component
     public function pageThreeDeclined()
     {
         $this->pagethree = 'threedeclined';
+    }
+
+    public function pageOneActive()
+    {
+        $this->pageone = 'oneActive';
+    }
+
+    public function pageOneInactive()
+    {
+        $this->pageone = 'oneInactive';
     }
 
     // Confirmation Message
@@ -363,6 +386,32 @@ class Registration extends Component
             $this->resetPage(pageName: 'registered-organization');
             $this->resetPage(pageName: 'for-approval');
             $this->resetPage(pageName: 'event-registration');
+        }
+    }
+
+    public function deactivateMember($individualID)
+    {
+        if ($individualID) {
+            $item = User::where('user_id', $individualID)->first();
+            $item->update([
+                'status'    =>      3,
+            ]);
+
+            session()->flash('status', "Rider's status has been set to inactive.");
+            $this->reset('individualID');
+        }
+    }
+
+    public function activateMember($individualID)
+    {
+        if ($individualID) {
+            $item = User::where('user_id', $individualID)->first();
+            $item->update([
+                'status'    =>      1,
+            ]);
+
+            session()->flash('status', "Rider's status has been set to active.");
+            $this->reset('individualID');
         }
     }
 }

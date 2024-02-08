@@ -84,10 +84,19 @@
 
             @if(Auth::user()->user_id !== 'ADMIN') <!-- If NOT Admin -->
             <div class="row mx-5 mt-4 mb-4">
-                <div class="input-group mb-4">
+                <div class="pagination-info my-2 text-end">
+                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                        <button type="button" class="btn {{ $pageone == '' || $pageone == 'oneActive' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageOneActive">Active</button>
+                        <button type="button" class="btn {{ $pageone == 'oneInactive' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageOneInactive">Inactive</button>
+                    </div>
+                </div>
+
+                @if($pageone == '' || $pageone == 'oneActive')
+                <div class="input-group mb-4 mt-3">
                     <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
                     <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Rider" wire:model.live.debounce.300ms="search_one_org">
                 </div>
+
                 @if($noRecordsRegisteredMembers)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>
@@ -111,12 +120,12 @@
                         </thead>
                         <tbody>
                             @foreach($registered_members as $reg_members)
-                            <tr>
+                            <tr wire:key="{{ $reg_members['user_id'] }}">
                                 <th scope="row">{{ $reg_members['last_name'] . ', ' . $reg_members['first_name'] . ($reg_members['middle_name'] ? ' ' . $reg_members['middle_name'] : '') . ($reg_members['ext_name'] ? ' ' . $reg_members['middle_name'] . '.' : '') }}</th>
                                 <td>{{ $reg_members['contact_number'] }}</td>
                                 <td>{{ $reg_members['address'] }}</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#editModal">ACTIVE</span>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" wire:click="deactivateMember('{{ $reg_members['user_id'] }}')" wire:confirm="Are you sure you want to set this rider inactive?">ACTIVE</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -125,9 +134,53 @@
                     {{ $registered_members->links('vendor.livewire.custom-pagination') }}
                 </div>
                 @endif
+                @elseif($pageone == 'oneInactive')
+                <div class="input-group mb-4 mt-3">
+                    <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addons1" placeholder="Rider" wire:model.live.debounce.300ms="search_one_org_inactive">
+                </div>
+
+                @if($noRecordsRegisteredMembersInactive)
+                <div class="pagination-info pt-4">
+                    <p class="text-center">No records found.</p>
+                </div>
+                @else
+
+                <div class="col text-center table-responsive">
+
+                    <div class="pagination-info pb-2 text-start">
+                        Page {{ $currentPageRegisteredMembersInactive }} out of {{ $totalPagesRegisteredMembersInactive }}, Total Records: {{ $totalRecordsRegisteredMembersInactive }}
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">NAME</th>
+                                <th scope="col">CONTACT NUMBER</th>
+                                <th scope="col">ADDRESS</th>
+                                <th scope="col">IS ACTIVE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($registered_membersInactive as $reg_members_inactive)
+                            <tr wire:key="{{ $reg_members_inactive['user_id'] }}">
+                                <th scope="row">{{ $reg_members_inactive['last_name'] . ', ' . $reg_members_inactive['first_name'] . ($reg_members_inactive['middle_name'] ? ' ' . $reg_members_inactive['middle_name'] : '') . ($reg_members_inactive['ext_name'] ? ' ' . $reg_members_inactive['middle_name'] . '.' : '') }}</th>
+                                <td>{{ $reg_members_inactive['contact_number'] }}</td>
+                                <td>{{ $reg_members_inactive['address'] }}</td>
+                                <td>
+                                    <span class="me-1" style="font-weight: bolder; color: #bf0000; cursor: pointer;" wire:click="activateMember('{{ $reg_members_inactive['user_id'] }}')" wire:confirm="Are you sure you want to set this rider active?">INACTIVE</span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{ $registered_membersInactive->links('vendor.livewire.custom-pagination') }}
+                </div>
+                @endif
+                @endif
             </div>
             @else <!-- If ADMIN -->
-            <div class="row mx-5 mt-4 mb-4">
+            <div class=" row mx-5 mt-4 mb-4">
 
                 <div class="input-group mb-4">
                     <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
@@ -256,7 +309,7 @@
                                 <th scope="col">NAME</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
-                                <th scope="col">IS ACTIVE</th>
+                                <th scope="col">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>

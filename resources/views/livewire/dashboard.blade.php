@@ -190,7 +190,7 @@
                                 <td>
                                     {{
                                         App\Models\IndividualInformationModel::where('id_organization', $org_info->id)
-                                        ->count();
+                                        ->count()
                                     }}
                                 </td>
                             </tr>
