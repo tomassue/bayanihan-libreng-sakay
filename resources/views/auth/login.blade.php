@@ -89,7 +89,7 @@
         <div class="col px-5 pb-4">
             <img src="assets/img/copy2.png" alt="logo" style="max-height: 100%; max-width: 100%;">
         </div>
-        <div class="col pt-2">
+        <div class="col pt-5 mt-3">
             <img src="assets/img/copy.png" alt="triangles" style="max-height: 100%; max-width: 100%;">
         </div>
     </div>
@@ -102,6 +102,15 @@
                 <img src="{{ asset('assets/img/cdo-seal.png') }}" alt="cdo-seal" class="small-image">
                 <img src="{{ asset('assets/img/rise.png') }}" alt="cdo-seal" class="medium-image">
             </div>
+
+            @if(session('status'))
+            <div class="d-flex justify-content-center">
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="width: 400px;">
+                    {{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            @endif
 
             <form method="POST" action="{{ route('login') }}">
                 <!-- You need @csrf when using POST as the form method -->
@@ -133,7 +142,16 @@
                     <button type="submit" class="btn btn-primary fs-w" style="width: 350px;"><b>LOGIN</b></button>
                 </div>
 
+                <div class="d-flex justify-content-start text-center pt-4" style="padding-left: 10%;">
+                    <a href="{{ route('register') }}" style="text-decoration:none"><span style="color: #426FE0;">Not yet <br> registered?</span></a>
+                </div>
+
             </form>
+
+            <div class="pt-5 mt-5 text-center" style="color: #426FE0; font-size:xx-small;" id="footer">
+                <img src="{{ asset('assets/img/ict-logo.png') }}" alt="ICT LOGO">&nbsp;&nbsp;POWERED BY: CITY MANAGEMENT INFORMATION SYSTEMS AND INNOVATION DEPARTMENT
+            </div>
+
         </div>
     </div>
 </div>

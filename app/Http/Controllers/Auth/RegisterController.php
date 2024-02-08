@@ -204,8 +204,9 @@ class RegisterController extends Controller
         event(new Registered($user));
 
         // Optionally, you can add a flash message here or perform any other actions
+        session()->flash('status', 'Registered successfully.');
 
         // Redirect the user to the desired page after registration
-        return redirect('/success-page');
+        return redirect('/login');
     }
 }

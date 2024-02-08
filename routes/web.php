@@ -24,7 +24,7 @@ use App\Livewire\Events;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login'); // I changed this from welcome, making the login page as landing page of the system.
 });
 
 Route::get('/success-page', [LandingPageController::class, 'index'])->name('landing-page');

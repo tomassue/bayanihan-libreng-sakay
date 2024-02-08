@@ -57,4 +57,14 @@ class LoginController extends Controller
             $request->filled('remember')
         );
     }
+
+    // Override the default logout method
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        return redirect('/login'); // Specify your custom redirect path here after logout.
+    }
 }
