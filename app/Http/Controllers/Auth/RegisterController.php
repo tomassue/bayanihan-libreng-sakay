@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str; //THIS IS FOR THE str::random()
 
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+
 
 class RegisterController extends Controller
 {
@@ -33,7 +36,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/success-page';
 
     /**
      * Create a new controller instance.
@@ -179,5 +182,30 @@ class RegisterController extends Controller
             ]);
         }
         return $user;
+    }
+
+    /**
+     * Handle a registration request for the application.
+     * 
+     * Overwrites the default behavior of after registration. In this new method, the user after registration will be redirected to a certain page but won't create auth sessions.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        // Validate the incoming request
+        $this->validator($request->all())->validate();
+
+        // Create the user instance without logging them in
+        $user = $this->create($request->all());
+
+        // Fire the Registered event
+        event(new Registered($user));
+
+        // Optionally, you can add a flash message here or perform any other actions
+
+        // Redirect the user to the desired page after registration
+        return redirect('/success-page');
     }
 }
