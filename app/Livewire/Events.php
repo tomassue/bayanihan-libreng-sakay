@@ -51,6 +51,7 @@ class Events extends Component
              * which exclude events associated with the organization of the currently authenticated user.
              */
             $listOfEvents = EventModel::where('status', 1)
+                ->where('tag', 0)
                 ->whereNotExists(function ($query) {
                     $query->select(DB::raw(1))
                         ->from('event_organizations')
@@ -217,5 +218,18 @@ class Events extends Component
             $this->dispatch('close-confirmJoin-Modal');
             session()->flash('status', 'Joined successfully.');
         }
+    }
+
+    // I have this condition that when the events are past due, we need to update the event and set it as done.
+    public function boot()
+    {
+        /**
+         *  whereDate('event_date', '<', now()->toDateString()): This condition filters the records where the event_date is less than today's date (now()->toDateString() returns today's date in the format YYYY-MM-DD). 
+         *  This will exclude events that are scheduled for today. This query will fetch all records where the event_date is in the past, excluding today's date.
+         */
+        $pastDueRecords = EventModel::where('event_date', '<', now()->toDateString());
+        $pastDueRecords->update([
+            'tag'   =>  1,
+        ]);
     }
 }
