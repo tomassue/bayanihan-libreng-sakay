@@ -58,7 +58,7 @@
         flex: 1;
     }
 
-    @media screen and (max-width: 425px) {
+    @media screen and (max-width: 426px) {
         .left-div {
             display: none;
         }
@@ -81,9 +81,9 @@
     }
 
     @media screen and (min-width: 1024px) and (max-width: 2560px) {
-        /* .wew {
-            height: 800px !important;
-        } */
+        .wew {
+            height: 900px !important;
+        }
     }
 </style>
 
