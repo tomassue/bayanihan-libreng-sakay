@@ -19,9 +19,11 @@
 
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageOne">
-                                            <div class="card-body" @if( $filter=='' || $filter=='one' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
+                                            <div class="card-header h-50" @if( $filter=='' || $filter=='one' ) style="background-color: #2E8B57; border: unset;" @else style="border: unset;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='one' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">REGISTERED {{ Auth::user()->user_id !== 'ADMIN' ? 'MEMBERS' : 'ORGANIZATION' }}</h1>
-                                                <h6 class=" text-center">
+                                            </div>
+                                            <div class="card-body" @if( $filter=='' || $filter=='one' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
+                                                <h6 class=" text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
                                                         ->join('users', 'individual_information.user_id', 'users.user_id')
@@ -39,9 +41,11 @@
 
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageTwo">
-                                            <div class="card-body" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
+                                            <div class="card-header h-50" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; border: unset;" @else style="border: unset;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='two' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
-                                                <h6 class="text-center">
+                                            </div>
+                                            <div class="card-body" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
+                                                <h6 class="text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
                                                         ->join('users', 'individual_information.user_id', 'users.user_id')
@@ -60,9 +64,11 @@
                                     @if(Auth::user()->user_id == 'ADMIN')
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageThree">
-                                            <div class="card-body" @if( $filter=='' || $filter=='three' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
+                                            <div class="card-header h-50" @if( $filter=='' || $filter=='three' ) style="background-color: #2E8B57; border: unset" @else style="border: unset;" @endif>
                                                 <h1 class="card-title text-center" @if( $filter=='' || $filter=='three' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">EVENT REGISTRATION</h1>
-                                                <h6 class="text-center">
+                                            </div>
+                                            <div class="card-body" @if( $filter=='' || $filter=='three' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
+                                                <h6 class="text-center fs-1">
                                                     {{ App\Models\EventModel::where('status', 0)
                                                     ->where('tag', 0)
                                                     ->count() }}

@@ -10,9 +10,11 @@
                                 <div class="row">
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-body" style="background-color: #228B22;">
+                                            <div class="card-header h-50" style="background-color: #228B22; border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">EVENTS</h1>
-                                                <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">
+                                            </div>
+                                            <div class="card-body" style="background-color: #228B22;">
+                                                <h6 class="text-center text-white fs-1" style="text-shadow: 1px 1px 0 black;">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                                                         ->join('events', 'events.id', '=', 'event_organizations.id_event')
@@ -26,9 +28,11 @@
                                     </div>
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-body" style="background-color: #2E8B57;">
+                                            <div class="card-header h-50" style="background-color: #2E8B57; border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">STUDENTS</h1>
-                                                <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">
+                                            </div>
+                                            <div class="card-body" style="background-color: #2E8B57;">
+                                                <h6 class="text-center text-white fs-1" style="text-shadow: 1px 1px 0 black;">
                                                     {{
                                                         App\Models\ClientInformationModel::where('user_type', 'student')
                                                         ->count()
@@ -39,9 +43,11 @@
                                     </div>
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-body" style="background-color: #50C878;">
+                                            <div class="card-header h-50" style="background-color: #50C878; border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">STAFFS</h1>
-                                                <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">
+                                            </div>
+                                            <div class="card-body" style="background-color: #50C878;">
+                                                <h6 class="text-center text-white fs-1" style="text-shadow: 1px 1px 0 black;">
                                                     {{
                                                         App\Models\ClientInformationModel::where('user_type', 'staff')
                                                         ->count()
@@ -52,9 +58,11 @@
                                     </div>
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-body" style="background-color: #98FF98;">
+                                            <div class="card-header h-50" style="background-color: #98FF98; border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">OTHER CLIENTS</h1>
-                                                <h6 class="text-center text-white" style="text-shadow: 1px 1px 0 black;">
+                                            </div>
+                                            <div class="card-body" style="background-color: #98FF98;">
+                                                <h6 class="text-center text-white fs-1" style="text-shadow: 1px 1px 0 black;">
                                                     {{
                                                         App\Models\ClientInformationModel::where('user_type', 'other')
                                                         ->count()
@@ -78,9 +86,11 @@
                                 <div class="row">
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-body">
+                                            <div class="card-header h-50" style="border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">REGISTERED {{ Auth::user()->user_id !== 'ADMIN' ? 'MEMBERS' : 'ORGANIZATION' }}</h1>
-                                                <h6 class="text-center">
+                                            </div>
+                                            <div class="card-body">
+                                                <h6 class="text-center fs-1">
 
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
@@ -99,9 +109,11 @@
                                     </div>
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-body">
+                                            <div class="card-header h-50" style="border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
-                                                <h6 class="text-center">
+                                            </div>
+                                            <div class="card-body">
+                                                <h6 class="text-center fs-1">
 
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
@@ -120,9 +132,11 @@
                                     </div>
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-body">
+                                            <div class="card-header h-50" style="border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">RIDERS</h1>
-                                                <h6 class="text-center">
+                                            </div>
+                                            <div class="card-body">
+                                                <h6 class="text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
                                                         ->join('users', 'individual_information.user_id', 'users.user_id')
