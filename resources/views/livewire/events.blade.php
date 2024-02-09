@@ -1,6 +1,6 @@
-<div>
+<div wire:poll.5s>
     <div class="col-12">
-        <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree, pageFour">
+        <div class="card border border-secondary">
             <div class="row mx-5 mt-4">
 
                 @if(session('status'))
@@ -153,7 +153,7 @@
                 @endif
             </div>
             @else
-            <div class="row mx-5 mt-4 mb-4" wire:loading.class="opacity-50">
+            <div class="row mx-5 mt-4 mb-4">
                 <div class="input-group mb-4 mt-4">
                     <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
                     <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Events" wire:model.live.debounce.300ms="search_totalNoOfEvents_admin">

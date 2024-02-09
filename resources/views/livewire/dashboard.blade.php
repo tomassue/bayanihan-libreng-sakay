@@ -1,4 +1,4 @@
-<div>
+<div wire:poll.5s>
     <div class="col-12">
         <div class="card border border-secondary">
 
