@@ -3,6 +3,31 @@
 @section('content')
 
 <style>
+    /* Footer
+    #footer {
+        color: #426FE0;
+        font-size: xx-small;
+        color: black;
+        -webkit-text-fill-color: white;
+        Will override color (regardless of order)
+        -webkit-text-stroke: 0.2px black;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    } */
+
+    /* Footer */
+    #footer {
+        /* color: #426FE0; */
+        font-size: xx-small;
+        /* color: black; */
+        -webkit-text-fill-color: white;
+        /* Will override color (regardless of order) */
+        -webkit-text-stroke: 0.2px black;
+    }
+
     /* Left Div */
     .left-div {
         background-image: url("{{ asset('assets/img/Group 2.png') }}"),
@@ -11,7 +36,7 @@
         /* background-size: contain, contain; */
         background-size: 80%, 80%;
         background-position: center top, left bottom;
-        height: 100%;
+        height: 1000px !important;
     }
 
     /* Right Div */
@@ -56,22 +81,22 @@
     }
 
     @media screen and (min-width: 1024px) and (max-width: 2560px) {
-        .wew {
+        /* .wew {
             height: 800px !important;
-        }
+        } */
     }
 </style>
 
 <div class="container-fluid d-md-flex flex-md-equal" style="padding-left: 0px;padding-right: 0px; height: fit-content;">
     <!-- Left Div -->
-    <div class="col-md-6 left-div" style="height: 800px;">
+    <div class="col-md-6 left-div vh-100" style="height: 1000px;">
         <div class="col" style="height: 98px;">
 
         </div>
     </div>
 
     <!-- Right Div -->
-    <div class="col-md-6 right-div" style="height: 100%;">
+    <div class="col-md-6 right-div" style="height: 1000px;">
         <div class="form-container wew" style="color: white; background-color: unset;">
             <h1 class="text-center fw-bolder fs-1 py-5 mt-5">REGISTRATION</h1>
             <form method="POST" action="{{ route('registration') }}">
@@ -93,6 +118,10 @@
                     </div>
                 </div>
             </form>
+        </div>
+
+        <div class="pt-4 pb-3 text-center" id="footer">
+            <img src="{{ asset('assets/img/ict-logo.png') }}" alt="ICT LOGO">&nbsp;&nbsp;POWERED BY: CITY MANAGEMENT INFORMATION SYSTEMS AND INNOVATION DEPARTMENT
         </div>
     </div>
 </div>

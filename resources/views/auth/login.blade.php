@@ -82,20 +82,20 @@
 
 <div class="container-fluid d-md-flex flex-md-equal" style="padding-left: var(--bs-gutter-x,.0);padding-right: var(--bs-gutter-x,.0);">
     <!-- Left Div -->
-    <div class="left col-md-7 left-div">
+    <div class="left col-md-7 left-div vh-100" style="height: 1000px;">
         <div class="col" style="height: 98px;">
 
         </div>
-        <div class="col px-5 pb-4">
+        <div class="col px-5 pb-4" style="height: 400px;">
             <img src="assets/img/copy2.png" alt="logo" style="max-height: 100%; max-width: 100%;">
         </div>
-        <div class="col pt-5 mt-3">
+        <div class="col pt-5 mt-5">
             <img src="assets/img/copy.png" alt="triangles" style="max-height: 100%; max-width: 100%;">
         </div>
     </div>
 
     <!-- Right Div -->
-    <div class="col-md-5 right-div" style="background-color: #FFFF;">
+    <div class="col-md-5 right-div vh-100" style="background-color: #FFFF;">
         <div class="form-container" style="background-color: #FFFF; color: white;">
 
             <div class="mt-5 mb-5 py-5 px-5 text-center right" style="display: block; width: auto;">
