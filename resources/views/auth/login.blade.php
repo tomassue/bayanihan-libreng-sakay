@@ -142,7 +142,7 @@
                     <button type="submit" class="btn btn-primary fs-w" style="width: 350px;"><b>LOGIN</b></button>
                 </div>
 
-                <div class="d-flex justify-content-start text-center pt-4" style="padding-left: 10%;">
+                <div class="d-flex justify-content-center text-center pt-4" style="padding-right: 50%;">
                     <a href="{{ route('register') }}" style="text-decoration:none"><span style="color: #426FE0;">Not yet <br> registered?</span></a>
                 </div>
 
