@@ -24,7 +24,7 @@ class Dashboard extends Component
             ->join('account_type', 'users.id_account_type', '=', 'account_type.id')
             ->select('organization_information.*', 'account_type.id AS account_type.id', 'account_type.account_type_name')
             ->where('status', 1)
-            ->paginate(5);
+            ->paginate(10);
 
         if (Auth::user()->user_id !== 'ADMIN') {
             $individual_information = IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
@@ -32,7 +32,7 @@ class Dashboard extends Component
                 ->where('status', 1)
                 ->join('account_type', 'users.id_account_type', '=', 'account_type.id')
                 ->select('individual_information.*', 'account_type.id AS account_type.id', 'account_type.account_type_name')
-                ->paginate(5);
+                ->paginate(10);
         }
 
         return view('livewire.dashboard', [

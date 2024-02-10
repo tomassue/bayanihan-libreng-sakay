@@ -6,9 +6,9 @@
                 <div class="col">
                     <div class="card h-100 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
-                            <div class=" container">
+                            <div class="container">
                                 <div class="row">
-                                    <div class="col mb-3">
+                                    <div class="col-sm-6 col-md-6 col-lg-3 mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-header h-50" style="background-color: #228B22; border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">EVENTS</h1>
@@ -26,7 +26,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col mb-3">
+                                    <div class="col-sm-6 col-md-6 col-lg-3 mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-header h-50" style="background-color: #2E8B57; border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">STUDENTS</h1>
@@ -41,7 +41,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col mb-3">
+                                    <div class="col-sm-6 col-md-6 col-lg-3 mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-header h-50" style="background-color: #50C878; border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">STAFFS</h1>
@@ -56,7 +56,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col mb-3">
+                                    <div class="col-sm-6 col-md-6 col-lg-3 mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-header h-50" style="background-color: #98FF98; border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">OTHER CLIENTS</h1>
@@ -80,13 +80,13 @@
 
             <div class="row mx-5 mt-4">
                 <div class="col">
-                    <div class="card h-100 border border-secondary">
+                    <div class="card h-70 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
-                            <div class=" container">
-                                <div class="row">
-                                    <div class="col mb-3">
-                                        <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-header h-50" style="border: unset;">
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-12 col-md-4 col-lg-3 mb-1">
+                                        <div class="card mt-3 border border-secondary" style="height: 86%;">
+                                            <div class="card-header" style="border: unset; height: 100%;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">REGISTERED {{ Auth::user()->user_id !== 'ADMIN' ? 'MEMBERS' : 'ORGANIZATION' }}</h1>
                                             </div>
                                             <div class="card-body">
@@ -107,9 +107,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col mb-3">
-                                        <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-header h-50" style="border: unset;">
+                                    <div class="col-sm-12 col-md-4 col-lg-3 mb-1">
+                                        <div class="card mt-3 border border-secondary" style="height: 86%;">
+                                            <div class="card-header" style="border: unset; height: 100%;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
                                             </div>
                                             <div class="card-body">
@@ -130,9 +130,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col mb-3">
-                                        <div class="card h-100 m-3 border border-secondary">
-                                            <div class="card-header h-50" style="border: unset;">
+                                    <div class="col-sm-12 col-md-4 col-lg-3 mb-1">
+                                        <div class="card mt-3 border border-secondary" style="height: 86%;">
+                                            <div class="card-header" style="border: unset; height: 100%;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">RIDERS</h1>
                                             </div>
                                             <div class="card-body">
@@ -196,12 +196,12 @@
                         </thead>
                         <tbody>
                             @foreach($organization_information as $org_info)
-                            <tr wire:key="{{ $org_info->user_id }}">
+                            <tr class="text-start" wire:key="{{ $org_info->user_id }}">
                                 <th scope="row">{{ $org_info->organization_name }}</th>
                                 <td>{{ $org_info->address }}</td>
                                 <!-- I used the syntax below since we are accessing data to access the property id_account_type of the related User model through the relationship defined in the OrganizationInformationModel -->
                                 <td>{{ $org_info->account_type_name }}</td>
-                                <td>
+                                <td style="text-align: center !important;">
                                     {{
                                         App\Models\IndividualInformationModel::where('id_organization', $org_info->id)
                                         ->count()
