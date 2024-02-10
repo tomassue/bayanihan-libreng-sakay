@@ -30,7 +30,10 @@ class Events extends Component
 
     // Input fields
     #[Validate('required')]
-    public $eventName, $eventDate;
+    public $eventName;
+
+    #[Validate('required|date|after_or_equal:today')]
+    public $eventDate;
 
     // Search
     public $search_totalNoOfEvents_admin = '', $search_onGoingEvents_admin = '', $search_doneEvents_admin = '', $search_totalNoOfEvents_org = '', $search_listOfEvents_org = '', $search_onGoingEvents_org = '', $search_doneEvents_org = '';
@@ -182,6 +185,7 @@ class Events extends Component
 
         $checkExistingRecord = EventModel::where('event_name', $this->eventName)
             ->where('event_date', $this->eventDate)
+            ->where('tag', 0)
             ->first();
 
         // dd($checkExistingRecord);

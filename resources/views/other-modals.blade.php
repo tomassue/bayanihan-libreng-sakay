@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="row fw-bolder justify-content-center">
-                        <button type="submit" class="btn btn-danger fw-bolder mt-2" style="width: 80px;">SAVE</button>
+                        <button type="submit" class="btn fw-bolder mt-2" style="width: 80px; background-color: #2e8b57; color:#FFFFFF;">SAVE</button>
                     </div>
                 </div>
             </form>
