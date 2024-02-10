@@ -285,8 +285,11 @@
                 </div>
 
                 <div class="text-center pt-2">
-                    <button type="submit" class="btn btn-primary">REGISTER</button>
+                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataPrivacyModal">REGISTER</button>
                 </div>
+
+                <!-- Submit Button -->
+                @include('data-privacy-modal')
             </form>
         </div>
 

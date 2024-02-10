@@ -51,6 +51,14 @@
         .left-div {
             display: none;
         }
+
+        .right-div {
+            height: 1490px !important;
+        }
+
+        #footer {
+            margin-top: 80px;
+        }
     }
 
     @media screen and (max-width: 768px) {
@@ -75,7 +83,7 @@
     </div>
 
     <div class="col-md-6 right-div">
-        <div class="form-container wew" style="background-color: unset; color: white;">
+        <div class="form-container" style="background-color: unset; color: white;">
             <h1 class="text-center fw-bolder fs-1 py-5 mt-5">REGISTRATION</h1>
 
             <form method="POST" action="{{ route('register') }}">
@@ -223,8 +231,11 @@
                 </div>
 
                 <div class="text-center pt-2">
-                    <button type="submit" class="btn btn-primary">REGISTER</button>
+                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataPrivacyModal">REGISTER</button>
                 </div>
+
+                <!-- Submit Button -->
+                @include('data-privacy-modal')
 
             </form>
 

@@ -47,6 +47,14 @@
         .left-div {
             display: none;
         }
+
+        .right-div {
+            height: 1170px !important;
+        }
+
+        #footer {
+            margin-top: 100px;
+        }
     }
 
     @media screen and (max-width: 768px) {
@@ -60,13 +68,13 @@
             height: 100%;
         }
 
-        .wew {
-            height: 903px !important;
+        .form-container {
+            height: 946px !important;
         }
     }
 
     @media screen and (min-width: 1024px) and (max-width: 2560px) {
-        .wew {
+        .form-container {
             height: 1000px !important;
         }
     }
@@ -82,7 +90,7 @@
 
     <!-- Right Div -->
     <div class="col-md-6 right-div">
-        <div class="form-container wew" style="color: white; color: white; background-color: unset;">
+        <div class="form-container" style="color: white; color: white; background-color: unset;">
             <h1 class="text-center fw-bolder fs-1 py-5 mt-5">REGISTRATION</h1>
 
             <form method="POST" action="{{ route('register') }}">
@@ -190,13 +198,16 @@
                     </div>
                 </div>
 
-                <!-- Submit Button -->
+                <!-- Triggers Privacy Modal -->
                 <div class="text-center pt-2">
-                    <button type="submit" class="btn btn-primary">REGISTER</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataPrivacyModal">REGISTER</button>
                 </div>
+
+                <!-- Submit Button -->
+                @include('data-privacy-modal')
+
             </form>
         </div>
-
         <div class="pt-4 pb-3 text-center" id="footer">
             <img src="{{ asset('assets/img/ict-logo.png') }}" alt="ICT LOGO">&nbsp;&nbsp;POWERED BY: CITY MANAGEMENT INFORMATION SYSTEMS AND INNOVATION DEPARTMENT
         </div>
