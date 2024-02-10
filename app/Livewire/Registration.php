@@ -35,29 +35,29 @@ class Registration extends Component
             ->select('users.id AS user_id', 'organization_information.*') // In my case, I have two different tables and their primary key's name are the same. I put an alias to the id of the other table so that it will distinguish from the other one. his renames the 'name' column from the 'tags' table to 'tag_name' in the result set. This is often done when you have multiple columns with the same name from different tables to avoid naming conflicts. 'products.*': This selects all columns from the 'products' table.
             ->where('status', 1)
             ->search($this->search_one)
-            ->paginate(5, pageName: 'registered-organizations'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
+            ->paginate(10, pageName: 'registered-organizations'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
         $organization_two = OrganizationInformationModel::orderBy('organization_name', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
             ->where('status', 0)
             ->search($this->search_twopending_admin)
-            ->paginate(5, pageName: 'for-approval'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
+            ->paginate(10, pageName: 'for-approval'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
         $organization_declined = OrganizationInformationModel::orderBy('organization_name', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
             ->where('status', 2)
             ->search($this->search_twodeclined_admin)
-            ->paginate(5, pageName: 'declined-organizations');
+            ->paginate(10, pageName: 'declined-organizations');
 
         $events = EventModel::where('status', 0)
             ->where('tag', 0)
             ->search($this->search_threepending_admin)
-            ->paginate(5, pageName: 'event-registrations');
+            ->paginate(10, pageName: 'event-registrations');
 
         $events_declined = EventModel::where('status', 2)
             ->where('tag', 0)
             ->search($this->search_threedeclined_admin)
-            ->paginate(5, pageName: 'declined_events');
+            ->paginate(10, pageName: 'declined_events');
 
         if (Auth::user()->user_id !== 'ADMIN') {
             $individual_one = IndividualInformationModel::orderBy('last_name', 'ASC')
@@ -65,28 +65,28 @@ class Registration extends Component
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
                 ->where('status', 1)
                 ->search($this->search_one_org)
-                ->paginate(5, pageName: 'total-registered-members');
+                ->paginate(10, pageName: 'total-registered-members');
 
             $individual_one_inactive = IndividualInformationModel::orderBy('last_name', 'ASC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
                 ->where('status', 3)
                 ->search($this->search_one_org_inactive)
-                ->paginate(5, pageName: 'total-inactive-members');
+                ->paginate(10, pageName: 'total-inactive-members');
 
             $individual_two = IndividualInformationModel::orderBy('last_name', 'ASC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
                 ->where('status', 0)
                 ->search($this->search_twopending_org)
-                ->paginate(5, pageName: 'for-approval-members');
+                ->paginate(10, pageName: 'for-approval-members');
 
             $individual_two_declined = IndividualInformationModel::orderBy('last_name', 'ASC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
                 ->where('status', 2)
                 ->search($this->search_twodeclined_org)
-                ->paginate(5, pageName: 'declined-members');
+                ->paginate(10, pageName: 'declined-members');
         }
 
         return view('livewire.registration', [

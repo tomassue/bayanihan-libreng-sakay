@@ -25,7 +25,7 @@ class OrganizationDetails extends Component
             // ->where('users.status', 1)
             ->orderBy('status', 'DESC')
             ->orderBy('last_name', 'ASC')
-            ->paginate(5);
+            ->paginate(10);
 
         return view('livewire.organization-details', [
             'individual'       =>      $individual,

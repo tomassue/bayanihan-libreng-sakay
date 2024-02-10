@@ -43,7 +43,7 @@ class Events extends Component
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
                 ->search($this->search_totalNoOfEvents_org)
-                ->paginate(5, pageName: 'organization-total-no-of-events');
+                ->paginate(10, pageName: 'organization-total-no-of-events');
 
             /**
              * LIST OF EVENTS (FOR Organization)
@@ -59,35 +59,35 @@ class Events extends Component
                     $query->whereRaw('event_organizations.id_organization = ?', [Auth::user()->organization_information->id]);
                 })
                 ->search($this->search_listOfEvents_org)
-                ->paginate(5, ['*'], pageName: 'list-of-events');
+                ->paginate(10, ['*'], pageName: 'list-of-events');
 
             $onGoingEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 0)
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
                 ->search($this->search_onGoingEvents_org)
-                ->paginate(5, pageName: 'organization-ongoing-events');
+                ->paginate(10, pageName: 'organization-ongoing-events');
 
             $doneEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 1)
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
                 ->search($this->search_doneEvents_org)
-                ->paginate(5, pageName: 'organization-ongoing-events');
+                ->paginate(10, pageName: 'organization-ongoing-events');
         }
         /** END ORGANIZATION */
 
         /** ADMINISTRATION */
         $totalNoOfEvents = EventModel::search($this->search_totalNoOfEvents_admin)
-            ->paginate(5, pageName: 'total-no-of-events');
+            ->paginate(10, pageName: 'total-no-of-events');
 
         $onGoingEvents = EventModel::where('tag', 0)
             ->search($this->search_onGoingEvents_admin)
-            ->paginate(5, pageName: 'ongoing-events');
+            ->paginate(10, pageName: 'ongoing-events');
 
         $doneEvents = EventModel::where('tag', 1)
             ->search($this->search_doneEvents_admin)
-            ->paginate(5, pageName: 'done-events');
+            ->paginate(10, pageName: 'done-events');
         /** END ADMINISTRATION */
 
         return view('livewire.events', [

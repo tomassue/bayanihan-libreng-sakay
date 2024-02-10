@@ -30,7 +30,7 @@ class EventDetails extends Component
             ->join('organization_information', 'organization_information.id', '=', 'event_organizations.id_organization')
             ->select('individual_information.id AS indi_id', 'individual_information.*', 'events.*', 'event_organizations.*', 'event_organization_riders.*', 'organization_information.*')
             ->where('event_organizations.id_event', $this->id_event['id'])
-            ->paginate(5, pageName: 'event-details');
+            ->paginate(10, pageName: 'event-details');
 
         if (Auth::user()->user_id !== 'ADMIN') {
             $org_event_details = EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
@@ -41,7 +41,7 @@ class EventDetails extends Component
                 // ->where('event_organizations.id_organization', Auth::user()->organization_information->id)
                 // ->where('event_organizations.id_event', $this->id_event['id'])
                 ->where('event_organization_riders.id_event_organization', $this->id_event['id'])
-                ->paginate(5, pageName: 'organization-event-details');
+                ->paginate(10, pageName: 'organization-event-details');
         }
 
         return view('livewire.event-details', [
