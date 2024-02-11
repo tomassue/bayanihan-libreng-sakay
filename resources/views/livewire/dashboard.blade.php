@@ -201,7 +201,7 @@
                                 <td>{{ $org_info->address }}</td>
                                 <!-- I used the syntax below since we are accessing data to access the property id_account_type of the related User model through the relationship defined in the OrganizationInformationModel -->
                                 <td>{{ $org_info->account_type_name }}</td>
-                                <td style="text-align: center !important;">
+                                <td>
                                     {{
                                         App\Models\IndividualInformationModel::where('id_organization', $org_info->id)
                                         ->count()

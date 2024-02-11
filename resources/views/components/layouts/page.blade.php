@@ -182,6 +182,17 @@
         }
 
         /* END FOOTER */
+
+        /* Tables */
+        /* Center text alignment for <tr> inside <thead> */
+        thead tr {
+            text-align: left;
+        }
+
+        /* Left text alignment for <tr> inside <tbody> */
+        tbody tr {
+            text-align: left;
+        }
     </style>
 </head>
 

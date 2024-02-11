@@ -51,7 +51,7 @@
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary" style="cursor: pointer;" wire:click="pageTwo">
                                             <div class="card-header h-50" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; border: unset;" @else style="border: unset;" @endif>
-                                                <h1 class="card-title text-center" @if( $filter=='' || $filter=='two' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">ON-GOING</h1>
+                                                <h1 class="card-title text-center" @if( $filter=='' || $filter=='two' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">UPCOMING</h1>
                                             </div>
                                             <div class="card-body" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h6 class="text-center fs-1">
