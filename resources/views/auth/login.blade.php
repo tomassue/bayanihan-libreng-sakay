@@ -43,6 +43,10 @@
             height: 100px;
             width: 180px;
         }
+
+        .logo {
+            padding-left: unset !important;
+        }
     }
 
     @media screen and (max-width: 768px) {
@@ -87,7 +91,7 @@
 
         </div>
         <div class="col px-5 pb-4" style="height: 400px;">
-            <img src="assets/img/copy2.png" alt="logo" style="max-height: 100%; max-width: 100%;">
+            <img src="assets/img/copy2.png" alt="logo" style="max-height: 100%; max-width: 100%; padding-left: 80px;" class="logo">
         </div>
         <div class="col pt-5 mt-5">
             <img src="assets/img/copy.png" alt="triangles" style="max-height: 100%; max-width: 100%;">
@@ -142,14 +146,14 @@
                     <button type="submit" class="btn btn-primary fs-w" style="width: 350px;"><b>LOGIN</b></button>
                 </div>
 
-                <div class="d-flex justify-content-center text-center pt-4" style="padding-right: 50%;">
-                    <a href="{{ route('register') }}" style="text-decoration:none"><span style="color: #426FE0;">Not yet <br> registered?</span></a>
+                <div class="d-flex justify-content-center text-center pt-4">
+                    <a href="{{ route('register') }}" style="text-decoration:none"><span style="color: #426FE0;">Not yet registered?</span></a>
                 </div>
 
             </form>
 
             <div class="pt-5 mt-5 text-center" style="color: #426FE0; font-size:xx-small;" id="footer">
-                <img src="{{ asset('assets/img/ict-logo.png') }}" alt="ICT LOGO">&nbsp;&nbsp;POWERED BY: CITY MANAGEMENT INFORMATION SYSTEMS AND INNOVATION DEPARTMENT
+                <!-- <img src="{{ asset('assets/img/ict-logo.png') }}" alt="ICT LOGO">&nbsp;&nbsp;POWERED BY: CITY MANAGEMENT INFORMATION SYSTEMS AND INNOVATION DEPARTMENT -->
             </div>
 
         </div>
