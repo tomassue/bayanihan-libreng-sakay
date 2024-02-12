@@ -101,11 +101,11 @@
                 <div class="mb-1 row">
                     <label for="inputUserType" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">User Type</label>
                     <div class="col-sm-7">
-                        <select name="userType" id="userType" class="form-select @error('userType') is-invalid @enderror" value="{{ old('userType') }}" autocomplete="userType" autofocus aria-label="Default select example">
-                            <option selected disabled>Select...</option>
-                            <option value="student">Student</option>
-                            <option value="staff">Staff</option>
-                            <option value="other">Other</option>
+                        <select name="userType" id="userType" class="form-select @error('userType') is-invalid @enderror" autocomplete="userType" autofocus aria-label="Default select example">
+                            <option value="" disabled {{ old('userType') ? '' : 'selected' }}>Select...</option>
+                            <option value="student" {{ old('userType') == 'student' ? 'selected' : '' }}>Student</option>
+                            <option value="staff" {{ old('userType') == 'staff' ? 'selected' : '' }}>Staff</option>
+                            <option value="other" {{ old('userType') == 'other' ? 'selected' : '' }}>Other</option>
                         </select>
 
                         @error('userType')
@@ -210,10 +210,10 @@
                 <div class="mb-1 row">
                     <label for="inputSchool" class="col-sm-3 col-sm-3 col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">School</label>
                     <div class="col-sm-7">
-                        <select name="school" id="school" class="form-select @error('school') is-invalid @enderror" value="{{ old('school') }}" autocomplete="school" autofocus aria-label="Default select example">
-                            <option selected disabled>Select...</option>
+                        <select name="school" id="school" class="form-select @error('school') is-invalid @enderror" autocomplete="school" autofocus aria-label="Default select example">
+                            <option value="" disabled {{ old('school') ? '' : 'selected' }}>Select...</option>
                             @foreach(\App\Models\SchoolInformationModel::all() as $school)
-                            <option value="{{ $school['id'] }}">{{ $school['school_name'] }}</option>
+                            <option value="{{ $school['id'] }}" {{ old('school') == $school['id'] ? 'selected' : '' }}>{{ $school['school_name'] }}</option>
                             @endforeach
                         </select>
 

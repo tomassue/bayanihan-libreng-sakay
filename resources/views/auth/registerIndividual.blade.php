@@ -176,7 +176,7 @@
                     </div>
                 </div>
 
-                <div class="mb-1 row">
+                <!-- <div class="mb-1 row">
                     <label for="inputOrganization" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Organization</label>
                     <div class="col-sm-7">
                         <select name="organization" id="organization" class="form-select @error('organization') is-invalid @enderror" value="{{ old('organization') }}" autocomplete="organization" autofocus aria-label="Default select example">
@@ -186,6 +186,27 @@
                             ->select('organization_information.id AS org_id', 'organization_information.*')
                             ->get() as $organization)
                             <option value="{{ $organization['org_id'] }}">{{ $organization['organization_name'] }}</option>
+                            @endforeach
+                        </select>
+
+                        @error('organization')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div> -->
+                <!-- As you can notice, the code below is slightly different from above. Those conditions below will retain the value selected after submitting then an error occurred.-->
+                <div class="mb-1 row">
+                    <label for="inputOrganization" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Organization</label>
+                    <div class="col-sm-7">
+                        <select name="organization" id="organization" class="form-select @error('organization') is-invalid @enderror" autocomplete="organization" autofocus aria-label="Default select example">
+                            <option value="" disabled {{ old('organization') ? '' : 'selected' }}>Select...</option>
+                            @foreach(\App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
+                            ->where('users.status', 1)
+                            ->select('organization_information.id AS org_id', 'organization_information.*')
+                            ->get() as $organization)
+                            <option value="{{ $organization['org_id'] }}" {{ old('organization') == $organization['org_id'] ? 'selected' : '' }}>{{ $organization['organization_name'] }}</option>
                             @endforeach
                         </select>
 
