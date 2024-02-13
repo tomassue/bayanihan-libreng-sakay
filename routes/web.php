@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\RegistrationAccountTypeController;
 use App\Http\Controllers\LandingPageController;
+use App\Livewire\ChangePassword;
 use App\Livewire\Dashboard;
 use App\Livewire\EventDetails;
 use App\Livewire\Registration;
@@ -41,11 +42,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['middleware' => 'auth'], function () {
     // Your authenticated routes go here
+    Route::get('/change-password', ChangePassword::class);
     Route::get('/dashboard', Dashboard::class);
     Route::get('/registration', Registration::class);
     Route::get('/events', Events::class);
 
     Route::get('/registration/organization-details/{id_organization}', OrganizationDetails::class);
-
     Route::get('/registration/event-details/{eventID}', EventDetails::class);
 });

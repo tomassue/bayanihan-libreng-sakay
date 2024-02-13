@@ -257,7 +257,7 @@
                 </a>
                 <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     <li class="nav-item">
-                        <a class="align-items-center" href="#" style="color: white;">
+                        <a class="align-items-center" href="/change-password" style="color: white;">
                             <span style="font-size: medium;">> &nbsp; Change Password</span>
                         </a>
                     </li>

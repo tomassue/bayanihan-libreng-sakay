@@ -265,7 +265,7 @@
                 </div>
 
                 <div class="mb-1 row">
-                    <label for="inputPassword" class="col-sm-3 col-sm-3 col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Password</label>
+                    <label for="inputPassword" class="col-sm-3 col-sm-3 col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Password<i class="ps-2 bi bi-info-circle" title="The password must have at least 8 characters, contain both letters, numbers, and special characters."></i></label>
                     <div class="col-sm-7">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
 

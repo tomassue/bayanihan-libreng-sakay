@@ -1,5 +1,5 @@
-<div wire:poll.5s>
-    <div class="col-12">
+<div>
+    <div class="col-12" wire:poll.5s>
         <div class="card border border-secondary">
 
             <div class="row mx-5 mt-4">

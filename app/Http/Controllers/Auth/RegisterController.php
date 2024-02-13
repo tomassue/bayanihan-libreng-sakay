@@ -66,7 +66,13 @@ class RegisterController extends Controller
                 'contactNumber'         => ['required', 'numeric', 'digits:11'],
 
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password'              => ['required', 'string', 'min:8', 'confirmed'],
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
+                    'confirmed'
+                ],
             ]);
         } elseif ($data['accountType'] == '2') {
             // INDIVIDUAL
@@ -80,7 +86,13 @@ class RegisterController extends Controller
                 'organization'          => ['required'],
 
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password'              => ['required', 'string', 'min:8', 'confirmed'],
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
+                    'confirmed'
+                ],
             ]);
         } elseif ($data['accountType'] == '3') {
             // dd('WAKA WAKA 3');
@@ -99,7 +111,13 @@ class RegisterController extends Controller
                 'guardianNumber'        => ['required', 'numeric', 'digits:11'],
 
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password'              => ['required', 'string', 'min:8', 'confirmed'],
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
+                    'confirmed'
+                ],
             ]);
         }
     }

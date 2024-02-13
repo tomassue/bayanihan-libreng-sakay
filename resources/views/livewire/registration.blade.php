@@ -1,15 +1,16 @@
-<div wire:poll.5s>
-    <div class="col-12">
+<div>
+
+    @if(session('status'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-1"></i>
+        {{ session('status') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+
+    <div class="col-12" wire:poll.5s>
         <div class="card border border-secondary" wire:target="pageOne, pageTwo, pageThree">
             <div class="row mx-5 mt-4">
-
-                @if(session('status'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="bi bi-check-circle me-1"></i>
-                    {{ session('status') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                @endif
 
                 <div class="col">
                     <div class="card h-70 border border-secondary">

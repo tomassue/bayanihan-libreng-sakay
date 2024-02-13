@@ -1,16 +1,16 @@
-<div wire:poll.5s>
-    <div class="col-12">
+<div>
+
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-1"></i>
+        sda
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+
+    <div class="col-12" wire:poll.5s>
         <div class="card border border-secondary">
             <div class="row mx-5 mt-4">
-
-                @if(session('status'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="bi bi-check-circle me-1"></i>
-                    {{ session('status') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                @endif
-
                 <div class="col">
                     <div class="card h-70 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
