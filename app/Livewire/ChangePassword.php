@@ -46,7 +46,7 @@ class ChangePassword extends Component
 
             session()->flash('status', 'Password updated successfully.');
         } else {
-            dd('No match.');
+            $this->addError('currentPass', 'Current password is incorrect.');
         }
 
         $this->reset('currentPass', 'newPass', 'confirmPass');
