@@ -556,7 +556,7 @@
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
                     <div class="row fw-bolder justify-content-center">
-                        <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveOrg' : 'declineOrg' }}('{{ $userID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
+                        <button type="button" class="btn {{ $approve ? 'btn-success' : 'btn-danger' }} fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveOrg' : 'declineOrg' }}('{{ $userID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
                     </div>
                 </div>
             </div>
@@ -576,7 +576,7 @@
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
                     <div class="row fw-bolder justify-content-center">
-                        <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 100px;" wire:click="approveOrg2('{{ $userID }}')">Approve</button>
+                        <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 100px;" wire:click="approveOrg2('{{ $userID }}')">Approve</button>
                     </div>
                 </div>
             </div>
@@ -596,7 +596,7 @@
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
                     <div class="row fw-bolder justify-content-center">
-                        <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveEvent' : 'declineEvent' }}('{{ $eventID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
+                        <button type="button" class="btn {{ $approve ? 'btn-success' : 'btn-danger' }} fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveEvent' : 'declineEvent' }}('{{ $eventID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
                     </div>
                 </div>
             </div>
@@ -616,7 +616,7 @@
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
                     <div class="row fw-bolder justify-content-center">
-                        <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveMember' : 'declineMember' }}('{{ $individualID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
+                        <button type="button" class="btn {{ $approve ? 'btn-success' : 'btn-danger' }} fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveMember' : 'declineMember' }}('{{ $individualID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
                     </div>
                 </div>
             </div>
