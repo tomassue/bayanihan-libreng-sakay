@@ -24,7 +24,7 @@ class OrganizationDetails extends Component
             ->join('users', 'individual_information.user_id', '=', 'users.user_id')
             // ->where('users.status', 1)
             ->orderBy('status', 'DESC')
-            ->orderBy('last_name', 'ASC')
+            ->orderBy('individual_information.created_at', 'DESC')
             ->paginate(10);
 
         return view('livewire.organization-details', [

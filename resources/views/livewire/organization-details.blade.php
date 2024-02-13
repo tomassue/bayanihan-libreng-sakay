@@ -33,14 +33,14 @@
                 <div class="col">
                     <div class="card h-100 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
-                            <div class=" container">
+                            <div class="container">
                                 <div class="row">
 
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body" style="background-color: #2E8B57; color: #FFFFFF;">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" style="font-size: 23px; font-weight: 1000 !important;">REGISTERED {{ Auth::user()->user_id !== 'ADMIN' ? 'MEMBERS' : 'ORGANIZATION' }}</h1>
-                                                <h6 class=" text-center">
+                                                <h1 class="card-title text-center h-50" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" style="font-size: 23px; font-weight: 1000 !important;">REGISTERED {{ Auth::user()->user_id !== 'ADMIN' ? 'MEMBERS' : 'ORGANIZATION' }}</h1>
+                                                <h6 class="text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
                                                         ->join('users', 'individual_information.user_id', 'users.user_id')
@@ -59,8 +59,8 @@
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
-                                                <h6 class="text-center">
+                                                <h1 class="card-title text-center h-50" style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
+                                                <h6 class="text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
                                                         ->join('users', 'individual_information.user_id', 'users.user_id')
@@ -79,8 +79,8 @@
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
-                                                <h6 class="text-center">
+                                                <h1 class="card-title text-center h-50" style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
+                                                <h6 class="text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
                                                         ->join('users', 'individual_information.user_id', 'users.user_id')

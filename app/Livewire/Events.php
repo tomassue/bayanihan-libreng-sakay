@@ -45,6 +45,7 @@ class Events extends Component
             $totalNoOfEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
+                ->orderBy('events.created_at', 'DESC')
                 ->search($this->search_totalNoOfEvents_org)
                 ->paginate(10, pageName: 'organization-total-no-of-events');
 
@@ -61,13 +62,16 @@ class Events extends Component
                         ->whereRaw('event_organizations.id_event = events.id');
                     $query->whereRaw('event_organizations.id_organization = ?', [Auth::user()->organization_information->id]);
                 })
+                ->orderBy('events.created_at', 'DESC')
                 ->search($this->search_listOfEvents_org)
                 ->paginate(10, ['*'], pageName: 'list-of-events');
 
+            // ON-GOING or UPCOMING
             $onGoingEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 0)
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
+                ->orderBy('events.created_at', 'DESC')
                 ->search($this->search_onGoingEvents_org)
                 ->paginate(10, pageName: 'organization-ongoing-events');
 
@@ -75,6 +79,7 @@ class Events extends Component
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 1)
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
+                ->orderBy('events.created_at', 'DESC')
                 ->search($this->search_doneEvents_org)
                 ->paginate(10, pageName: 'organization-ongoing-events');
         }
@@ -82,13 +87,16 @@ class Events extends Component
 
         /** ADMINISTRATION */
         $totalNoOfEvents = EventModel::search($this->search_totalNoOfEvents_admin)
+            ->orderBy('created_at', 'DESC')
             ->paginate(10, pageName: 'total-no-of-events');
 
         $onGoingEvents = EventModel::where('tag', 0)
+            ->orderBy('created_at', 'DESC')
             ->search($this->search_onGoingEvents_admin)
             ->paginate(10, pageName: 'ongoing-events');
 
         $doneEvents = EventModel::where('tag', 1)
+            ->orderBy('created_at', 'DESC')
             ->search($this->search_doneEvents_admin)
             ->paginate(10, pageName: 'done-events');
         /** END ADMINISTRATION */

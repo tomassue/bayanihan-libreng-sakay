@@ -30,6 +30,7 @@ class EventDetails extends Component
             ->join('organization_information', 'organization_information.id', '=', 'event_organizations.id_organization')
             ->select('individual_information.id AS indi_id', 'individual_information.*', 'events.*', 'event_organizations.*', 'event_organization_riders.*', 'organization_information.*')
             ->where('event_organizations.id_event', $this->id_event['id'])
+            ->orderBy('event_organizations.created_at', 'DESC')
             ->paginate(10, pageName: 'event-details');
 
         if (Auth::user()->user_id !== 'ADMIN') {
@@ -41,6 +42,7 @@ class EventDetails extends Component
                 // ->where('event_organizations.id_organization', Auth::user()->organization_information->id)
                 // ->where('event_organizations.id_event', $this->id_event['id'])
                 ->where('event_organization_riders.id_event_organization', $this->id_event['id'])
+                ->orderBy('event_organization_riders.created_at', 'DESC')
                 ->paginate(10, pageName: 'organization-event-details');
         }
 

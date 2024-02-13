@@ -38,8 +38,8 @@
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body" style="background-color: #2E8B57; color: #FFFFFF;">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" style="font-size: 23px; font-weight: 1000 !important;">TOTAL NO. OF EVENTS</h1>
-                                                <h6 class="text-center">
+                                                <h1 class="card-title text-center h-50" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" style="font-size: 23px; font-weight: 1000 !important;">TOTAL NO. OF EVENTS</h1>
+                                                <h6 class="text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                                                         ->join('events', 'events.id', '=', 'event_organizations.id_event')
@@ -55,8 +55,8 @@
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">LIST OF EVENTS</h1>
-                                                <h6 class="text-center">
+                                                <h1 class="card-title text-center h-50" style="font-size: 23px; font-weight: 1000 !important;">LIST OF EVENTS</h1>
+                                                <h6 class="text-center fs-1">
                                                     {{ App\Models\EventModel::where('status', 1)
                                                         ->whereNotExists(function ($query) {
                                                             $query->select(DB::raw(1))
@@ -73,8 +73,8 @@
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">ON-GOING</h1>
-                                                <h6 class="text-center">
+                                                <h1 class="card-title text-center h-50" style="font-size: 23px; font-weight: 1000 !important;">ON-GOING</h1>
+                                                <h6 class="text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                                                         ->join('events', 'events.id', '=', 'event_organizations.id_event')
@@ -90,8 +90,8 @@
                                     <div class="col mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-body">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">DONE</h1>
-                                                <h6 class="text-center">
+                                                <h1 class="card-title text-center h-50" style="font-size: 23px; font-weight: 1000 !important;">DONE</h1>
+                                                <h6 class="text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                                                         ->join('events', 'events.id', '=', 'event_organizations.id_event')

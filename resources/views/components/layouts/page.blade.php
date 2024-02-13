@@ -185,8 +185,10 @@
 
         /* Tables */
         /* Center text alignment for <tr> inside <thead> */
-        thead tr {
+        thead tr th {
             text-align: left;
+            color: #0A335D !important;
+            font-weight: bolder !important;
         }
 
         /* Left text alignment for <tr> inside <tbody> */

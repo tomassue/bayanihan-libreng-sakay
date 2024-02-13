@@ -1,6 +1,6 @@
 <div wire:poll.5s>
     <div class="col-12">
-        <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree">
+        <div class="card border border-secondary" wire:target="pageOne, pageTwo, pageThree">
             <div class="row mx-5 mt-4">
 
                 @if(session('status'))
