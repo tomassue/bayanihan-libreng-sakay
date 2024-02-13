@@ -43,6 +43,7 @@ class Events extends Component
         /** ORGANIZATION */
         if (Auth::user()->user_id !== 'ADMIN') {
             $totalNoOfEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                ->where('event_organizations.status', 1)
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')
                 ->orderBy('events.created_at', 'DESC')
@@ -68,6 +69,7 @@ class Events extends Component
 
             // ON-GOING or UPCOMING
             $onGoingEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                ->where('event_organizations.status', 1)
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 0)
                 ->select('event_organizations.id AS event_organizations_id', 'events.*')

@@ -69,8 +69,7 @@
                                             </div>
                                             <div class="card-body" @if( $filter=='' || $filter=='three' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h6 class="text-center fs-1">
-                                                    {{ App\Models\EventModel::where('status', 0)
-                                                    ->where('tag', 0)
+                                                    {{ App\Models\EventOrganizationsModel::where('status', 0)
                                                     ->count() }}
                                                 </h6>
                                             </div>
@@ -478,13 +477,17 @@
                         </thead>
                         <tbody>
                             @foreach($events as $event)
-                            <tr wire:key="{{ $event['id'] }}">
+                            <tr wire:key="{{ $event['org_info_id'] }}">
                                 <th scope="row">{{ $event['event_name'] }}</th>
-                                <td>Organization ID</td>
-                                <td>No. of Riders</td>
+                                <td>{{ $event['organization_name'] }}</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmApproveEvent('{{ $event['id'] }}')">APPROVE </span>
-                                    <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmDeclineEvent('{{ $event['id'] }}')">DECLINE</span>
+                                    {{
+                                        App\Models\IndividualInformationModel::where('id_organization', $event['org_id'])->count()
+                                    }}
+                                </td>
+                                <td>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmApproveEvent('{{ $event['org_info_id'] }}')">APPROVE </span>
+                                    <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmDeclineEvent('{{ $event['org_info_id'] }}')">DECLINE</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -521,12 +524,16 @@
                         </thead>
                         <tbody>
                             @foreach($events_declined as $eventdeclined)
-                            <tr wire:key="{{ $eventdeclined['id'] }}">
+                            <tr wire:key="{{ $eventdeclined['org_info_id'] }}">
                                 <th scope="row">{{ $eventdeclined['event_name'] }}</th>
-                                <td>Organization ID</td>
-                                <td>No. of Riders</td>
+                                <td>{{ $eventdeclined['organization_name'] }}</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmApproveEvent('{{ $eventdeclined['id'] }}')">APPROVE </span>
+                                    {{
+                                        App\Models\IndividualInformationModel::where('id_organization', $eventdeclined['org_id'])->count()
+                                    }}
+                                </td>
+                                <td>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmApproveEvent('{{ $eventdeclined['org_info_id'] }}')">APPROVE </span>
                                 </td>
                             </tr>
                             @endforeach
@@ -583,7 +590,7 @@
         </div>
     </div>
 
-    <!-- CONFIRMATION MESSAGE for the approving events -->
+    <!-- CONFIRMATION MESSAGE for the approving organizations to join the events -->
     <div wire:ignore.self class="modal fade" id="confirmModal3" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

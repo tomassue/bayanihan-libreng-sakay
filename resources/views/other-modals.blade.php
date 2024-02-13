@@ -50,7 +50,7 @@
                     <h4>Are you sure you want to proceed?</h4>
                 </div>
                 <div class="row fw-bolder justify-content-center">
-                    <button type="button" class="btn btn-danger fw-bolder mt-2" style="width: 100px;" wire:click="joinEvent('{{ $event_ID }}')">PROCEED</button>
+                    <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 100px;" wire:click="joinEvent('{{ $event_ID }}')">PROCEED</button>
                 </div>
             </div>
         </div>

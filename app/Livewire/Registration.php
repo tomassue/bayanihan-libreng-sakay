@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\OrganizationInformationModel;
 use App\Models\User;
 use App\Models\EventModel;
+use App\Models\EventOrganizationsModel;
 use App\Models\IndividualInformationModel;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -49,15 +50,21 @@ class Registration extends Component
             ->search($this->search_twodeclined_admin)
             ->paginate(10, pageName: 'declined-organizations');
 
-        $events = EventModel::where('status', 0)
-            ->where('tag', 0)
-            ->orderBy('created_at', 'DESC')
+        // Once an organization joined an organization from the list of events, it will show here.
+        $events = EventOrganizationsModel::join('events', 'event_organizations.id_event', '=', 'events.id')
+            ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
+            ->select('event_organizations.id AS org_info_id', 'events.*', 'organization_information.id AS org_id', 'organization_information.*')
+            ->where('event_organizations.status', 0)
+            ->orderBy('event_organizations.created_at', 'DESC')
             ->search($this->search_threepending_admin)
             ->paginate(10, pageName: 'event-registrations');
 
-        $events_declined = EventModel::where('status', 2)
-            ->where('tag', 0)
-            ->orderBy('created_at', 'DESC')
+        // Once an organization joined an organization from the list of events and were declined by the admin, it will show here.
+        $events_declined = EventOrganizationsModel::join('events', 'event_organizations.id_event', '=', 'events.id')
+            ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
+            ->select('event_organizations.id AS org_info_id', 'events.*', 'organization_information.id AS org_id', 'organization_information.*')
+            ->where('event_organizations.status', 2)
+            ->orderBy('event_organizations.created_at', 'DESC')
             ->search($this->search_threedeclined_admin)
             ->paginate(10, pageName: 'declined_events');
 
@@ -315,7 +322,8 @@ class Registration extends Component
     public function approveEvent($eventID)
     {
         if ($eventID) {
-            $item = EventModel::where('id', $eventID)->first();
+            // dd('WEW');
+            $item = EventOrganizationsModel::where('id', $eventID)->first();
             $item->update([
                 'status'    =>     1,
             ]);
@@ -335,7 +343,8 @@ class Registration extends Component
     public function declineEvent($eventID)
     {
         if ($eventID) {
-            $item = EventModel::where('id', $eventID)->first();
+            // dd($eventID);
+            $item = EventOrganizationsModel::where('id', $eventID)->first();
             $item->update([
                 'status'    =>     2,
             ]);

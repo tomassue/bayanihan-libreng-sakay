@@ -14,6 +14,7 @@ class EventOrganizationsModel extends Model
     protected $fillable = [
         'id_event',
         'id_organization',
+        'status',
     ];
 
     public function events()

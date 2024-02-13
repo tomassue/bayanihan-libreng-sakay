@@ -27,6 +27,7 @@
                                                     @if(Auth::user()->user_id !== 'ADMIN')
                                                     {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                                                         ->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                                        ->where('event_organizations.status', 1)
                                                         ->count() }}
                                                     @else
                                                     {{ App\Models\EventModel::all()->count() }}
@@ -60,6 +61,7 @@
                                                     {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                                                     ->join('events', 'events.id', '=', 'event_organizations.id_event')
                                                     ->where('events.tag', 0)
+                                                    ->where('event_organizations.status', 1)
                                                     ->count() }}
                                                     @else
                                                     {{ App\Models\EventModel::where('tag', 0)->count() }}
