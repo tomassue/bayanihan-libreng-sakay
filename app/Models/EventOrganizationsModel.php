@@ -15,6 +15,7 @@ class EventOrganizationsModel extends Model
         'id_event',
         'id_organization',
         'status',
+        'remarks',
     ];
 
     public function events()

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('id_event'); // FK, From event table
             $table->integer('id_organization'); // FK
             $table->integer('status');
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

@@ -1,14 +1,14 @@
 <div>
 
-
+    @if(session('status'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-circle me-1"></i>
-        sda
+        {{ session('status') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    @endif
 
-
-    <div class="col-12" wire:poll.5s>
+    <div class="col-12">
         <div class="card border border-secondary">
             <div class="row mx-5 mt-4">
                 <div class="col">

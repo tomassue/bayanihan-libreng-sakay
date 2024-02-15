@@ -54,6 +54,81 @@
             border-style: solid;
             border-color: #A8A6A6 !important;
         }
+
+        /* TOOL TIP */
+
+        .tooltip-text {
+            visibility: hidden;
+            position: absolute;
+            z-index: 2;
+            width: 150px !important;
+            color: white;
+            font-size: 12px;
+            background-color: #192733;
+            border-radius: 10px;
+            padding: 10px 15px 10px 15px;
+        }
+
+        .tooltip-text::before {
+            content: "";
+            position: absolute;
+            transform: rotate(45deg);
+            background-color: #192733;
+            padding: 5px;
+            z-index: 1;
+        }
+
+        .hover-text:hover .tooltip-text {
+            visibility: visible;
+        }
+
+        #top {
+            top: -40px;
+            left: -50%;
+        }
+
+        #top::before {
+            top: 80%;
+            left: 45%;
+        }
+
+        #bottom {
+            top: 25px;
+            left: -50%;
+        }
+
+        #bottom::before {
+            top: -5%;
+            left: 45%;
+        }
+
+        #left {
+            top: -8px;
+            right: 120%;
+        }
+
+        #left::before {
+            top: 35%;
+            left: 94%;
+        }
+
+        #right {
+            top: -8px;
+            left: 120%;
+        }
+
+        #right::before {
+            top: 35%;
+            left: -2%;
+        }
+
+        .hover-text {
+            position: relative;
+            display: inline-block;
+            margin: unset;
+        }
+
+        /* END TOOL TIP */
     </style>
 
 </head>

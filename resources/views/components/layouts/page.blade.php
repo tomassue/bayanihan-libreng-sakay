@@ -257,13 +257,13 @@
                 </a>
                 <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     <li class="nav-item">
-                        <a class="align-items-center" href="/change-password" style="color: white;">
+                        <a class="align-items-center" href="/change-password" style="color: white; padding-bottom: 2px;">
                             <span style="font-size: medium;">> &nbsp; Change Password</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item pt-0">
                         <a class="align-items-center" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                    document.getElementById('logout-form').submit();" style="color: white;">
+                                                    document.getElementById('logout-form').submit();" style="color: white; padding-top: 2px;">
                             <span style="font-size: medium;">> &nbsp; Sign Out</span>
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

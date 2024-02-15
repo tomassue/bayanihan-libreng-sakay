@@ -8,7 +8,7 @@
     </div>
     @endif
 
-    <div class="col-12" wire:poll.5s>
+    <div class="col-12">
         <div class="card border border-secondary" wire:target="pageOne, pageTwo, pageThree">
             <div class="row mx-5 mt-4">
 
@@ -325,7 +325,7 @@
                                 <td>{{ $dec_members['contact_number'] }}</td>
                                 <td>{{ $dec_members['address'] }}</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#individualModal" wire:click="confirmApproveMember('{{ $dec_members['user_id'] }}')">APPROVE</span>
+                                    {{ $dec_members['remarks'] }}
                                 </td>
                             </tr>
                             @endforeach
@@ -416,7 +416,7 @@
                                 <th scope="col">ORGANIZATION</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
-                                <th scope="col">DETAILS</th>
+                                <th scope="col">REMARKS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -426,7 +426,7 @@
                                 <td>{{ $orgdeclined['contact_number'] }}</td>
                                 <td>{{ $orgdeclined['address'] }}</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal2" wire:click="confirmApproveOrg2('{{ $orgdeclined['user_id'] }}')">APPROVE </span>
+                                    {{ $orgdeclined['remarks'] }}
                                 </td>
                             </tr>
                             @endforeach
@@ -483,7 +483,13 @@
                                 <td>{{ $event['organization_name'] }}</td>
                                 <td>
                                     {{
-                                        App\Models\IndividualInformationModel::where('id_organization', $event['org_id'])->count()
+                                        // App\Models\IndividualInformationModel::where('id_organization', $event['org_id'])->count()
+
+                                        App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                                        ->select('event_organizations.id AS event_org_id', 'event_organizations.*', 'event_organization_riders.*')
+                                        ->where('event_organizations.id_organization', $event['org_id'])
+                                        ->where('event_organizations.id_event', $event['events_id'])
+                                        ->count()
                                     }}
                                 </td>
                                 <td>
@@ -520,7 +526,7 @@
                                 <th scope="col">EVENT NAME</th>
                                 <th scope="col">ORGANIZATION</th>
                                 <th scope="col">NO. OF RIDERS</th>
-                                <th scope="col">ACTION</th>
+                                <th scope="col">REMARKS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -530,11 +536,17 @@
                                 <td>{{ $eventdeclined['organization_name'] }}</td>
                                 <td>
                                     {{
-                                        App\Models\IndividualInformationModel::where('id_organization', $eventdeclined['org_id'])->count()
+                                        // App\Models\IndividualInformationModel::where('id_organization', $eventdeclined['org_id'])->count()
+
+                                        App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                                        ->select('event_organizations.id AS event_org_id', 'event_organizations.*', 'event_organization_riders.*')
+                                        ->where('event_organizations.id_organization', $eventdeclined['org_id'])
+                                        ->where('event_organizations.id_event', $eventdeclined['events_id'])
+                                        ->count()
                                     }}
                                 </td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmApproveEvent('{{ $eventdeclined['org_info_id'] }}')">APPROVE </span>
+                                    <span class="me-1">{{ $eventdeclined['remarks'] }}</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -556,13 +568,21 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Warning!</h1>
+                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Confirmation</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
+                    @if (!$approve)
+                    <div class="row mb-3">
+                        <label for="inputRemarks" class="col-sm-12 col-form-label fs-5 fs-bolder" style="color: #0A335D;">Remarks:</label>
+                        <div class="col-sm-12">
+                            <textarea class="form-control" style="height: 100px" wire:model="remarks"></textarea>
+                        </div>
+                    </div>
+                    @endif
                     <div class="row fw-bolder justify-content-center">
                         <button type="button" class="btn {{ $approve ? 'btn-success' : 'btn-danger' }} fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveOrg' : 'declineOrg' }}('{{ $userID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
                     </div>
@@ -576,10 +596,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Warning!</h1>
+                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Confirmation</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="row mb-3 fw-bolder" style="color: #0A335D;">
+                        <h4>Are you sure you want to proceed?</h4>
+                    </div>
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
@@ -596,13 +619,21 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Warning!</h1>
+                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Confirmation</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
+                    @if (!$approve)
+                    <div class="row mb-3">
+                        <label for="inputRemarks" class="col-sm-12 col-form-label fs-5 fs-bolder" style="color: #0A335D;">Remarks:</label>
+                        <div class="col-sm-12">
+                            <textarea class="form-control" style="height: 100px" wire:model="remarks_event"></textarea>
+                        </div>
+                    </div>
+                    @endif
                     <div class="row fw-bolder justify-content-center">
                         <button type="button" class="btn {{ $approve ? 'btn-success' : 'btn-danger' }} fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveEvent' : 'declineEvent' }}('{{ $eventID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
                     </div>
@@ -616,13 +647,21 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Warning!</h1>
+                    <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Confirmation</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
+                    @if (!$approve)
+                    <div class="row mb-3">
+                        <label for="inputRemarks" class="col-sm-12 col-form-label fs-5 fs-bolder" style="color: #0A335D;">Remarks:</label>
+                        <div class="col-sm-12">
+                            <textarea class="form-control" style="height: 100px" wire:model="remarks_individuals"></textarea>
+                        </div>
+                    </div>
+                    @endif
                     <div class="row fw-bolder justify-content-center">
                         <button type="button" class="btn {{ $approve ? 'btn-success' : 'btn-danger' }} fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveMember' : 'declineMember' }}('{{ $individualID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
                     </div>

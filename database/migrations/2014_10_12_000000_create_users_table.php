@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('id_account_type'); // from account_type table. This will determine if the user is an organization or administrator.
             $table->string('password');
             $table->integer('status')->default('0'); // with a default value of 0. 0 - pending, 1 - approved, 2 - declined.
+            $table->text('remarks')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

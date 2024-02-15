@@ -23,8 +23,11 @@ class Registration extends Component
 
     public $filter, $pageone, $pagetwo, $pagethree; // FILTERS
 
-    #[Locked]
+    #[Locked] // Locked properties cannot be updated. This is only good for accessing data or passing data.
     public $userID, $approve, $eventID, $individualID; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
+
+    // Filters
+    public $remarks, $remarks_event, $remarks_individuals;
 
     // Search
     public $search_one = '', $search_twopending_admin = '', $search_twodeclined_admin = '', $search_threepending_admin = '', $search_threedeclined_admin = '', $search_one_org = '', $search_twopending_org = '', $search_twodeclined_org = '', $search_one_org_inactive = '';
@@ -53,7 +56,8 @@ class Registration extends Component
         // Once an organization joined an organization from the list of events, it will show here.
         $events = EventOrganizationsModel::join('events', 'event_organizations.id_event', '=', 'events.id')
             ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
-            ->select('event_organizations.id AS org_info_id', 'events.*', 'organization_information.id AS org_id', 'organization_information.*')
+            // ->select('event_organizations.id AS org_info_id', 'events.*', 'organization_information.id AS org_id', 'organization_information.*')
+            ->select('event_organizations.id AS org_info_id', 'events.id AS events_id', 'events.*', 'organization_information.id AS org_id', 'organization_information.*')
             ->where('event_organizations.status', 0)
             ->orderBy('event_organizations.created_at', 'DESC')
             ->search($this->search_threepending_admin)
@@ -62,7 +66,7 @@ class Registration extends Component
         // Once an organization joined an organization from the list of events and were declined by the admin, it will show here.
         $events_declined = EventOrganizationsModel::join('events', 'event_organizations.id_event', '=', 'events.id')
             ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
-            ->select('event_organizations.id AS org_info_id', 'events.*', 'organization_information.id AS org_id', 'organization_information.*')
+            ->select('event_organizations.id AS org_info_id', 'event_organizations.*', 'events.id AS events_id', 'events.*', 'organization_information.id AS org_id', 'organization_information.*')
             ->where('event_organizations.status', 2)
             ->orderBy('event_organizations.created_at', 'DESC')
             ->search($this->search_threedeclined_admin)
@@ -302,16 +306,20 @@ class Registration extends Component
     public function declineOrg($userID)
     {
         if ($userID) {
+
+            // dd($this->remarks);
+
             $item = User::where('user_id', $userID)->first();
             $item->update([
                 'status'    =>      2,
+                'remarks'   =>      $this->remarks,
             ]);
 
             session()->flash('status', 'User declined.');
 
             // We need to close the modal after the process.
             $this->dispatch('close-modal');
-            $this->reset('userID', 'approve');
+            $this->reset('userID', 'approve', 'remarks');
 
             $this->resetPage(pageName: 'registered-organization');
             $this->resetPage(pageName: 'for-approval');
@@ -343,16 +351,16 @@ class Registration extends Component
     public function declineEvent($eventID)
     {
         if ($eventID) {
-            // dd($eventID);
             $item = EventOrganizationsModel::where('id', $eventID)->first();
             $item->update([
                 'status'    =>     2,
+                'remarks'   =>     $this->remarks_event,
             ]);
 
             session()->flash('status', 'Event declined');
 
             $this->dispatch('close-modal3');
-            $this->reset('eventID', 'approve');
+            $this->reset('eventID', 'approve', 'remarks_event');
 
             $this->resetPage(pageName: 'registered-organization');
             $this->resetPage(pageName: 'for-approval');
@@ -383,9 +391,13 @@ class Registration extends Component
     public function declineMember($individualID)
     {
         if ($individualID) {
+
+            // dd($this->remarks_individuals);
+
             $item = User::where('user_id', $individualID)->first();
             $item->update([
                 'status'    =>     2,
+                'remarks'   =>     $this->remarks_individuals,
             ]);
 
             session()->flash('status', 'Member is declined.');

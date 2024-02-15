@@ -42,7 +42,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                <h1 class="modal-title fs-5 fw-bolder" id="confirmJoinModalLabel">Warning!</h1>
+                <h1 class="modal-title fs-5 fw-bolder" id="confirmJoinModalLabel">Confirmation</h1>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
             </div>
             <div class="modal-body">
