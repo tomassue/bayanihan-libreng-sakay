@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClientInformationModel;
+use App\Models\SchoolInformationModel;
 use App\Models\User;
-use Exception;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -32,7 +33,7 @@ class RegistrationController extends Controller
 
     protected function validator(array $data)
     {
-        return $this->validator->make($data, [
+        return Validator::make($data, [
             'accountType'           => ['required', 'string', 'max:1'],
             'userType'              => ['required', 'string'],
             'lastName'              => ['required', 'string'],
@@ -59,22 +60,30 @@ class RegistrationController extends Controller
     public function register(Request $request)
     {
         try {
-            $this->validator($request->all())->validate();
+            // Validate the incoming request data
+            $validator = $this->validator($request->all());
+
+            // Check if validation fails
+            if ($validator->fails()) {
+                // Return validation errors with status code 422
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
 
             // Generate random letters and numbers for doctype_code
             $timestamp = now()->timestamp;
             $randomString = Str::random(10);
             $user_id = $timestamp . $randomString;
 
+            // Create the client (user) credentials
             $user_cred                  = new User();
             $user_cred->user_id         = $user_id;
             $user_cred->email           = $request->email;
             $user_cred->id_account_type = $request->id_account_type;
             $user_cred->password        = $request->password;
 
-
+            // Create client's other information
             $client_info                 = new ClientInformationModel();
-            $client_info->accountType    = $request->accountType;
+            // $client_info->accountType    = $request->accountType; No need for this since, the registration is for clients only.
             $client_info->userType       = $request->userType;
             $client_info->lastName       = $request->lastName;
             $client_info->firstName      = $request->firstName;
@@ -87,10 +96,18 @@ class RegistrationController extends Controller
             $client_info->guardianNumber = $request->guardianNumber;
             $client_info->save();
 
+            // Return success prompt
             return response()->json(['message' => 'User registered successfully'], 200);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
+
             // Handle exception, log it, or return an error response
             return response()->json(['error' => 'Registration failed'], 500);
         }
+    }
+
+    public function getSchool(Request $request)
+    {
+        $school = SchoolInformationModel::all();
+        return response()->json($school);
     }
 }

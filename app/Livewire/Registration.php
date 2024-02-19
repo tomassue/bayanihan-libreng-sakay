@@ -47,7 +47,7 @@ class Registration extends Component
             ->search($this->search_twopending_admin)
             ->paginate(10, pageName: 'for-approval'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
-        $organization_declined = OrganizationInformationModel::orderBy('organization_name', 'ASC')
+        $organization_declined = OrganizationInformationModel::orderBy('users.updated_at', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
             ->where('status', 2)
             ->search($this->search_twodeclined_admin)

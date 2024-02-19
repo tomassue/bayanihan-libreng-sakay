@@ -10,9 +10,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class LoginController extends Controller
 {
+    public $user;
+
     public function login(Request $request)
     {
         try {
@@ -46,6 +49,22 @@ class LoginController extends Controller
         } catch (\Exception $e) {
             return response()->json($request->email, 500);
             // return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    private function checkToken($token)
+    {
+        try {
+            $decrypt_token = Crypt::decryptString($token);
+            $is_auth = User::where('api_token', $decrypt_token)->first();
+
+            if ($is_auth) {
+                $this->user = $is_auth;
+                return true;
+            }
+            return false;
+        } catch (DecryptException $e) {
+            return false;
         }
     }
 }
