@@ -8,6 +8,7 @@ use App\Models\SchoolInformationModel;
 use App\Models\User;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -47,7 +48,7 @@ class RegistrationController extends Controller
             'guardianNumber'        => ['required', 'numeric', 'digits:11'],
 
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => [
+            'password'              => [
                 'required',
                 'string',
                 'min:8',
@@ -57,17 +58,19 @@ class RegistrationController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(Request $content)
     {
+        $request = json_decode($content->getContent());
+        // return $request->userType;
         try {
-            // Validate the incoming request data
-            $validator = $this->validator($request->all());
+            // // Validate the incoming request data
+            // $validator = $this->validator($request->all());
 
-            // Check if validation fails
-            if ($validator->fails()) {
-                // Return validation errors with status code 422
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
+            // // Check if validation fails
+            // if ($validator->fails()) {
+            //     // Return validation errors with status code 422
+            //     return response()->json(['errors' => $validator->errors()], 422);
+            // }
 
             // Generate random letters and numbers for doctype_code
             $timestamp = now()->timestamp;
@@ -78,30 +81,33 @@ class RegistrationController extends Controller
             $user_cred                  = new User();
             $user_cred->user_id         = $user_id;
             $user_cred->email           = $request->email;
-            $user_cred->id_account_type = $request->id_account_type;
-            $user_cred->password        = $request->password;
+            $user_cred->id_account_type = 3;
+            $user_cred->password        = Hash::make($request->password);
+            $user_cred->status          = 3;
+            $user_cred->save();
 
             // Create client's other information
-            $client_info                 = new ClientInformationModel();
-            // $client_info->accountType    = $request->accountType; No need for this since, the registration is for clients only.
-            $client_info->userType       = $request->userType;
-            $client_info->lastName       = $request->lastName;
-            $client_info->firstName      = $request->firstName;
-            $client_info->middleName     = $request->middleName;
-            $client_info->birthday       = $request->birthday;
-            $client_info->contactNumber  = $request->contactNumber;
-            $client_info->address        = $request->address;
-            $client_info->school         = $request->school;
-            $client_info->guardianName   = $request->guardianName;
-            $client_info->guardianNumber = $request->guardianNumber;
+            $client_info                           = new ClientInformationModel();
+            $client_info->user_id                  = $user_id;
+            $client_info->user_type                = $request->userType;
+            $client_info->last_name                = $request->lastName;
+            $client_info->first_name               = $request->firstName;
+            $client_info->middle_name              = $request->middleName;
+            $client_info->ext_name                 = $request->extensionName;
+            $client_info->birthday                 = $request->birthday;
+            $client_info->contact_number           = $request->contactNumber;
+            $client_info->address                  = $request->address;
+            $client_info->id_school                = $request->school;
+            $client_info->guardian_name            = $request->guardianName;
+            $client_info->guardian_contact_number  = $request->guardianNumber;
             $client_info->save();
 
             // Return success prompt
-            return response()->json(['message' => 'User registered successfully'], 200);
+            return response()->json(['message' => 'Client registered successfully', 'code' => 200], 200);
         } catch (\Exception $e) {
 
             // Handle exception, log it, or return an error response
-            return response()->json(['error' => 'Registration failed'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

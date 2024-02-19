@@ -182,6 +182,7 @@ class RegisterController extends Controller
                 'email'             =>      $data['email'],
                 'id_account_type'   =>      $data['accountType'],
                 'password'          =>      Hash::make($data['password']),
+                'status'            =>      3,
             ]);
 
             ClientInformationModel::create([

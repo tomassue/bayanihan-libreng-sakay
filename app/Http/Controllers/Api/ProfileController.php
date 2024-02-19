@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\EventOrganizationRidersModel;
 use Illuminate\Http\Client\Request;
 use App\Models\TransactionModel;
 use Illuminate\Support\Facades\Crypt;
@@ -11,18 +12,28 @@ use Exception;
 
 class ProfileController extends Controller
 {
+    // Individual
     public $user;
-    public $user_id = null, $user_data = null;
+    public $user_id, $user_data, $full_name, $contact_number, $indi_id;
 
     public function index($token)
     {
         try {
             if ($this->checkToken($token)) {
+                // Individual
                 $totalTrip = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
-                    ->where('event_organization_riders.id_individual', 3)
+                    ->where('event_organization_riders.id_individual', $this->indi_id)
                     ->count();
 
-                return response()->json($totalTrip);
+                $clientServed = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                    ->where('event_organization_riders.id_individual', $this->indi_id)
+                    ->count();
+
+                $eventsJoined = EventOrganizationRidersModel::where('event_organization_riders.id_individual', $this->indi_id)
+                    ->count();
+
+                return response()->json([$totalTrip, $clientServed, $eventsJoined]);
+                // return response()->json($this->contact_number);
             } else {
                 return response()->json(['error' => 'User not found.'], 500);
             }
@@ -35,11 +46,17 @@ class ProfileController extends Controller
     {
         try {
             $decrypt_token = Crypt::decryptString($token);
-            $is_auth = User::where('api_token', $decrypt_token)->first();
+            $is_auth = User::join('individual_information', 'users.user_id', '=', 'individual_information.user_id')
+                ->select('individual_information.id AS indi_id', 'individual_information.*', 'users.*')
+                ->where('api_token', $decrypt_token)
+                ->first();
 
             if ($is_auth) {
-                $this->user = $is_auth;
-                $this->user_id = $is_auth->user_id;
+                $this->user             =   $is_auth;
+                $this->user_id          =   $is_auth->user_id;
+                $this->full_name        =   $is_auth->first_name . ' ' . $is_auth->last_name;
+                $this->contact_number   =   $is_auth->contact_number;
+                $this->indi_id          =   $is_auth->indi_id;
                 return true;
             }
             return false;
