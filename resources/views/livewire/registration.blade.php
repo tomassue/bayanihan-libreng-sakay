@@ -315,7 +315,7 @@
                                 <th scope="col">NAME</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
-                                <th scope="col">ACTION</th>
+                                <th scope="col">REMARKS</th>
                             </tr>
                         </thead>
                         <tbody>
