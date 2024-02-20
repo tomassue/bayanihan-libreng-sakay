@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\EventsController;
 use App\Http\Controllers\Api\HomeScreenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,3 +28,6 @@ Route::post('/register', [RegistrationController::class, 'register']);
 Route::get('/school', [RegistrationController::class, 'getSchool']);
 
 Route::get('/profile/{token}', [ProfileController::class, 'index']);
+Route::get('/get_qr/{token}', [ProfileController::class, 'generateQRCode']);
+Route::get('/list-of-events/{token}', [EventsController::class, 'index']);
+Route::post('/join-event', [EventsController::class, 'joinEvent']);

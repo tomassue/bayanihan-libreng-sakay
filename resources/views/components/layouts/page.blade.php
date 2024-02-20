@@ -293,11 +293,20 @@
                 </a>
             </li>
 
+            @if(Auth::user()->user_id == 'ADMIN')
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('reports') ? '' : 'collapsed' }}" href="#" style="border-radius: unset;">
+                <a class="nav-link {{ request()->is('reports', 'client-list') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Reports</span>
                 </a>
+                <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li class="nav-item">
+                        <a class="align-items-center" href="/client-list" style="color: white; padding-bottom: 2px;">
+                            <span style="font-size: medium;">> &nbsp; Clients List</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
+            @endif
         </ul>
     </aside>
 

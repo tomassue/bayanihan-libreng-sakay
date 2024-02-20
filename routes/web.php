@@ -12,6 +12,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\EventDetails;
 use App\Livewire\Registration;
 use App\Livewire\Events;
+use App\Livewire\Reports;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,4 +50,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/registration/organization-details/{id_organization}', OrganizationDetails::class);
     Route::get('/registration/event-details/{eventID}', EventDetails::class);
+
+    Route::get('/client-list', Reports::class);
 });
