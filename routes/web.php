@@ -52,4 +52,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/registration/event-details/{eventID}', EventDetails::class);
 
     Route::get('/client-list', Reports::class);
+    Route::get('/generate-qr/{clientID}', [Reports::class, 'generateQr']);
 });

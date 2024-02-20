@@ -51,12 +51,14 @@
                                     <td colspan="5" style="background-image: linear-gradient(#2E8B57 53%, #0A335D 100%);"><span style="font-size:larger; font-weight:bolder; color:#FFFFFF">LIST</span></td>
                                 </tr>
                                 @foreach($clients as $client)
-                                <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;">
-                                    <th scope="row">{{ $client->first_name }}</th>
+                                <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;" wire:key="{{ $client->id }}">
+                                    <th scope="row">{{ $client->last_name . ', ' . $client->first_name . ($client->middle_name ? ' ' . $client->middle_name : '') . ($client->ext_name ? ' ' . $client->middle_name . '.' : '') }}</th>
                                     <td>{{ $client->address }}</td>
                                     <td>{{ $client->contact_number }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-success fw-bold mx-auto" style="width: 100px; height: 30px; padding-right: 0px; padding-top: 0px; padding-left: 0px; padding-bottom: 0px;">GENERATE</button>
+                                        <a href="/generate-qr/{{ $client->id }}">
+                                            <button type="button" class="btn btn-success fw-bold mx-auto" style="width: 100px; height: 30px; padding-right: 0px; padding-top: 0px; padding-left: 0px; padding-bottom: 0px;">GENERATE</button>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach

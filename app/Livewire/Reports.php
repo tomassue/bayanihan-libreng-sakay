@@ -7,7 +7,8 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\WithPagination;
-use BaconQrCode\Encoder\QrCode;
+use Barryvdh\DomPDF\Facade\Pdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 #[Layout('components.layouts.page')]
 #[Title('Reports')]
@@ -23,7 +24,8 @@ class Reports extends Component
 
     public function render()
     {
-        $clients = ClientInformationModel::paginate(10, pageName: 'list-of-clients');
+        $clients = ClientInformationModel::orderBy('created_at', 'DESC')
+            ->paginate(10, pageName: 'list-of-clients');
 
         return view('livewire.reports', [
             'clients'                   =>      $clients,
@@ -43,5 +45,30 @@ class Reports extends Component
         $ciphertext_raw = openssl_encrypt($text_data, $this->encryptMethod, $this->key, 0, $this->iv);
 
         return $ciphertext_raw;
+    }
+
+    public function generateQr($clientID)
+    {
+        // Generate QR code
+        $qrCode = QrCode::format('svg')
+            ->size(200)
+            ->errorCorrection('H')
+            ->generate('QR ni!' . $clientID);
+
+        // Generate PDF with QR code
+        // $pdf = PDF::loadView('livewire.pdf-client-qr-code', [
+        //     'qrCode' => $qrCode,
+        //     'clientID' => $clientID,
+        // ]);
+
+        // $pdf->setOption('title', 'myQR' . $clientID);
+
+        // return $pdf->stream('myQR.pdf');
+
+        // Alternatively, return view with QR code data
+        return view('livewire.pdf-client-qr-code', [
+            'qrCode' => $qrCode,
+            'clientID' => $clientID,
+        ]);
     }
 }
