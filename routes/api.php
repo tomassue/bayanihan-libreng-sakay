@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ClientListController;
 use App\Http\Controllers\Api\EventsController;
 use App\Http\Controllers\Api\HomeScreenController;
 use Illuminate\Http\Request;
@@ -7,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\TransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +33,6 @@ Route::get('/profile/{token}', [ProfileController::class, 'index']);
 Route::get('/get_qr/{token}', [ProfileController::class, 'generateQRCode']);
 Route::get('/list-of-events/{token}', [EventsController::class, 'index']);
 Route::post('/join-event', [EventsController::class, 'joinEvent']);
+Route::get('/joined-events/{token}', [EventsController::class, 'joinedEvents']);
+Route::get('/client-list/{token}', [ClientListController::class, 'index']);
+Route::post('/transact', [TransactionsController::class, 'transaction']);

@@ -94,9 +94,9 @@ class ProfileController extends Controller
                 $value = $this->encrypt($to_incrypt);
 
                 return response()->json(["qr_code" => $value, "name" => $f_name, "c_number" => $c_number]);
+            } else {
+                return response()->json(['error' => 'Something went wrong.'], 500);
             }
-
-            return response()->json(['error' => 'Something went wrong.'], 500);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Something went wrong.'], 500);
         }

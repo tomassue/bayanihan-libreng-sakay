@@ -52,15 +52,28 @@ class Reports extends Component
         // Paper Size
         $customPaper = array(0, 0, 1248, 816);
 
+        // Decrypt the url we just encrypted in our route
+        $clientID = decrypt($clientID);
+
         // Fetch client's data
         $client_info = ClientInformationModel::where('id', $clientID)
             ->first();
+
+        // Encrypt fetched data
+        $u_id   = $clientID;
+        $f_name = str_replace(',', '|', $client_info->first_name . ' ' . $client_info->middle_name . ' ' . $client_info->last_name . ' ' . $client_info->ext_name);
+        $c_number = $client_info->contact_number;
+
+        $to_incrypt = $u_id . ',' . $f_name . ',' . $c_number;
+        $value = $this->encrypt($to_incrypt);
 
         // Generate QR code
         $qrCode = QrCode::format('svg')
             ->size(195)
             ->errorCorrection('H')
-            ->generate('QR ni!' . $clientID);
+            // ->format('png')
+            // ->merge('assets/img/cdo-seal.png')
+            ->generate($value);
 
         // Generate PDF with QR code
         $pdf = PDF::loadView(
@@ -69,7 +82,7 @@ class Reports extends Component
                 'qrCode'    => base64_encode($qrCode),
                 'clientID'  => $clientID,
                 'title'     => 'myQR' . $clientID,
-                'full_name' => $client_info->first_name . ' ' . $client_info->middle_name . ' ' . $client_info->last_name,
+                'full_name' => $client_info->last_name . ', ' . $client_info->first_name . ($client_info->middle_name ? ' ' . $client_info->middle_name : '') . ($client_info->ext_name ? ' ' . $client_info->middle_name . '.' : ''),
             ]
         )
             // ->setPaper($customPaper)

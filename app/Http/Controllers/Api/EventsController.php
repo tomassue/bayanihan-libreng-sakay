@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class EventsController extends Controller
 {
@@ -22,6 +21,7 @@ class EventsController extends Controller
         try {
             if ($this->checkToken($token)) {
                 $id = $this->indi_id;
+
                 $listOfEvent = EventOrganizationsModel::join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
                     ->join('events', 'event_organizations.id_event', '=', 'events.id')
                     ->where('events.tag', 0)
@@ -33,7 +33,6 @@ class EventsController extends Controller
                             ->whereRaw('event_organization_riders.id_event_organization = event_organizations.id')
                             ->where('event_organization_riders.id_individual', $id);
                     })
-
                     ->get();
 
                 // return response()->json($id);
@@ -42,8 +41,8 @@ class EventsController extends Controller
                 return response()->json(["error" => 'User not found.'], 500);
             }
         } catch (\Exception $e) {
-            // return response()->json(['error' => 'Something went wrong.'], 500);
-            return response()->json($e->getMessage());
+            return response()->json(['error' => 'Something went wrong.'], 500);
+            // return response()->json($e->getMessage());
         }
     }
 
@@ -73,22 +72,43 @@ class EventsController extends Controller
 
     public function joinEvent(Request $content)
     {
-
         $request = json_decode($content->getContent());
+
         try {
             if ($this->checkToken($request->token)) {
-                // dd($request->event->id);
-
                 // Save to event_organization_riders
                 $event_organization_riders                           = new EventOrganizationRidersModel();
-                $event_organization_riders->id_event_organization   = $request->event->id;
-                $event_organization_riders->id_individual           = $this->indi_id;
+                $event_organization_riders->id_event_organization    = $request->event->id;
+                $event_organization_riders->id_individual            = $this->indi_id;
                 $event_organization_riders->save();
             } else {
                 return response()->json(['error' => 'User not found.'], 500);
             }
         } catch (\Exception $e) {
             // return response()->json(['error' => 'Something went wrong.'], 500);
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function joinedEvents($token)
+    {
+        try {
+            if ($this->checkToken($token)) {
+                $id = $this->indi_id;
+
+                $listofJoinedEvents = EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                    ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
+                    ->join('events', 'event_organizations.id_event', '=', 'events.id')
+                    ->where('events.tag', 0)
+                    ->where('event_organizations.id_organization', $this->id_org)
+                    ->where('event_organization_riders.id_individual', $id)
+                    ->select('event_organization_riders.id AS id', "events.event_date", "events.event_name")
+                    ->get();
+
+                return response()->json($listofJoinedEvents);
+            } else {
+            }
+        } catch (\Exception $e) {
             return response()->json($e->getMessage(), 500);
         }
     }
