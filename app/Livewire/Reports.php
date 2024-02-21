@@ -71,8 +71,6 @@ class Reports extends Component
         $qrCode = QrCode::format('svg')
             ->size(195)
             ->errorCorrection('H')
-            // ->format('png')
-            // ->merge('assets/img/cdo-seal.png')
             ->generate($value);
 
         // Generate PDF with QR code
