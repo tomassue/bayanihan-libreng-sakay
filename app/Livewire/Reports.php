@@ -49,26 +49,41 @@ class Reports extends Component
 
     public function generateQr($clientID)
     {
+        // Paper Size
+        $customPaper = array(0, 0, 1248, 816);
+
+        // Fetch client's data
+        $client_info = ClientInformationModel::where('id', $clientID)
+            ->first();
+
         // Generate QR code
         $qrCode = QrCode::format('svg')
-            ->size(200)
+            ->size(195)
             ->errorCorrection('H')
             ->generate('QR ni!' . $clientID);
 
         // Generate PDF with QR code
-        // $pdf = PDF::loadView('livewire.pdf-client-qr-code', [
-        //     'qrCode' => $qrCode,
-        //     'clientID' => $clientID,
+        $pdf = PDF::loadView(
+            'livewire.pdf-client-qr-code',
+            [
+                'qrCode'    => base64_encode($qrCode),
+                'clientID'  => $clientID,
+                'title'     => 'myQR' . $clientID,
+                'full_name' => $client_info->first_name . ' ' . $client_info->middle_name . ' ' . $client_info->last_name,
+            ]
+        )
+            // ->setPaper($customPaper)
+            ->setPaper('a4', 'portrait')
+            ->setOption(['defaultFont' => 'roboto'])
+            ->setOption('isRemoteEnabled', true);
+
+        return $pdf->stream('myQR.pdf');
+
+        // return view('livewire.pdf-client-qr-code', [
+        //     'qrCode'    => base64_encode($qrCode),
+        //     'clientID'  => $clientID,
+        //     'title'     => 'myQR' . $clientID,
+        //     'full_name' => $client_info->first_name . ' ' . $client_info->middle_name . ' ' . $client_info->last_name,
         // ]);
-
-        // $pdf->setOption('title', 'myQR' . $clientID);
-
-        // return $pdf->stream('myQR.pdf');
-
-        // Alternatively, return view with QR code data
-        return view('livewire.pdf-client-qr-code', [
-            'qrCode' => $qrCode,
-            'clientID' => $clientID,
-        ]);
     }
 }
