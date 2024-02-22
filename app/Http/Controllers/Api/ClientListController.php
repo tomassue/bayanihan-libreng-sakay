@@ -27,7 +27,7 @@ class ClientListController extends Controller
                 $servedClients = TransactionModel::class::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
                     ->join('client_information', 'transactions.id_client', '=', 'client_information.id')
                     ->where('event_organization_riders.id_individual', $id)
-                    ->select('client_information.id AS client_id', DB::raw("CONCAT(COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname"), 'event_organization_riders.*', 'transactions.destination')
+                    ->select('client_information.id AS client_id', DB::raw("CONCAT(COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname"), 'event_organization_riders.id_individual', DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"), 'transactions.destination')
                     ->get();
 
                 return response()->json($servedClients);

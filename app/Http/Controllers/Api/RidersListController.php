@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\AssignOp\Concat;
+use Carbon\Carbon;
 
 class RidersListController extends Controller
 {
@@ -27,7 +28,7 @@ class RidersListController extends Controller
                 $riders = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
                     ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
                     ->where('id_client', $this->indi_id)
-                    ->select('event_organization_riders.id AS event_organization_riders_id', 'event_organization_riders.id_individual', 'individual_information.id AS individual_id', DB::raw("CONCAT(COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname"), 'transactions.created_at', 'transactions.destination')
+                    ->select('event_organization_riders.id AS event_organization_riders_id', 'event_organization_riders.id_individual', 'individual_information.id AS individual_id', DB::raw("CONCAT(COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname"), DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"), 'transactions.destination')
                     ->get();
 
                 return response()->json($riders);
