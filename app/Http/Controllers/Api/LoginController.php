@@ -26,6 +26,7 @@ class LoginController extends Controller
                 $individual_information = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
                     ->select('individual_information.*', 'users.id AS userID', 'users.id_account_type AS account_type')
                     ->where('users.user_id', $user->user_id)
+                    ->where('users.status', 1) // ADDED this. Individual with this value will not be able to login.
                     ->first();
 
                 if ($user != '[]' && Hash::check($request->password, $user->password)) {
