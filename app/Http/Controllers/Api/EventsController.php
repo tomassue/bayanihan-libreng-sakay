@@ -107,6 +107,7 @@ class EventsController extends Controller
 
                 return response()->json($listofJoinedEvents);
             } else {
+                return response()->json(["error" => 'User not found.'], 500);
             }
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 500);

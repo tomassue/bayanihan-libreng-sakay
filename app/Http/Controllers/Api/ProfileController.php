@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClientInformationModel;
 use App\Models\EventOrganizationRidersModel;
+use App\Models\IndividualInformationModel;
 use Illuminate\Http\Client\Request;
 use App\Models\TransactionModel;
 use Illuminate\Support\Facades\Crypt;
@@ -52,22 +54,33 @@ class ProfileController extends Controller
     {
         try {
             $decrypt_token = Crypt::decryptString($token);
-            $is_auth = User::join('individual_information', 'users.user_id', '=', 'individual_information.user_id')
-                ->select('individual_information.id AS indi_id', 'individual_information.*', 'users.*')
-                ->where('api_token', $decrypt_token)
-                ->first();
 
-            if ($is_auth) {
-                $this->user             =   $is_auth;
-                $this->user_id          =   $is_auth->user_id;
-                $this->full_name        =   $is_auth->first_name . ' ' . $is_auth->middle_name . ' ' . $is_auth->last_name . ' ' . $is_auth->ext_name;
-                $this->contact_number   =   $is_auth->contact_number;
-                $this->indi_id          =   $is_auth->indi_id;
+            $is_auth = User::where('api_token', $decrypt_token)->first();
+
+            if ($is_auth && ($is_auth->id_account_type == '2')) {
+                $is_rider = IndividualInformationModel::where('user_id', $is_auth->user_id)->first();
+
+                $this->user             =   $is_rider;
+                $this->user_id          =   $is_rider->user_id;
+                $this->full_name        =   $is_rider->first_name . ' ' . $is_rider->middle_name . ' ' . $is_rider->last_name . ' ' . $is_rider->ext_name;
+                $this->contact_number   =   $is_rider->contact_number;
+                $this->indi_id          =   $is_rider->indi_id;
+
+                return true;
+            } elseif ($is_auth && ($is_auth->id_account_type == '3')) {
+                $is_client = ClientInformationModel::where('user_id', $is_auth->user_id)->first();
+
+                $this->user             =   $is_client;
+                $this->user_id          =   $is_client->user_id;
+                $this->full_name        =   $is_client->first_name . ' ' . $is_client->middle_name . ' ' . $is_client->last_name . ' ' . $is_client->ext_name;
+                $this->contact_number   =   $is_client->contact_number;
+                $this->indi_id          =   $is_client->indi_id;
+
                 return true;
             }
-            return false;
+            return response()->json($is_auth);
         } catch (\Exception $e) {
-            return false;
+            return response()->json($e->getMessage());
         }
     }
 
@@ -84,6 +97,8 @@ class ProfileController extends Controller
 
     public function generateQRCode($token)
     {
+        // dd($this->checkToken($token));
+
         try {
             if ($this->checkToken($token)) {
                 $u_id   = $this->user_id;
@@ -95,10 +110,11 @@ class ProfileController extends Controller
 
                 return response()->json(["qr_code" => $value, "name" => $f_name, "c_number" => $c_number]);
             } else {
-                return response()->json(['error' => 'Something went wrong.'], 500);
+                return response()->json(['error' => 'Unauthorized.'], 500);
             }
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Something went wrong.'], 500);
+            // return response()->json(['error' => 'Something went wrong.'], 500);
+            return response()->json($e->getMessage());
         }
     }
 }

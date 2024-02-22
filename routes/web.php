@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GenerateClientQRController;
 use App\Http\Controllers\HomeController;
 use App\Livewire\OrganizationDetails;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,9 @@ Route::post('/registration', [RegistrationAccountTypeController::class, 'index']
 Route::get('/registration/org', [RegistrationAccountTypeController::class, 'registerOrg'])->name('register.org');
 Route::get('/registration/ind', [RegistrationAccountTypeController::class, 'registerInd'])->name('register.ind');
 Route::get('/registration/client', [RegistrationAccountTypeController::class, 'registerClient'])->name('register.client');
+
+Route::get('/qr/{ClientUserID}', [GenerateClientQRController::class, 'generateQRPage'])->name('qr'); // QR PAGE
+Route::get('/get-my-qr/client/{ClientUserID}', [GenerateClientQRController::class, 'index'])->name('get-my-qr'); // GENERATE QR
 
 Auth::routes();
 

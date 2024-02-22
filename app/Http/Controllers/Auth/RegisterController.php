@@ -222,10 +222,19 @@ class RegisterController extends Controller
         // Fire the Registered event
         event(new Registered($user));
 
-        // Optionally, you can add a flash message here or perform any other actions
-        session()->flash('status', 'Registered successfully.');
+        if ($request['accountType'] == '3') {
+            // dd($user->id);
 
-        // Redirect the user to the desired page after registration
-        return redirect('/login');
+            return redirect()->route('qr', ['ClientUserID' => encrypt($user->user_id)]);
+
+            // After registration, I retrieved the user_id (from users) of the recent saved data under client's category. I'll send this data to the controller where it will find the id from client_information and perform the encryption and generation of QR code.
+            // return redirect()->route('get-my-qr', ['ClientUserID' => encrypt($user->user_id)]);
+        } else {
+            // Optionally, you can add a flash message here or perform any other actions
+            session()->flash('status', 'Registered successfully.');
+
+            // Redirect the user to the desired page after registration
+            return redirect('/login');
+        }
     }
 }

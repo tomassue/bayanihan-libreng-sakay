@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\AssignOp\Concat;
 
 class ClientListController extends Controller
 {
@@ -24,7 +25,9 @@ class ClientListController extends Controller
                 $id = $this->indi_id;
 
                 $servedClients = TransactionModel::class::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                    ->join('client_information', 'transactions.id_client', '=', 'client_information.id')
                     ->where('event_organization_riders.id_individual', $id)
+                    ->select('client_information.id AS client_id', DB::raw("CONCAT(COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname"), 'event_organization_riders.*', 'transactions.destination')
                     ->get();
 
                 return response()->json($servedClients);

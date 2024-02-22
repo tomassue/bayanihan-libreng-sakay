@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ 'MY QR'. $clientID }}</title>
+    <title>{{ 'MY QR CODE' }}</title>
     <link rel="stylesheet" href="https://use.typekit.net/oov2wcw.css">
 </head>
 
