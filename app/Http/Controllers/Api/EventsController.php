@@ -101,6 +101,7 @@ class EventsController extends Controller
                     ->join('events', 'event_organizations.id_event', '=', 'events.id')
                     ->where('events.tag', 0)
                     ->where('event_organizations.id_organization', $this->id_org)
+                    ->where('event_organizations.status', 1)
                     ->where('event_organization_riders.id_individual', $id)
                     ->select('event_organization_riders.id AS id', DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"), 'events.event_name')
                     ->get();

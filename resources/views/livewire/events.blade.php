@@ -129,17 +129,25 @@
                                 <th scope="row">{{ $total_no_of_events_org['event_name'] }}</th>
                                 <td>{{ $total_no_of_events_org['event_date'] }}</td>
                                 <td>
-                                    {{
-                                        App\Models\TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
-                                        ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
-                                        ->where('transactions.id_event_organization_riders', $total_no_of_events_org['event_organizations_id'])
-                                        ->count()
-                                    }}
+                                    @php
+                                    $one = App\Models\EventOrganizationsModel::where('id_event', $total_no_of_events_org['events_id'])
+                                    ->where('id_organization', [Auth::user()->organization_information->id])
+                                    ->pluck('id');
+
+                                    $onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
+                                    ->pluck('id');
+
+                                    $onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
+                                    ->count();
+
+                                    echo $onethree;
+                                    @endphp
                                 </td>
                                 <td>
                                     {{
-                                        App\Models\EventOrganizationRidersModel::where('id_event_organization', $total_no_of_events_org['event_organizations_id'])
-                                        ->count()
+                                        App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                                        ->where('id_event_organization', $total_no_of_events_org['event_organizations_id'])
+                                        ->count();
                                     }}
                                 </td>
                                 <td>
@@ -224,13 +232,13 @@
                     </table>
                     {{ $totalNoOfEvents->links('vendor.livewire.custom-pagination') }}
                 </div>
+                @endif
                 <div class="text-end mt-2">
                     @if(Auth::user()->user_id == 'ADMIN')
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#eventSaveModal">ADD EVENT</button>
                     @endif
                 </div>
-                @endif
             </div>
             @endif
 
@@ -267,17 +275,25 @@
                                 <th scope="row">{{ $ongoing_events_org['event_name'] }}</th>
                                 <td>{{ $ongoing_events_org['event_date'] }}</td>
                                 <td>
-                                    {{
-                                        App\Models\TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
-                                        ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
-                                        ->where('transactions.id_event_organization_riders', $ongoing_events_org['event_organizations_id'])
-                                        ->count()
-                                    }}
+                                    @php
+                                    $one = App\Models\EventOrganizationsModel::where('id_event', $ongoing_events_org['id'])
+                                    ->where('id_organization', [Auth::user()->organization_information->id])
+                                    ->pluck('id');
+
+                                    $onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
+                                    ->pluck('id');
+
+                                    $onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
+                                    ->count();
+
+                                    echo $onethree;
+                                    @endphp
                                 </td>
                                 <td>
                                     {{
-                                        App\Models\EventOrganizationRidersModel::where('id_event_organization', $ongoing_events_org['event_organizations_id'])
-                                        ->count()
+                                        App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                                        ->where('id_event_organization', $ongoing_events_org['event_organizations_id'])
+                                        ->count();
                                     }}
                                 </td>
                                 <td>
@@ -399,17 +415,25 @@
                                 <th scope="row">{{ $done_Events_org['event_name'] }}</th>
                                 <td>{{ $done_Events_org['event_date'] }}</td>
                                 <td>
-                                    {{
-                                        App\Models\TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
-                                        ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
-                                        ->where('transactions.id_event_organization_riders', $done_Events_org['event_organizations_id'])
-                                        ->count()
-                                    }}
+                                    @php
+                                    $one = App\Models\EventOrganizationsModel::where('id_event', $done_Events_org['id'])
+                                    ->where('id_organization', [Auth::user()->organization_information->id])
+                                    ->pluck('id');
+
+                                    $onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
+                                    ->pluck('id');
+
+                                    $onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
+                                    ->count();
+
+                                    echo $onethree;
+                                    @endphp
                                 </td>
                                 <td>
                                     {{
-                                        App\Models\EventOrganizationRidersModel::where('id_event_organization', $done_Events_org['event_organizations_id'])
-                                        ->count()
+                                        App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                                        ->where('id_event_organization', $done_Events_org['event_organizations_id'])
+                                        ->count();
                                     }}
                                 </td>
                                 <td>

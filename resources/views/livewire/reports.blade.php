@@ -34,6 +34,11 @@
                         <div class="text-start" style="color: #0A335D;">
                             <h1>Clients</h1>
                         </div>
+                        @if($noRecordsclients)
+                        <div class="pagination-info pt-4">
+                            <p class="text-center">No records found.</p>
+                        </div>
+                        @else
                         <div class="pagination-info pb-2 text-start">
                             Page {{ $currentPageclients }} out of {{ $totalPagesclients }}, Total Records: {{ $totalRecordsclients }}
                         </div>
@@ -56,7 +61,7 @@
                                     <td>{{ $client->address }}</td>
                                     <td>{{ $client->contact_number }}</td>
                                     <td>
-                                        <a href="/generate-qr/{{ encrypt($client->id) }}">
+                                        <a href="/generate-qr/{{ encrypt($client->id) }}" target="_blank">
                                             <button type="button" class="btn btn-success fw-bold mx-auto" style="width: 100px; height: 30px; padding-right: 0px; padding-top: 0px; padding-left: 0px; padding-bottom: 0px;">GENERATE</button>
                                         </a>
                                     </td>
@@ -65,9 +70,9 @@
                             </tbody>
                         </table>
                         {{ $clients->links('vendor.livewire.custom-pagination') }}
+                        @endif
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

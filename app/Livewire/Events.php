@@ -42,12 +42,22 @@ class Events extends Component
     {
         /** ORGANIZATION */
         if (Auth::user()->user_id !== 'ADMIN') {
+            // $totalNoOfEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+            //     ->where('event_organizations.status', 1)
+            //     ->join('events', 'events.id', '=', 'event_organizations.id_event')
+            //     ->select('event_organizations.id AS event_organizations_id', 'event_organizations.id_event', 'events.*')
+            //     ->orderBy('events.created_at', 'DESC')
+            //     ->search($this->search_totalNoOfEvents_org)
+            //     ->paginate(10, pageName: 'organization-total-no-of-events');
+
             $totalNoOfEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
-                ->where('event_organizations.status', 1)
-                ->join('events', 'events.id', '=', 'event_organizations.id_event')
-                ->select('event_organizations.id AS event_organizations_id', 'events.*')
-                ->orderBy('events.created_at', 'DESC')
-                ->search($this->search_totalNoOfEvents_org)
+                ->join('events', 'event_organizations.id_event', '=', 'events.id')
+                ->select(
+                    'event_organizations.id AS event_organizations_id',
+                    'events.id AS events_id',
+                    'events.event_name AS event_name',
+                    'events.event_date AS event_date',
+                )
                 ->paginate(10, pageName: 'organization-total-no-of-events');
 
             /**

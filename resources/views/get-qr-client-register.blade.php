@@ -91,7 +91,7 @@
     <!-- Right Div -->
     <div class="col-md-6 right-div">
         <div class="form-container" style="color: white; color: white; background-color: unset;">
-            <h1 class="text-center fw-bolder fs-1 py-5 mt-5">THANK YOU FOR REGISTRING</h1>
+            <h1 class="text-center fw-bolder fs-1 py-5 mt-5">THANK YOU FOR REGISTERING</h1>
 
             <div class="text-center pt-2">
                 <a href="{{ route('get-my-qr', $ClientUserID) }}" target="_blank">

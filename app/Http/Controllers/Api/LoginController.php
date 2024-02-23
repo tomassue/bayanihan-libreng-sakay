@@ -53,8 +53,8 @@ class LoginController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            // return response()->json($request->email, 500);
-            return response()->json($e->getMessage(), 500);
+            return response()->json(['message' => 'Your account is not yet approved.'], 500);
+            // return response()->json($e->getMessage(), 500);
         }
     }
 
