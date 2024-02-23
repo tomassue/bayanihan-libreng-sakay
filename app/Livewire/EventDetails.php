@@ -20,7 +20,7 @@ class EventDetails extends Component
 {
     use WithPagination;
 
-    public EventOrganizationsModel $id_event;
+    public $id_event;
 
     public function render()
     {
@@ -40,7 +40,7 @@ class EventDetails extends Component
                 'organization_information.id AS organization_informationID',
                 'organization_information.*'
             )
-            ->where('event_organizations.id_event', $this->id_event['id'])
+            ->where('event_organizations.id_event', $this->id_event)
             ->orderBy('event_organizations.created_at', 'DESC')
             ->paginate(10, pageName: 'event-details');
 
@@ -71,7 +71,7 @@ class EventDetails extends Component
                     'organization_information.id AS organization_information_id',
                     'organization_information.*'
                 )
-                ->where('event_organization_riders.id_event_organization', $this->id_event['id'])
+                ->where('event_organization_riders.id_event_organization', $this->id_event)
                 ->orderBy('event_organization_riders.created_at', 'DESC')
                 ->paginate(10, pageName: 'organization-event-details');
         }
@@ -91,7 +91,7 @@ class EventDetails extends Component
         ]);
     }
 
-    public function mount(EventOrganizationsModel $eventID)
+    public function mount($eventID)
     {
         $this->id_event = $eventID;
     }

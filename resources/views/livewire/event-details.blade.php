@@ -180,7 +180,7 @@
                                     @php
                                     //$event_detail['indi_id']
 
-                                    $getEventOrg = App\Models\EventOrganizationsModel::where('id_event', $id_event['id'])
+                                    $getEventOrg = App\Models\EventOrganizationsModel::where('id_event', $id_event)
                                     ->pluck('id');
 
                                     $getEventOrgRiders = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $getEventOrg)
