@@ -38,3 +38,4 @@ Route::get('/joined-events/{token}', [EventsController::class, 'joinedEvents']);
 Route::get('/client-list/{token}', [ClientListController::class, 'index']);
 Route::get('/riders-list/{token}', [RidersListController::class, 'index']);
 Route::post('/transact', [TransactionsController::class, 'transaction']);
+Route::get('/check-user/{token}', [LoginController::class, 'checkUser']);

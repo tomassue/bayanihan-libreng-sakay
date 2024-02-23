@@ -58,6 +58,15 @@ class LoginController extends Controller
         }
     }
 
+    public function checkUser($token)
+    {
+        if ($this->checkToken($token)) {
+            return response()->json(['message' => 'Active session'], 200);
+        } else {
+            return response()->json(['message' => 'Session expired'], 500);
+        }
+    }
+
     private function checkToken($token)
     {
         try {

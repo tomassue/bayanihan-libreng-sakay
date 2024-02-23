@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClientInformationModel;
 use App\Models\EventOrganizationRidersModel;
 use App\Models\IndividualInformationModel;
+use App\Models\OrganizationInformationModel;
 use Illuminate\Http\Client\Request;
 use App\Models\TransactionModel;
 use Illuminate\Support\Facades\Crypt;
@@ -17,7 +18,7 @@ class ProfileController extends Controller
 {
     // Individual
     public $user;
-    public $user_id, $user_data, $full_name, $contact_number, $indi_id;
+    public $user_id, $user_data, $full_name, $contact_number, $organization, $indi_id, $user_type;
 
     // Function encrypt($text_data)
     private string $encryptMethod = 'AES-256-CBC';
@@ -28,20 +29,47 @@ class ProfileController extends Controller
     {
         try {
             if ($this->checkToken($token)) {
-                // Individual
-                $totalTrip = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
-                    ->where('event_organization_riders.id_individual', $this->indi_id)
-                    ->count();
+                $decrypt_token = Crypt::decryptString($token);
 
-                $clientServed = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
-                    ->where('event_organization_riders.id_individual', $this->indi_id)
-                    ->count();
+                $is_auth = User::where('api_token', $decrypt_token)->first();
 
-                $eventsJoined = EventOrganizationRidersModel::where('event_organization_riders.id_individual', $this->indi_id)
-                    ->count();
+                if ($is_auth && ($is_auth->id_account_type == '2')) {
+                    // Individual
+                    $organization_info = OrganizationInformationModel::where('id', $this->organization)->first();
 
-                return response()->json([$totalTrip, $clientServed, $eventsJoined]);
-                // return response()->json($this->contact_number);
+                    $totalTripCount = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                        ->where('event_organization_riders.id_individual', $this->indi_id)
+                        ->count();
+
+                    $clientServedCount = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                        ->where('event_organization_riders.id_individual', $this->indi_id)
+                        ->count();
+
+                    $eventsJoinedCount = EventOrganizationRidersModel::where('event_organization_riders.id_individual', $this->indi_id)
+                        ->count();
+
+                    return response()->json([
+                        'fullname'          => $this->full_name,
+                        'contact'           => $this->contact_number,
+                        'organization'      => $organization_info->organization_name,
+                        'totalTripCount'    => $totalTripCount,
+                        'clientServedCount' => $clientServedCount,
+                        'eventsJoinedCount' => $eventsJoinedCount
+                    ]);
+                } elseif ($is_auth && ($is_auth->id_account_type == '3')) {
+                    // Client
+                    $totalTripCount = TransactionModel::where('id_client', $this->indi_id)
+                        ->count();
+
+                    return response()->json([
+                        'fullname'         =>  $this->full_name,
+                        'userType'         =>  ucfirst(trans($this->user_type)),
+                        'totalTripCount'   =>  $totalTripCount
+                    ]);
+
+                    // return response()->json($totalTripCount);
+                }
+                // return response()->json($this->indi_id);
             } else {
                 return response()->json(['error' => 'User not found.'], 500);
             }
@@ -64,7 +92,8 @@ class ProfileController extends Controller
                 $this->user_id          =   $is_rider->user_id;
                 $this->full_name        =   $is_rider->first_name . ' ' . $is_rider->middle_name . ' ' . $is_rider->last_name . ' ' . $is_rider->ext_name;
                 $this->contact_number   =   $is_rider->contact_number;
-                $this->indi_id          =   $is_rider->indi_id;
+                $this->organization     =   $is_rider->id_organization;
+                $this->indi_id          =   $is_rider->id;
 
                 return true;
             } elseif ($is_auth && ($is_auth->id_account_type == '3')) {
@@ -74,7 +103,8 @@ class ProfileController extends Controller
                 $this->user_id          =   $is_client->user_id;
                 $this->full_name        =   $is_client->first_name . ' ' . $is_client->middle_name . ' ' . $is_client->last_name . ' ' . $is_client->ext_name;
                 $this->contact_number   =   $is_client->contact_number;
-                $this->indi_id          =   $is_client->indi_id;
+                $this->user_type        =   $is_client->user_type;
+                $this->indi_id          =   $is_client->id;
 
                 return true;
             }
@@ -97,8 +127,6 @@ class ProfileController extends Controller
 
     public function generateQRCode($token)
     {
-        // dd($this->checkToken($token));
-
         try {
             if ($this->checkToken($token)) {
                 $u_id   = $this->user_id;
