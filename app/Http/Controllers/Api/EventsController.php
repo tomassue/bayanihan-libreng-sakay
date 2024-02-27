@@ -59,7 +59,7 @@ class EventsController extends Controller
                 $this->user             =   $is_auth;
                 $this->user_id          =   $is_auth->user_id;
                 $this->full_name        =   $is_auth->first_name . ' ' . $is_auth->middle_name . ' ' . $is_auth->last_name . ' ' . $is_auth->ext_name;
-                $this->contact_number   =   $is_auth->contact_number;
+                $this->contact_number   =   $is_auth->contactNumber;
                 $this->indi_id          =   $is_auth->indi_id;
                 $this->id_org           =   $is_auth->id_organization;
                 return true;

@@ -27,7 +27,13 @@ class ClientListController extends Controller
                 $servedClients = TransactionModel::class::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
                     ->join('client_information', 'transactions.id_client', '=', 'client_information.id')
                     ->where('event_organization_riders.id_individual', $id)
-                    ->select('client_information.id AS client_id', DB::raw("CONCAT(COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname"), 'event_organization_riders.id_individual', DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"), 'transactions.destination')
+                    ->select(
+                        'client_information.id AS client_id',
+                        DB::raw("CONCAT(COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname"),
+                        'event_organization_riders.id_individual',
+                        DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"),
+                        'transactions.destination'
+                    )
                     ->get();
 
                 return response()->json($servedClients);
@@ -54,7 +60,7 @@ class ClientListController extends Controller
                 $this->user             =   $is_auth;
                 $this->user_id          =   $is_auth->user_id;
                 $this->full_name        =   $is_auth->first_name . ' ' . $is_auth->middle_name . ' ' . $is_auth->last_name . ' ' . $is_auth->ext_name;
-                $this->contact_number   =   $is_auth->contact_number;
+                $this->contact_number   =   $is_auth->contactNumber;
                 $this->indi_id          =   $is_auth->indi_id;
                 $this->id_org           =   $is_auth->id_organization;
                 return true;

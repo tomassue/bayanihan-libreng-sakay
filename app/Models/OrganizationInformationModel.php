@@ -17,7 +17,6 @@ class OrganizationInformationModel extends Model
         'organization_name',
         'date_established',
         'address',
-        'contact_number',
         'status',
     ];
 

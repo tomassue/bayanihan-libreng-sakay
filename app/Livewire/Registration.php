@@ -36,19 +36,21 @@ class Registration extends Component
     {
         $organization_one = OrganizationInformationModel::orderBy('organization_information.created_at', 'DESC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
-            ->select('users.id AS user_id', 'organization_information.*') // In my case, I have two different tables and their primary key's name are the same. I put an alias to the id of the other table so that it will distinguish from the other one. his renames the 'name' column from the 'tags' table to 'tag_name' in the result set. This is often done when you have multiple columns with the same name from different tables to avoid naming conflicts. 'products.*': This selects all columns from the 'products' table.
+            ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'organization_information.*') // In my case, I have two different tables and their primary key's name are the same. I put an alias to the id of the other table so that it will distinguish from the other one. his renames the 'name' column from the 'tags' table to 'tag_name' in the result set. This is often done when you have multiple columns with the same name from different tables to avoid naming conflicts. 'products.*': This selects all columns from the 'products' table.
             ->where('status', 1)
             ->search($this->search_one)
             ->paginate(10, pageName: 'registered-organizations'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
         $organization_two = OrganizationInformationModel::orderBy('organization_information.created_at', 'DESC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
+            ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'organization_information.*')
             ->where('status', 0)
             ->search($this->search_twopending_admin)
             ->paginate(10, pageName: 'for-approval'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
 
         $organization_declined = OrganizationInformationModel::orderBy('users.updated_at', 'ASC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
+            ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'organization_information.*')
             ->where('status', 2)
             ->search($this->search_twodeclined_admin)
             ->paginate(10, pageName: 'declined-organizations');
@@ -76,6 +78,7 @@ class Registration extends Component
             $individual_one = IndividualInformationModel::orderBy('individual_information.created_at', 'DESC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->select('users.contactNumber AS contact_number', 'individual_information.*')
                 ->where('status', 1)
                 ->search($this->search_one_org)
                 ->paginate(10, pageName: 'total-registered-members');
@@ -83,6 +86,7 @@ class Registration extends Component
             $individual_one_inactive = IndividualInformationModel::orderBy('individual_information.created_at', 'DESC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->select('users.contactNumber AS contact_number', 'individual_information.*')
                 ->where('status', 3)
                 ->search($this->search_one_org_inactive)
                 ->paginate(10, pageName: 'total-inactive-members');
@@ -90,6 +94,7 @@ class Registration extends Component
             $individual_two = IndividualInformationModel::orderBy('individual_information.created_at', 'DESC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->select('users.contactNumber AS contact_number', 'individual_information.*')
                 ->where('status', 0)
                 ->search($this->search_twopending_org)
                 ->paginate(10, pageName: 'for-approval-members');
@@ -97,6 +102,7 @@ class Registration extends Component
             $individual_two_declined = IndividualInformationModel::orderBy('individual_information.created_at', 'DESC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->select('users.contactNumber AS contact_number', 'individual_information.*')
                 ->where('status', 2)
                 ->search($this->search_twodeclined_org)
                 ->paginate(10, pageName: 'declined-members');

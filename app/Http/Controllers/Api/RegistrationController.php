@@ -81,6 +81,8 @@ class RegistrationController extends Controller
             $user_cred                  = new User();
             $user_cred->user_id         = $user_id;
             $user_cred->email           = $request->email;
+            $user_cred->contactNumber   = $request->contactNumber;
+
             $user_cred->id_account_type = 3;
             $user_cred->password        = Hash::make($request->password);
             $user_cred->status          = 3;
@@ -95,7 +97,6 @@ class RegistrationController extends Controller
             $client_info->middle_name              = $request->middleName;
             $client_info->ext_name                 = $request->extensionName;
             $client_info->birthday                 = $request->birthday;
-            $client_info->contact_number           = $request->contactNumber;
             $client_info->address                  = $request->address;
             $client_info->id_school                = $request->school;
             $client_info->guardian_name            = $request->guardianName;

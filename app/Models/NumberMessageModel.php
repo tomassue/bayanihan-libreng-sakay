@@ -12,6 +12,7 @@ class NumberMessageModel extends Model
     protected $table = 'tbl_number_messages';
 
     protected $fillable = [
+        'user_id',
         'phone_number',
         'otp_code',
         'is_verified',

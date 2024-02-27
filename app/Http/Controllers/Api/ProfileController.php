@@ -86,23 +86,47 @@ class ProfileController extends Controller
             $is_auth = User::where('api_token', $decrypt_token)->first();
 
             if ($is_auth && ($is_auth->id_account_type == '2')) {
-                $is_rider = IndividualInformationModel::where('user_id', $is_auth->user_id)->first();
+                $is_rider = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
+                    ->where('individual_information.user_id', $is_auth->user_id)
+                    ->select(
+                        'individual_information.id',
+                        'individual_information.user_id AS user_id',
+                        'individual_information.first_name AS first_name',
+                        'individual_information.middle_name AS middle_name',
+                        'individual_information.last_name AS last_name',
+                        'individual_information.ext_name AS ext_name',
+                        'users.contactNumber',
+                        'individual_information.id_organization',
+                    )
+                    ->first();
 
                 $this->user             =   $is_rider;
                 $this->user_id          =   $is_rider->user_id;
                 $this->full_name        =   $is_rider->first_name . ' ' . $is_rider->middle_name . ' ' . $is_rider->last_name . ' ' . $is_rider->ext_name;
-                $this->contact_number   =   $is_rider->contact_number;
+                $this->contact_number   =   $is_rider->contactNumber;
                 $this->organization     =   $is_rider->id_organization;
                 $this->indi_id          =   $is_rider->id;
 
                 return true;
             } elseif ($is_auth && ($is_auth->id_account_type == '3')) {
-                $is_client = ClientInformationModel::where('user_id', $is_auth->user_id)->first();
+                $is_client = ClientInformationModel::join('users', 'client_information.user_id', '=', 'users.user_id')
+                    ->where('client_information.user_id', $is_auth->user_id)
+                    ->select(
+                        'client_information.id',
+                        'client_information.user_id AS user_id',
+                        'client_information.first_name AS first_name',
+                        'client_information.middle_name AS middle_name',
+                        'client_information.last_name AS last_name',
+                        'client_information.ext_name AS ext_name',
+                        'users.contactNumber',
+                        'client_information.user_type',
+                    )
+                    ->first();
 
                 $this->user             =   $is_client;
                 $this->user_id          =   $is_client->user_id;
                 $this->full_name        =   $is_client->first_name . ' ' . $is_client->middle_name . ' ' . $is_client->last_name . ' ' . $is_client->ext_name;
-                $this->contact_number   =   $is_client->contact_number;
+                $this->contact_number   =   $is_client->contactNumber;
                 $this->user_type        =   $is_client->user_type;
                 $this->indi_id          =   $is_client->id;
 

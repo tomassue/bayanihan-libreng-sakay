@@ -63,7 +63,7 @@ class RegisterController extends Controller
                 'organizationName'      => ['required', 'string', 'max:255'],
                 'dateEstablished'       => ['required'],
                 'address'               => ['required', 'string'],
-                'contactNumber'         => ['required', 'numeric', 'digits:11'],
+                'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
 
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => [
@@ -81,7 +81,7 @@ class RegisterController extends Controller
                 'lastName'              => ['required', 'string'],
                 'firstName'             => ['required', 'string'],
                 'middleName'            => ['string', 'nullable'],
-                'contactNumber'         => ['required', 'numeric', 'digits:11'],
+                'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
                 'address'               => ['required'],
                 'organization'          => ['required'],
 
@@ -104,7 +104,7 @@ class RegisterController extends Controller
                 'firstName'             => ['required', 'string'],
                 'middleName'            => ['string', 'nullable'],
                 'birthday'              => ['required'],
-                'contactNumber'         => ['required', 'numeric', 'digits:11'],
+                'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
                 'address'               => ['required'],
                 'school'                => ['required'],
                 'guardianName'          => ['required'],
@@ -138,11 +138,10 @@ class RegisterController extends Controller
         // SAVE to organization information if the account type is 1.
         if ($data['accountType'] == '1') {
 
-            // dd($data['accountType']);
-
             $user = User::create([
                 'user_id'           =>      $user_id,
                 'email'             =>      $data['email'],
+                'contactNumber'     =>      $data['contactNumber'],
                 'id_account_type'   =>      $data['accountType'],
                 'password'          =>      Hash::make($data['password']),
             ]);
@@ -152,7 +151,6 @@ class RegisterController extends Controller
                 'organization_name'     =>          $data['organizationName'],
                 'date_established'      =>          $data['dateEstablished'],
                 'address'               =>          $data['address'],
-                'contact_number'        =>          $data['contactNumber'],
             ]);
             // SAVE to individual information if the account type is 2.
         } elseif ($data['accountType'] == '2') {
@@ -160,6 +158,7 @@ class RegisterController extends Controller
             $user = User::create([
                 'user_id'           =>      $user_id,
                 'email'             =>      $data['email'],
+                'contactNumber'     =>      $data['contactNumber'],
                 'id_account_type'   =>      $data['accountType'],
                 'password'          =>      Hash::make($data['password']),
             ]);
@@ -170,7 +169,6 @@ class RegisterController extends Controller
                 'first_name'            => $data['firstName'],
                 'middle_name'           => $data['middleName'],
                 'ext_name'              => $data['extensionName'],
-                'contact_number'        => $data['contactNumber'],
                 'address'               => $data['address'],
                 'id_organization'       => $data['organization'],
             ]);
@@ -180,6 +178,7 @@ class RegisterController extends Controller
             $user = User::create([
                 'user_id'           =>      $user_id,
                 'email'             =>      $data['email'],
+                'contactNumber'     =>      $data['contactNumber'],
                 'id_account_type'   =>      $data['accountType'],
                 'password'          =>      Hash::make($data['password']),
                 'status'            =>      3,
@@ -193,7 +192,6 @@ class RegisterController extends Controller
                 'middle_name'              => $data['middleName'],
                 'ext_name'                 => $data['extensionName'],
                 'birthday'                 => $data['birthday'],
-                'contact_number'           => $data['contactNumber'],
                 'address'                  => $data['address'],
                 'id_school'                => $data['school'],
                 'guardian_name'            => $data['guardianName'],

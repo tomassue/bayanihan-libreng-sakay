@@ -47,7 +47,8 @@ class RidersListController extends Controller
             $is_auth = User::where('api_token', $decrypt_token)->first();
 
             if ($is_auth && ($is_auth->id_account_type == '3')) {
-                $is_client = ClientInformationModel::where('user_id', $is_auth->user_id)->first();
+                $is_client = ClientInformationModel::where('user_id', $is_auth->user_id)
+                    ->first();
 
                 $this->user             =   $is_client;
                 $this->user_id          =   $is_client->user_id;

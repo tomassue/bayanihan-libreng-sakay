@@ -141,7 +141,7 @@
                                 <th scope="row">{{ $orgeventdetails['event_name'] }}</th>
                                 <td>{{ $orgeventdetails['event_date'] }}</td>
                                 <td>{{ $orgeventdetails['last_name'] . ', ' . $orgeventdetails['first_name'] . ($orgeventdetails['middle_name'] ? ' ' . $orgeventdetails['middle_name'] : '') . ($orgeventdetails['ext_name'] ? ' ' . $orgeventdetails['middle_name'] . '.' : '') }}</td>
-                                <td>{{ $orgeventdetails['indi_contact_number'] }}</td>
+                                <td>{{ $orgeventdetails['contact_number'] }}</td>
                             </tr>
                             @endforeach
                         </tbody>

@@ -24,7 +24,9 @@ class Reports extends Component
 
     public function render()
     {
-        $clients = ClientInformationModel::orderBy('created_at', 'DESC')
+        $clients = ClientInformationModel::join('users', 'client_information.user_id', '=', 'users.user_id')
+            ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'client_information.*')
+            ->orderBy('created_at', 'DESC')
             ->paginate(10, pageName: 'list-of-clients');
 
         return view('livewire.reports', [
@@ -56,7 +58,9 @@ class Reports extends Component
         $clientID = decrypt($clientID);
 
         // Fetch client's data
-        $client_info = ClientInformationModel::where('id', $clientID)
+        $client_info = ClientInformationModel::where('client_information.id', $clientID)
+            ->join('users', 'client_information.user_id', '=', 'users.user_id')
+            ->select('users.id AS userID', 'users.contactNumber AS contact_number', 'client_information.*')
             ->first();
 
         // Encrypt fetched data

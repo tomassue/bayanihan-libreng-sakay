@@ -45,23 +45,13 @@ class EventDetails extends Component
             ->paginate(10, pageName: 'event-details');
 
         if (Auth::user()->user_id !== 'ADMIN') {
-            // $org_event_details = EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
-            //     ->join('events', 'event_organizations.id_event', '=', 'events.id')
-            //     ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
-            //     ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
-            //     ->select('individual_information.contact_number AS indi_contact_number', 'individual_information.*', 'event_organizations.*', 'events.*', 'organization_information.*')
-            //     // ->where('event_organizations.id_organization', Auth::user()->organization_information->id)
-            //     // ->where('event_organizations.id_event', $this->id_event['id'])
-            //     ->where('event_organization_riders.id_event_organization', $this->id_event['id'])
-            //     ->orderBy('event_organization_riders.created_at', 'DESC')
-            //     ->paginate(10, pageName: 'organization-event-details');
-
             $org_event_details = EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
                 ->join('events', 'event_organizations.id_event', '=', 'events.id')
                 ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
                 ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
+                ->join('users', 'individual_information.user_id', '=', 'users.user_id')
                 ->select(
-                    'individual_information.contact_number AS indi_contact_number',
+                    'users.contactNumber AS contact_number',
                     'individual_information.id AS individual_information_id',
                     'individual_information.*',
                     'event_organizations.id AS event_organizations_id',

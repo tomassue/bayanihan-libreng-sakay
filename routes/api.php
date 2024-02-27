@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RidersListController;
 use App\Http\Controllers\Api\TransactionsController;
+use App\Http\Controllers\Api\NumberMessageController;
+use App\Models\NumberMessageModel;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,3 +41,8 @@ Route::get('/client-list/{token}', [ClientListController::class, 'index']);
 Route::get('/riders-list/{token}', [RidersListController::class, 'index']);
 Route::post('/transact', [TransactionsController::class, 'transaction']);
 Route::get('/check-user/{token}', [LoginController::class, 'checkUser']);
+
+// Change Password
+Route::get('/check-contact-number/{contact_number}', [NumberMessageController::class, 'store']);
+Route::post('/check-contact-otp', [NumberMessageController::class, 'verify_otp']);
+Route::post('/change-password', [NumberMessageController::class, 'new_password']);
