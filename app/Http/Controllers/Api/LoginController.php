@@ -82,4 +82,11 @@ class LoginController extends Controller
             return false;
         }
     }
+
+    public function forgotPassword(Request $request)
+    {
+        try {
+        } catch (\Exception $e) {
+        }
+    }
 }

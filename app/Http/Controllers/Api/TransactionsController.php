@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClientInformationModel;
 use App\Models\EventOrganizationRidersModel;
 use App\Models\EventOrganizationsModel;
 use App\Models\TransactionModel;
@@ -23,13 +24,21 @@ class TransactionsController extends Controller
 
         try {
             if ($this->checkToken($request->token)) {
-                $transaction                                =   new TransactionModel();
-                $transaction->id_event_organization_riders  =   $request->transaction->id;
-                $transaction->id_client                     =   $request->transaction->id_client;
-                $transaction->destination                   =   $request->transaction->destination;
-                $transaction->save();
+                // Checks if the client exists in the database or if the QR's invalid.
+                $checkClient = ClientInformationModel::where('id', $request->transaction->id_client)
+                    ->first();
 
-                return response()->json(['message' => 'Scanned Successfully.'], 200);
+                if ($checkClient) {
+                    $transaction                                =   new TransactionModel();
+                    $transaction->id_event_organization_riders  =   $request->transaction->id;
+                    $transaction->id_client                     =   $request->transaction->id_client;
+                    $transaction->destination                   =   $request->transaction->destination;
+                    $transaction->save();
+
+                    return response()->json(['message' => 'Scanned Successfully.'], 200);
+                } else {
+                    return response()->json(['message' => 'QR is invalid.'], 200);
+                }
             } else {
                 return response()->json(['error' => 'User not found.'], 500);
             }
