@@ -21,6 +21,14 @@
     <!-- Icons -->
     <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet" />
 
+    <!-- GOOGLE RECAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("registrationForm").submit();
+        }
+    </script>
+
     <title>Registration Form</title>
     <style>
         body,

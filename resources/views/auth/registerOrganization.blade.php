@@ -93,7 +93,7 @@
         <div class="form-container" style="color: white; color: white; background-color: unset;">
             <h1 class="text-center fw-bolder fs-1 py-5 mt-5">REGISTRATION</h1>
 
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" id="registrationForm" action="{{ route('register') }}">
                 @csrf
 
                 <!-- Account Type -->

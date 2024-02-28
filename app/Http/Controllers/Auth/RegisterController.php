@@ -15,6 +15,8 @@ use Illuminate\Support\Str; //THIS IS FOR THE str::random()
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 
+use App\Rules\ReCaptchaV3;
+
 
 class RegisterController extends Controller
 {
@@ -73,6 +75,8 @@ class RegisterController extends Controller
                     'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
                     'confirmed'
                 ],
+
+                'g-recaptcha-response' => ['required', new ReCaptchaV3('submitRegistration')],
             ]);
         } elseif ($data['accountType'] == '2') {
             // INDIVIDUAL
@@ -93,6 +97,8 @@ class RegisterController extends Controller
                     'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
                     'confirmed'
                 ],
+
+                'g-recaptcha-response' => ['required', new ReCaptchaV3('submitRegistration')],
             ]);
         } elseif ($data['accountType'] == '3') {
             // dd('WAKA WAKA 3');
@@ -118,6 +124,8 @@ class RegisterController extends Controller
                     'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
                     'confirmed'
                 ],
+
+                'g-recaptcha-response' => ['required', new ReCaptchaV3('submitRegistration')],
             ]);
         }
     }
