@@ -10,8 +10,8 @@
     <meta content="" name="keywords" />
 
     <!-- Favicons -->
-    <link href="{{ asset('assets/img/favicon.png') }}" rel="icon" />
-    <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon" />
+    <link href="{{ asset('assets/img/cdo-seal.png') }}" rel="icon" />
+    <link href="{{ asset('assets/img/cdo-seal.png') }}" rel="apple-touch-icon" />
 
     <!-- ANYBODY Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Anybody' rel='stylesheet'>
@@ -284,12 +284,64 @@
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('registration') ? '' : 'collapsed' }}" href="{{ route('registration') }}" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Registration</span>
+
+                    @php
+                    if(Auth::user()->user_id !== 'ADMIN') {
+                    $org_for_approval = App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
+                    ->join('users', 'individual_information.user_id', 'users.user_id')
+                    ->where('status', 0)
+                    ->count();
+                    } else {
+                    $admin_for_approval = App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
+                    ->where('status', 0)
+                    ->count();
+                    $admin_event_registration = App\Models\EventOrganizationsModel::where('status', 0)
+                    ->count();
+                    $org_event_registration = App\Models\EventOrganizationsModel::where('status', 0)
+                    ->count();
+                    }
+                    @endphp
+
+                    @if(Auth::user()->user_id !== 'ADMIN')
+                    @if($org_for_approval > 0)
+                    <span class="ms-auto">
+                        <i class="bi bi-circle-fill" style="color: #ff0000;"></i>
+                    </span>
+                    @endif
+                    @else
+                    @if($admin_for_approval > 0 || $admin_event_registration > 0 || $org_event_registration > 0)
+                    <span class="ms-auto">
+                        <i class="bi bi-circle-fill" style="color: #ff0000;"></i>
+                    </span>
+                    @endif
+                    @endif
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('events') ? '' : 'collapsed' }}" href="{{ route('events') }}" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Events</span>
+                    @php
+                    if(Auth::user()->user_id !== 'ADMIN') {
+                    $org_list_of_events = App\Models\EventModel::where('status', 1)
+                    ->where('tag', 0)
+                    ->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                    ->from('event_organizations')
+                    ->whereRaw('event_organizations.id_event = events.id');
+                    $query->whereRaw('event_organizations.id_organization = ?', [Auth::user()->organization_information->id]);
+                    })
+                    ->count();
+                    }
+                    @endphp
+
+                    @if(Auth::user()->user_id !== 'ADMIN')
+                    @if($org_list_of_events > 0)
+                    <span class="ms-auto">
+                        <i class="bi bi-circle-fill" style="color: #ff0000;"></i>
+                    </span>
+                    @endif
+                    @endif
                 </a>
             </li>
 
