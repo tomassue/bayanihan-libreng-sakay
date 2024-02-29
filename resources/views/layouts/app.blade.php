@@ -24,8 +24,17 @@
     <!-- GOOGLE RECAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <script>
+        // function onSubmit(token) {
+        //     document.getElementById("registrationForm").submit();
+        // }
+
         function onSubmit(token) {
-            document.getElementById("registrationForm").submit();
+            var form = document.getElementById("registrationForm");
+            if (form.checkValidity()) {
+                document.getElementById("registrationForm").submit();
+            } else {
+                form.reportValidity();
+            }
         }
     </script>
 
