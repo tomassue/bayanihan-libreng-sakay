@@ -189,7 +189,7 @@ class RegisterController extends Controller
                 'contactNumber'     =>      $data['contactNumber'],
                 'id_account_type'   =>      $data['accountType'],
                 'password'          =>      Hash::make($data['password']),
-                'status'            =>      3,
+                'status'            =>      1,
             ]);
 
             ClientInformationModel::create([

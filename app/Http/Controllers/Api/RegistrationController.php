@@ -85,7 +85,7 @@ class RegistrationController extends Controller
 
             $user_cred->id_account_type = 3;
             $user_cred->password        = Hash::make($request->password);
-            $user_cred->status          = 3;
+            $user_cred->status          = 1;
             $user_cred->save();
 
             // Create client's other information
