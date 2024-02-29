@@ -27,7 +27,7 @@
                 @endif
 
                 <div class="col-12 mb-2">
-                    <a href="/events"><button type="button" class="btn btn-primary"><i class="bi bi-arrow-bar-left"></i> Go Back</button></a>
+                    <a href="{{ route('events') }}"><button type="button" class="btn btn-primary"><i class="bi bi-arrow-bar-left"></i> Go Back</button></a>
                 </div>
 
                 <div class="col">
