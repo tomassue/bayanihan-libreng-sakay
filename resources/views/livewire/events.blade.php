@@ -151,7 +151,7 @@
                                     }}
                                 </td>
                                 <td>
-                                    <a href="/registration/event-details/{{ $total_no_of_events_org['event_organizations_id'] }}">
+                                    <a href="{{ route('event-details', $total_no_of_events_org['event_organizations_id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </a>
                                 </td>
@@ -222,7 +222,7 @@
                                     @endphp
                                 </td>
                                 <td>
-                                    <a href="/registration/event-details/{{ $total_no_of_events['id'] }}">
+                                    <a href="{{ route('event-details', $total_no_of_events['id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </a>
                                 </td>
@@ -297,7 +297,7 @@
                                     }}
                                 </td>
                                 <td>
-                                    <a href="/registration/event-details/{{ $ongoing_events_org['event_organizations_id'] }}">
+                                    <a href="{{ route('event-details', $ongoing_events_org['event_organizations_id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </a>
                                 </td>
@@ -368,7 +368,7 @@
                                     @endphp
                                 </td>
                                 <td>
-                                    <a href="/registration/event-details/{{ $ongoing_events['id'] }}">
+                                    <a href="{{ route('event-details', $ongoing_events['id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </a>
                                 </td>
@@ -437,7 +437,7 @@
                                     }}
                                 </td>
                                 <td>
-                                    <a href="/registration/event-details/{{ $done_Events_org['event_organizations_id'] }}">
+                                    <a href="{{ route('event-details', $done_Events_org['event_organizations_id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </a>
                                 </td>
@@ -508,7 +508,7 @@
                                     @endphp
                                 </td>
                                 <td>
-                                    <a href="/registration/event-details/{{ $done_Events['id'] }}">
+                                    <a href="{{ route('event-details', $done_Events['id']) }} {{  }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </a>
                                 </td>

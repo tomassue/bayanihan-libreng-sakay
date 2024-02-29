@@ -61,7 +61,7 @@
                                     <td>{{ $client->address }}</td>
                                     <td>{{ $client->contact_number }}</td>
                                     <td>
-                                        <a href="/generate-qr/{{ encrypt($client->id) }}" target="_blank">
+                                        <a href="{{ route('generate.qr', $client->id) }}" target="_blank">
                                             <button type="button" class="btn btn-success fw-bold mx-auto" style="width: 100px; height: 30px; padding-right: 0px; padding-top: 0px; padding-left: 0px; padding-bottom: 0px;">GENERATE</button>
                                         </a>
                                     </td>

@@ -47,14 +47,14 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     // Your authenticated routes go here
-    Route::get('/change-password', ChangePassword::class);
-    Route::get('/dashboard', Dashboard::class);
-    Route::get('/registration', Registration::class);
-    Route::get('/events', Events::class);
+    Route::get('/change-password', ChangePassword::class)->name('change-password');
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/registration', Registration::class)->name('registration');
+    Route::get('/events', Events::class)->name('events');
 
-    Route::get('/registration/organization-details/{id_organization}', OrganizationDetails::class);
-    Route::get('/registration/event-details/{eventID}', EventDetails::class);
+    Route::get('/registration/organization-details/{id_organization}', OrganizationDetails::class)->name('organization.details');
+    Route::get('/registration/event-details/{eventID}', EventDetails::class)->name('event-details');
 
-    Route::get('/client-list', Reports::class);
-    Route::get('/generate-qr/{clientID}', [Reports::class, 'generateQr']);
+    Route::get('/client-list', Reports::class)->name('client-list');
+    Route::get('/generate-qr/{clientID}', [Reports::class, 'generateQr'])->name('generate.qr');
 });

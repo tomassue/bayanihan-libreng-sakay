@@ -221,7 +221,7 @@
                                 <td>{{ $orgone['contact_number'] }}</td>
                                 <td>{{ $orgone['address'] }}</td>
                                 <td>
-                                    <a href="/registration/organization-details/{{ $orgone['id'] }}"><img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;"></a>
+                                    <a href="{{ route('organization.details', $orgone['id']) }}"><img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;"></a>
                                 </td>
                             </tr>
                             @endforeach

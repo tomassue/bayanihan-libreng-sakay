@@ -276,19 +276,19 @@
             <hr style="color: #FFFFFF; margin-right: 20px;">
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('dashboard') ? '' : 'collapsed' }}" href="/dashboard" style="border-radius: unset;">
+                <a class="nav-link {{ request()->is('dashboard') ? '' : 'collapsed' }}" href="{{ route('dashboard') }}" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Dashboard</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('registration') ? '' : 'collapsed' }}" href="/registration" style="border-radius: unset;">
+                <a class="nav-link {{ request()->is('registration') ? '' : 'collapsed' }}" href="{{ route('registration') }}" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Registration</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('events') ? '' : 'collapsed' }}" href="/events" style="border-radius: unset;">
+                <a class="nav-link {{ request()->is('events') ? '' : 'collapsed' }}" href="{{ route('events') }}" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Events</span>
                 </a>
             </li>
@@ -300,7 +300,7 @@
                 </a>
                 <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     <li class="nav-item">
-                        <a class="align-items-center" href="/client-list" style="color: white; padding-bottom: 2px;">
+                        <a class="align-items-center" href="{{ route('client-list') }}" style="color: white; padding-bottom: 2px;">
                             <span style="font-size: medium;">> &nbsp; Clients List</span>
                         </a>
                     </li>
