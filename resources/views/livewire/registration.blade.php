@@ -571,7 +571,7 @@
                     <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Confirmation</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" wire:loading.remove>
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
@@ -603,9 +603,9 @@
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
-                    <div class="row mb-3 fw-bolder" style="color: #0A335D;">
+                    <!-- <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <h4>Are you sure you want to proceed?</h4>
-                    </div>
+                    </div> -->
                     <div class="row fw-bolder justify-content-center">
                         <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 100px;" wire:click="approveOrg2('{{ $userID }}')">Approve</button>
                     </div>
@@ -622,7 +622,7 @@
                     <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Confirmation</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" wire:loading.remove>
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
@@ -650,7 +650,7 @@
                     <h1 class="modal-title fs-5 fw-bolder" id="confirmModalLabel">Confirmation</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" wire:loading.remove>
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <h4>Are you sure you want to proceed?</h4>
                     </div>
