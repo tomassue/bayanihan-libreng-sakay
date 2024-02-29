@@ -508,7 +508,7 @@
                                     @endphp
                                 </td>
                                 <td>
-                                    <a href="{{ route('event-details', $done_Events['id']) }} {{  }}">
+                                    <a href="{{ route('event-details', $done_Events['id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </a>
                                 </td>
