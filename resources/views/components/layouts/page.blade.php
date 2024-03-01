@@ -258,7 +258,7 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed fs-5" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#" aria-expanded="false" style="border-radius: unset;">
-                    <img src="{{ asset('assets/img/profile-img.jpg') }}" alt="Profile" class="rounded-circle me-2" style="height: 50px; width: 50px;">
+                    <img src="{{ asset('assets/img/profile.png') }}" alt="Profile" class="rounded-circle me-2" style="height: 50px; width: 50px;">
                     <span class="text-truncate col-9">
                         {{ Auth::user()->user_id == 'ADMIN' ? 'Administrator' : Auth::user()->organization_information->organization_name }}
                     </span>
