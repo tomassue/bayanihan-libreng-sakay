@@ -245,9 +245,7 @@
 
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
-                <li class="nav-item dropdown pe-3">
-                    <span class="badge bg-danger" wire:offline>Whoops, your device has lost connection. The web page you are viewing is offline.</span>
-                </li>
+                @livewire('offline')
             </ul>
         </nav>
 
