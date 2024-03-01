@@ -147,7 +147,7 @@
                                     {{
                                         App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
                                         ->where('id_event_organization', $total_no_of_events_org['event_organizations_id'])
-                                        ->count();
+                                        ->count()
                                     }}
                                 </td>
                                 <td>
@@ -293,7 +293,7 @@
                                     {{
                                         App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
                                         ->where('id_event_organization', $ongoing_events_org['event_organizations_id'])
-                                        ->count();
+                                        ->count()
                                     }}
                                 </td>
                                 <td>
@@ -433,7 +433,7 @@
                                     {{
                                         App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
                                         ->where('id_event_organization', $done_Events_org['event_organizations_id'])
-                                        ->count();
+                                        ->count()
                                     }}
                                 </td>
                                 <td>

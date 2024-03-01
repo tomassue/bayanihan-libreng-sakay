@@ -305,13 +305,13 @@
                     @if(Auth::user()->user_id !== 'ADMIN')
                     @if($org_for_approval > 0)
                     <span class="ms-auto">
-                        <i class="bi bi-circle-fill" style="color: #ff0000;"></i>
+                        <i class="bi bi-circle-fill" style="color: #dc3545;"></i>
                     </span>
                     @endif
                     @else
                     @if($admin_for_approval > 0 || $admin_event_registration > 0 || $org_event_registration > 0)
                     <span class="ms-auto">
-                        <i class="bi bi-circle-fill" style="color: #ff0000;"></i>
+                        <i class="bi bi-circle-fill" style="color: #dc3545;"></i>
                     </span>
                     @endif
                     @endif
@@ -338,7 +338,7 @@
                     @if(Auth::user()->user_id !== 'ADMIN')
                     @if($org_list_of_events > 0)
                     <span class="ms-auto">
-                        <i class="bi bi-circle-fill" style="color: #ff0000;"></i>
+                        <i class="bi bi-circle-fill" style="color: #dc3545;"></i>
                     </span>
                     @endif
                     @endif

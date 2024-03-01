@@ -131,7 +131,7 @@
                             @foreach($individual as $rider)
                             <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;">
                                 <th scope="row">{{ $rider['last_name'] . ', ' . $rider['first_name'] . ($rider['middle_name'] ? ' ' . $rider['middle_name'] : '') . ($rider['ext_name'] ? ' ' . $rider['middle_name'] . '.' : '') }}</th>
-                                <td>{{ $rider['contact_number'] }}</td>
+                                <td>{{ $rider['contactNumber'] }}</td>
                                 <td>{{ $rider['address'] }}</td>
                                 <td>
                                     @if($rider['status'] == 0)

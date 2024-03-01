@@ -33,10 +33,30 @@
                                             </div>
                                             <div class="card-body" style="background-color: #2E8B57;">
                                                 <h6 class="text-center text-white fs-1" style="text-shadow: 1px 1px 0 black;">
+                                                    @if(Auth::user()->user_id != 'ADMIN')
+                                                    @php
+                                                    $s = App\Models\ClientInformationModel::where('user_type', 'student')
+                                                    ->pluck('id'); // Students
+
+                                                    $r = App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
+                                                    ->pluck('id'); // Individual or Riders
+
+                                                    $eor_student = App\Models\EventOrganizationRidersModel::whereIn('id_individual', $r)
+                                                    ->pluck('id'); // Event Organization Information Riders
+
+                                                    /**I used whereIn() because there are instances that the queries above will pluck() collections in an array.
+                                                    where() only receives one data while whereIn() removes elements from the collection that do not have a specified item value that is contained within the given array.*/
+
+                                                    echo $transactions_student = App\Models\TransactionModel::whereIn('id_event_organization_riders', $eor_student)
+                                                    ->whereIn('id_client', $s)
+                                                    ->count();
+                                                    @endphp
+                                                    @else
                                                     {{
                                                         App\Models\ClientInformationModel::where('user_type', 'student')
                                                         ->count()
                                                     }}
+                                                    @endif
                                                 </h6>
                                             </div>
                                         </div>
@@ -48,10 +68,30 @@
                                             </div>
                                             <div class="card-body" style="background-color: #50C878;">
                                                 <h6 class="text-center text-white fs-1" style="text-shadow: 1px 1px 0 black;">
+                                                    @if(Auth::user()->user_id != 'ADMIN')
+                                                    @php
+                                                    $s = App\Models\ClientInformationModel::where('user_type', 'staff')
+                                                    ->pluck('id'); // Students
+
+                                                    $r = App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
+                                                    ->pluck('id'); // Individual or Riders
+
+                                                    $eor_student = App\Models\EventOrganizationRidersModel::whereIn('id_individual', $r)
+                                                    ->pluck('id'); // Event Organization Information Riders
+
+                                                    /**I used whereIn() because there are instances that the queries above will pluck() collections in an array.
+                                                    where() only receives one data while whereIn() removes elements from the collection that do not have a specified item value that is contained within the given array.*/
+
+                                                    echo $transactions_student = App\Models\TransactionModel::whereIn('id_event_organization_riders', $eor_student)
+                                                    ->whereIn('id_client', $s)
+                                                    ->count();
+                                                    @endphp
+                                                    @else
                                                     {{
                                                         App\Models\ClientInformationModel::where('user_type', 'staff')
                                                         ->count()
                                                     }}
+                                                    @endif
                                                 </h6>
                                             </div>
                                         </div>
@@ -63,10 +103,30 @@
                                             </div>
                                             <div class="card-body" style="background-color: #98FF98;">
                                                 <h6 class="text-center text-white fs-1" style="text-shadow: 1px 1px 0 black;">
+                                                    @if(Auth::user()->user_id != 'ADMIN')
+                                                    @php
+                                                    $s = App\Models\ClientInformationModel::where('user_type', 'other')
+                                                    ->pluck('id'); // Students
+
+                                                    $r = App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
+                                                    ->pluck('id'); // Individual or Riders
+
+                                                    $eor_student = App\Models\EventOrganizationRidersModel::whereIn('id_individual', $r)
+                                                    ->pluck('id'); // Event Organization Information Riders
+
+                                                    /**I used whereIn() because there are instances that the queries above will pluck() collections in an array.
+                                                    where() only receives one data while whereIn() removes elements from the collection that do not have a specified item value that is contained within the given array.*/
+
+                                                    echo $transactions_student = App\Models\TransactionModel::whereIn('id_event_organization_riders', $eor_student)
+                                                    ->whereIn('id_client', $s)
+                                                    ->count();
+                                                    @endphp
+                                                    @else
                                                     {{
                                                         App\Models\ClientInformationModel::where('user_type', 'other')
                                                         ->count()
                                                     }}
+                                                    @endif
                                                 </h6>
                                             </div>
                                         </div>
