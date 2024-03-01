@@ -265,7 +265,7 @@
                 </a>
                 <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     <li class="nav-item">
-                        <a class="align-items-center" href="/change-password" style="color: white; padding-bottom: 2px;">
+                        <a class="align-items-center" href="{{ route('change-password') }}" style="color: white; padding-bottom: 2px;">
                             <span style="font-size: medium;">> &nbsp; Change Password</span>
                         </a>
                     </li>
