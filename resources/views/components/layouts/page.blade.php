@@ -243,6 +243,14 @@
             </ul>
         </nav> -->
 
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+                <li class="nav-item dropdown pe-3">
+                    <span class="badge bg-danger" wire:offline>Whoops, your device has lost connection. The web page you are viewing is offline.</span>
+                </li>
+            </ul>
+        </nav>
+
     </header>
 
     <aside id="sidebar" class="sidebar" style="background-color: #0A335D; padding-right: unset;">
