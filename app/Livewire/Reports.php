@@ -77,10 +77,23 @@ class Reports extends Component
             ->errorCorrection('H')
             ->generate($value);
 
+        // Logos to base64
+        $cdo_seal = public_path('assets/img/cdo-seal.png');
+        $mayor    = public_path('assets/img/MAYOR.png');
+        $rise     = public_path('assets/img/rise.png');
+
+        $cdo_seal64 = base64_encode(file_get_contents($cdo_seal));
+        $mayor64    = base64_encode(file_get_contents($mayor));
+        $rise64     = base64_encode(file_get_contents($rise));
+
         // Generate PDF with QR code
         $pdf = PDF::loadView(
             'livewire.pdf-client-qr-code',
             [
+                'cdo_seal'  => $cdo_seal64,
+                'mayor'     => $mayor64,
+                'rise'      => $rise64,
+
                 'qrCode'    => base64_encode($qrCode),
                 'clientID'  => $clientID,
                 'title'     => 'myQR' . $clientID,
@@ -95,6 +108,9 @@ class Reports extends Component
         return $pdf->stream('myQR.pdf');
 
         // return view('livewire.pdf-client-qr-code', [
+        //     'cdo_seal'  => $cdo_seal64,
+        //     'mayor'     => $mayor64,
+        //     'rise'      => $rise64,
         //     'qrCode'    => base64_encode($qrCode),
         //     'clientID'  => $clientID,
         //     'title'     => 'myQR' . $clientID,

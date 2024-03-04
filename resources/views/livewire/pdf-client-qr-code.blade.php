@@ -85,7 +85,7 @@
         </div> -->
 
         <div class="row">
-            <div class="column">
+            <!-- <div class="column">
                 <img src="{{ asset('assets/img/cdo-seal.png') }}" style="height: 40px; padding-left: 25px;" alt="logo">
             </div>
             <div class="column">
@@ -93,6 +93,16 @@
             </div>
             <div class="column">
                 <img src="{{ asset('assets/img/rise.png') }}" style="height: 40px; padding-left: 11.4px;" alt="logo">
+            </div> -->
+
+            <div class="column">
+                <img src="data:image/png;base64,{{ $cdo_seal }}" style="height: 40px; padding-left: 25px;" alt="logo">
+            </div>
+            <div class="column">
+                <img src="data:image/png;base64,{{ $mayor }}" style="height: 40px; padding-left: 11.4px;" alt="logo">
+            </div>
+            <div class="column">
+                <img src="data:image/png;base64,{{ $rise }}" style="height: 40px; padding-left: 11.4px;" alt="logo">
             </div>
         </div>
 
