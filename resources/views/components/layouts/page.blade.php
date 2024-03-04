@@ -29,6 +29,10 @@
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
 
     <style>
+        .titlenav {
+            font-family: Anybody !important;
+        }
+
         .nav-pills .nav-link.active,
         .nav-pills .show>.nav-link {
             color: white;
@@ -201,12 +205,20 @@
 <body>
 
     <header id="header" class="header fixed-top d-flex align-items-center">
-        <div class="d-flex align-items-center justify-content-between">
+        <!-- <div class="d-flex align-items-center justify-content-between">
 
             <i class="bi bi-list toggle-sidebar-btn"></i>
 
-        </div>
+        </div> -->
         <!-- End Logo -->
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center">
+                <img src={{ asset('assets/img/cdo-seal.png') }} alt="CDO SEAL">
+                <span id="titlenav" class="d-none d-lg-block">LIBRENG SAKAY</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div>
 
         <!-- <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">

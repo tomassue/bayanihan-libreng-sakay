@@ -153,7 +153,8 @@ class ProfileController extends Controller
     {
         try {
             if ($this->checkToken($token)) {
-                $u_id   = $this->user_id;
+                // $u_id   = $this->user_id;
+                $u_id   = $this->indi_id;
                 $f_name = str_replace(',', '|', $this->full_name);
                 $c_number = $this->contact_number;
 

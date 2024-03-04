@@ -108,9 +108,11 @@
                     <div class="col-sm-12 col-md-12 col-lg-8 col-xl-9">
                         <select name="accountType" id="accountType" class="form-select" aria-label="Default select example" required>
                             <option value="" selected disabled>Select...</option>
-                            @foreach(\App\Models\AccountTypeModel::all() as $accountType)
+                            <!-- @foreach(\App\Models\AccountTypeModel::all() as $accountType)
                             <option value="{{ $accountType['id'] }}">{{ $accountType['account_type_name'] }}</option>
-                            @endforeach
+                            @endforeach -->
+                            <option value="1">Organization</option>
+                            <option value="2">Individual</option>
                         </select>
                     </div>
                     <div class="text-center pt-4">
