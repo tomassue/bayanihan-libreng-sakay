@@ -33,10 +33,10 @@ Route::get('/', function () {
 Route::get('/success-page', [LandingPageController::class, 'index'])->name('landing-page');
 
 // This is somehow the 'landing page' of registration. Users are asked what account type they are going to register, then they will be routed to the registration form associated with the account type they prefer.
-Route::post('/registration', [RegistrationAccountTypeController::class, 'index'])->name('registration');
-Route::get('/registration/org', [RegistrationAccountTypeController::class, 'registerOrg'])->name('register.org');
+// Route::post('/registration', [RegistrationAccountTypeController::class, 'index'])->name('registration');
+// Route::get('/registration/org', [RegistrationAccountTypeController::class, 'registerOrg'])->name('register.org');
 Route::get('/registration/ind', [RegistrationAccountTypeController::class, 'registerInd'])->name('register.ind');
-Route::get('/registration/client', [RegistrationAccountTypeController::class, 'registerClient'])->name('register.client');
+// Route::get('/registration/client', [RegistrationAccountTypeController::class, 'registerClient'])->name('register.client');
 
 Route::get('/qr/{ClientUserID}', [GenerateClientQRController::class, 'generateQRPage'])->name('qr'); // QR PAGE
 Route::get('/get-my-qr/client/{ClientUserID}', [GenerateClientQRController::class, 'index'])->name('get-my-qr'); // GENERATE QR

@@ -147,7 +147,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center text-center pt-4">
-                    <a href="{{ route('register') }}" style="text-decoration:none"><span style="color: #426FE0;">Not yet registered?</span></a>
+                    <a href="{{ route('register.ind') }}" style="text-decoration:none"><span style="color: #426FE0;">Not yet registered?</span></a>
                 </div>
 
             </form>

@@ -114,7 +114,7 @@ class RegisterController extends Controller
                 'address'               => ['required'],
                 'school'                => ['required'],
                 'guardianName'          => ['required'],
-                'guardianNumber'        => ['required', 'numeric', 'digits:11'],
+                'guardianNumber'        => ['required', 'numeric', 'digits:11', 'unique:users'],
 
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => [
@@ -141,7 +141,7 @@ class RegisterController extends Controller
         // Generate random letters and numbers for doctype_code
         $timestamp = now()->timestamp;
         $randomString = Str::random(10);
-        $user_id = $timestamp . $randomString;
+        $user_id = strtoupper($timestamp . $randomString);
 
         // SAVE to organization information if the account type is 1.
         if ($data['accountType'] == '1') {

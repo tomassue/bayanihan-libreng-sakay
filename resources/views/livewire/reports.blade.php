@@ -15,17 +15,17 @@
             }
         </style>
 
+        @if(session('status'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-1"></i>
+            {{ session('status') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+
         <div class="col-12">
             <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree">
                 <div class="row mx-5 mt-4">
-
-                    @if(session('status'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle me-1"></i>
-                        {{ session('status') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    @endif
 
                 </div>
 
@@ -33,6 +33,10 @@
                     <div class="col text-center table-responsive">
                         <div class="text-start" style="color: #0A335D;">
                             <h1>Clients</h1>
+                        </div>
+                        <div class="input-group mb-4 mt-4">
+                            <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Clients" wire:model.live.debounce.300ms="search_client">
                         </div>
                         @if($noRecordsclients)
                         <div class="pagination-info pt-4">
@@ -92,78 +96,174 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="">
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">User Type</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected="" disabled>Select</option>
-                                <option value="student">Student</option>
-                                <option value="staff">Staff</option>
-                                <option value="other">Others</option>
-                            </select>
-                        </div>
+                    <div class="row">
+                        <form wire:submit="saveClient">
+                            <div class="container row">
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="">
-                        </div>
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">User Type</label>
+                                        <div class="col-12">
+                                            <select name="user_type" id="user_type" autocomplete="user_type" autofocus class="form-select @error('user_type') is-invalid @enderror" aria-label="Default select example" wire:model.live="user_type">
+                                                <option value="" {{ old('user_type') ? '' : 'selected' }}>Select...</option>
+                                                <option value="student" {{ old('user_type') == 'student' ? 'selected' : '' }}>Student</option>
+                                                <option value="school_staff" {{ old('user_type') == 'school_staff' ? 'selected' : '' }}>School Staff</option>
+                                                <option value="city_hall_employee" {{ old('user_type') == 'city_hall_employee' ? 'selected' : '' }}>City Hall Employee</option>
+                                                <option value="city_hall_client" {{ old('user_type') == 'city_hall_client' ? 'selected' : '' }}>City Hall Client</option>
+                                                <option value="other" {{ old('user_type') == 'other' ? 'selected' : '' }}>Other</option>
+                                            </select>
+                                            @error('user_type')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="">
-                        </div>
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">Last Name</label>
+                                        <div class="col-12">
+                                            <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="last_name">
+                                            @error('last_name')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Middle Name</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="">
-                        </div>
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">First Name</label>
+                                        <div class="col-12">
+                                            <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="first_name">
+                                            @error('first_name')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Extension Name</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="">
-                        </div>
+                                    <div class=" mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">Middle Name</label>
+                                        <div class="col-12">
+                                            <input type="text" class="form-control @error('middle_name') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="middle_name">
+                                            @error('middle_name')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Birthday</label>
-                            <input type="date" class="form-control" id="exampleFormControlInput1" placeholder="">
-                        </div>
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">Extension Name</label>
+                                        <div class="col-12">
+                                            <input type="text" class="form-control @error('ext_name') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="ext_name">
+                                            @error('ext_name')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Contact Number</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="">
-                        </div>
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">Birthday</label>
+                                        <div class="col-12">
+                                            <input type="date" class="form-control @error('birthday') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="birthday">
+                                            @error('birthday')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Address</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="">
-                        </div>
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">Contact Number</label>
+                                        <div class="col-12">
+                                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('contact_number') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="contact_number">
+                                            @error('contact_number')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">School</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option value="" disabled {{ old('school') ? '' : 'selected' }}>Select...</option>
-                                @foreach(\App\Models\SchoolInformationModel::all() as $school)
-                                <option value="{{ $school['id'] }}" {{ old('school') == $school['id'] ? 'selected' : '' }}>{{ $school['school_name'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">Address</label>
+                                        <div class="col-12">
+                                            <input type="text" class="form-control @error('address') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="address">
+                                            @error('address')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">In case of emergency</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="">
-                        </div>
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">School</label>
+                                        <div class="col-12">
+                                            <select class="form-select @error('school') is-invalid @enderror" aria-label="Default select example" wire:model.live="school">
+                                                <option value="" {{ old('school') ? '' : 'selected' }}>Select...</option>
+                                                @foreach(\App\Models\SchoolInformationModel::all() as $school)
+                                                <option value="{{ $school['id'] }}" {{ old('school') == $school['id'] ? 'selected' : '' }}>{{ $school['school_name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('school')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Emergency contact no.</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="">
-                        </div>
-                    </form>
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">Emergency contact name</label>
+                                        <div class="col-12">
+                                            <input type="text" class="form-control @error('emergency_name') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="emergency_name">
+                                            @error('emergency_name')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">Emergency contact no.</label>
+                                        <div class="col-12">
+                                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('emergency_contact_no') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="emergency_contact_no">
+                                            @error('emergency_contact_no')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 140px;" wire:click="">SAVE</button>
+                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 140px;">SAVE</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
 
 </div>
+
+@script
+<script>
+    $wire.on('close-addClientModal-Modal', () => {
+        $('#addClientModal').modal('hide');
+    });
+</script>
+@endscript

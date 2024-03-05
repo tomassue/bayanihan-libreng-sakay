@@ -93,7 +93,7 @@
                     <label for="inputOrganizationName" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Account Type</label>
                     <div class="col-sm-7">
                         <select class="form-select" name="accountType" id="accountType" aria-label="Account Type" style="pointer-events: none; background-color: #f4f4f4;">
-                            <option value="2">Individual</option>
+                            <option value="2">Rider</option>
                         </select>
                     </div>
                 </div>

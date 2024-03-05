@@ -64,13 +64,13 @@
                                     <div class="col-sm-6 col-md-6 col-lg-3 mb-3">
                                         <div class="card h-100 m-3 border border-secondary">
                                             <div class="card-header h-50" style="background-color: #50C878; border: unset;">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">STAFFS</h1>
+                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important; color: white; text-shadow: 1px 1px 0 black;">SCHOOL STAFFS</h1>
                                             </div>
                                             <div class="card-body" style="background-color: #50C878;">
                                                 <h6 class="text-center text-white fs-1" style="text-shadow: 1px 1px 0 black;">
                                                     @if(Auth::user()->user_id != 'ADMIN')
                                                     @php
-                                                    $s = App\Models\ClientInformationModel::where('user_type', 'staff')
+                                                    $s = App\Models\ClientInformationModel::where('user_type', 'school_staff')
                                                     ->pluck('id'); // Students
 
                                                     $r = App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
@@ -88,7 +88,7 @@
                                                     @endphp
                                                     @else
                                                     {{
-                                                        App\Models\ClientInformationModel::where('user_type', 'staff')
+                                                        App\Models\ClientInformationModel::where('user_type', 'school_staff')
                                                         ->count()
                                                     }}
                                                     @endif
@@ -124,6 +124,8 @@
                                                     @else
                                                     {{
                                                         App\Models\ClientInformationModel::where('user_type', 'other')
+                                                        ->orwhere('user_type', 'city_hall_employee')
+                                                        ->orwhere('user_type', 'city_hall_client')
                                                         ->count()
                                                     }}
                                                     @endif

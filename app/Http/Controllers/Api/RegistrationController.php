@@ -41,11 +41,11 @@ class RegistrationController extends Controller
             'firstName'             => ['required', 'string'],
             'middleName'            => ['string', 'nullable'],
             'birthday'              => ['required'],
-            'contactNumber'         => ['required', 'numeric', 'digits:11'],
+            'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
             'address'               => ['required'],
             'school'                => ['required'],
             'guardianName'          => ['required'],
-            'guardianNumber'        => ['required', 'numeric', 'digits:11'],
+            'guardianNumber'        => ['required', 'numeric', 'digits:11', 'unique:users'],
 
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'              => [
@@ -75,7 +75,7 @@ class RegistrationController extends Controller
             // Generate random letters and numbers for doctype_code
             $timestamp = now()->timestamp;
             $randomString = Str::random(10);
-            $user_id = $timestamp . $randomString;
+            $user_id = strtoupper($timestamp . $randomString);
 
             // Create the client (user) credentials
             $user_cred                  = new User();

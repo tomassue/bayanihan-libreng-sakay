@@ -29,6 +29,7 @@ class RidersListController extends Controller
                     ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
                     ->where('id_client', $this->indi_id)
                     ->select('event_organization_riders.id AS event_organization_riders_id', 'event_organization_riders.id_individual', 'individual_information.id AS individual_id', DB::raw("CONCAT(COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname"), DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"), 'transactions.destination')
+                    ->orderBy('created_at', 'DESC')
                     ->get();
 
                 return response()->json($riders);

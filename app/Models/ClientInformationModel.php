@@ -15,7 +15,6 @@ class ClientInformationModel extends Model
         'user_id',
         'user_type',
         'last_name',
-        'last_name',
         'first_name',
         'middle_name',
         'ext_name',
@@ -24,6 +23,13 @@ class ClientInformationModel extends Model
         'id_school',
         'guardian_name',
         'guardian_contact_number',
-
     ];
+
+    public function scopeSearch($query, $value)
+    {
+        return $query->where('last_name', 'like', "%{$value}%")
+            ->orWhere('first_name', 'like', "%{$value}%")
+            ->orWhere('middle_name', 'like', "%{$value}%")
+            ->orWhere('ext_name', 'like', "%{$value}%");
+    }
 }

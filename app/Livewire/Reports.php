@@ -3,12 +3,15 @@
 namespace App\Livewire;
 
 use App\Models\ClientInformationModel;
+use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Livewire\Attributes\Validate;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Str;
 
 #[Layout('components.layouts.page')]
 #[Title('Reports')]
@@ -16,6 +19,15 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class Reports extends Component
 {
     use WithPagination;
+    // Client Modal
+    public $middle_name, $ext_name;
+    #[Validate('required')]
+    public $user_type, $last_name, $first_name, $birthday, $address, $school, $emergency_name;
+    #[Validate('required|size:11|unique:users,contactNumber|unique:client_information,guardian_contact_number')]
+    public $contact_number, $emergency_contact_no;
+
+    // Search
+    public $search_client;
 
     // Function encrypt($text_data)
     private string $encryptMethod = 'AES-256-CBC';
@@ -24,7 +36,8 @@ class Reports extends Component
 
     public function render()
     {
-        $clients = ClientInformationModel::join('users', 'client_information.user_id', '=', 'users.user_id')
+        $clients = ClientInformationModel::search($this->search_client)
+            ->join('users', 'client_information.user_id', '=', 'users.user_id')
             ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'client_information.*')
             ->orderBy('created_at', 'DESC')
             ->paginate(10, pageName: 'list-of-clients');
@@ -36,6 +49,48 @@ class Reports extends Component
             'totalRecordsclients'       =>      $clients->total(),
             'noRecordsclients'          =>      $clients->isEmpty(),
         ]);
+    }
+
+    public function updating()
+    {
+        $this->resetPage('list-of-clients');
+    }
+
+    public function saveClient()
+    {
+        $this->validate();
+
+        // Generate random letters and numbers for user_id
+        $timestamp = now()->timestamp;
+        $randomString = Str::random(10);
+        $user_id = strtoupper($timestamp . $randomString);
+
+        ClientInformationModel::create([
+            'user_id'                   => $user_id,
+            'user_type'                 => $this->user_type,
+            'last_name'                 => $this->last_name,
+            'first_name'                => $this->first_name,
+            'middle_name'               => $this->middle_name,
+            'ext_name'                  => $this->ext_name,
+            'birthday'                  => $this->birthday,
+            'address'                   => $this->address,
+            'id_school'                 => $this->school,
+            'guardian_name'             => $this->emergency_name,
+            'guardian_contact_number'   => $this->emergency_contact_no,
+        ]);
+
+        User::create([
+            'user_id'                   => $user_id,
+            'email'                     => 'null',
+            'contactNumber'             => $this->contact_number,
+            'id_account_type'           => '3',
+            'password'                  => 'null',
+            'status'                    =>  '1',
+        ]);
+
+        $this->reset('user_type', 'last_name', 'first_name', "middle_name", "ext_name", "birthday", "address", "school", "emergency_name", "contact_number");
+        $this->dispatch('close-addClientModal-Modal');
+        session()->flash('status', 'Event added successfully.');
     }
 
     private function encrypt($text_data): string
