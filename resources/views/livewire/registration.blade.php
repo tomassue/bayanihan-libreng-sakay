@@ -245,7 +245,7 @@
                     <div class="text-end mt-2 mb-3">
                         @if(Auth::user()->user_id == 'ADMIN')
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 204px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#registerOrgModal">ADD ORGANIZATION</button>
+                        <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 220px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#registerOrgModal">ADD ORGANIZATION</button>
                         @endif
                     </div>
                     {{ $org_one->links('vendor.livewire.custom-pagination') }}
