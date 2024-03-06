@@ -17,6 +17,7 @@ class IndividualInformationModel extends Model
         'first_name',
         'middle_name',
         'ext_name',
+        'sex',
         'address',
         'id_organization',
     ];

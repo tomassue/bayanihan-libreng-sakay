@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('id_event_organization_riders');
             $table->integer('id_client');
             $table->string('destination');
+            $table->string('status');
             $table->timestamps();
         });
     }

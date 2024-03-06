@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('ext_name')->nullable();
+            $table->string('sex');
             $table->string('contact_number');
             $table->string('address');
             $table->integer('id_organization'); // id from organization

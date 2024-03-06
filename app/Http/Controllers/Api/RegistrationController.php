@@ -96,6 +96,7 @@ class RegistrationController extends Controller
             $client_info->first_name               = $request->firstName;
             $client_info->middle_name              = $request->middleName;
             $client_info->ext_name                 = $request->extensionName;
+            $client_info->sex                      = $request->sex;
             $client_info->birthday                 = $request->birthday;
             $client_info->address                  = $request->address;
             $client_info->id_school                = $request->school;

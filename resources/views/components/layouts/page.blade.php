@@ -508,9 +508,9 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-6 col-md-3 col-lg-2 other-systems">
-                                    <h6>other Related Systems</h6>
+                                    <!-- <h6>other Related Systems</h6> -->
                                     <ul class="footer-links">
-                                        <li><a href="http://119.93.152.91/dtr/" style="color: #5390ad;">Attendance Management System</a></li>
+                                        <!-- <li><a href="http://119.93.152.91/dtr/" style="color: #5390ad;">Attendance Management System</a></li> -->
                                         <br />
                                         <li>If you have issues encountered and inquiries:<a href="https://services.cagayandeoro.gov.ph/helpdesk/" style="color: #5390ad;">
                                                 <br />

@@ -19,10 +19,11 @@ use Illuminate\Support\Str;
 class Reports extends Component
 {
     use WithPagination;
-    // Client Modal
+
+    // Add Client Modal
     public $middle_name, $ext_name;
     #[Validate('required')]
-    public $user_type, $last_name, $first_name, $birthday, $address, $school, $emergency_name;
+    public $user_type, $last_name, $first_name, $birthday, $sex, $address, $school, $emergency_name;
     #[Validate('required|size:11|unique:users,contactNumber|unique:client_information,guardian_contact_number')]
     public $contact_number, $emergency_contact_no;
 
@@ -72,6 +73,7 @@ class Reports extends Component
             'first_name'                => $this->first_name,
             'middle_name'               => $this->middle_name,
             'ext_name'                  => $this->ext_name,
+            'sex'                       => $this->sex,
             'birthday'                  => $this->birthday,
             'address'                   => $this->address,
             'id_school'                 => $this->school,
@@ -88,9 +90,9 @@ class Reports extends Component
             'status'                    =>  '1',
         ]);
 
-        $this->reset('user_type', 'last_name', 'first_name', "middle_name", "ext_name", "birthday", "address", "school", "emergency_name", "contact_number");
         $this->dispatch('close-addClientModal-Modal');
         session()->flash('status', 'Event added successfully.');
+        return redirect()->to('client-list');
     }
 
     private function encrypt($text_data): string

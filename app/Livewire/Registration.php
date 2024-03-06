@@ -13,6 +13,9 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Validate;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 #[Layout('components.layouts.page')]
 #[Title('Registration')]
@@ -31,6 +34,16 @@ class Registration extends Component
 
     // Search
     public $search_one = '', $search_twopending_admin = '', $search_twodeclined_admin = '', $search_threepending_admin = '', $search_threedeclined_admin = '', $search_one_org = '', $search_twopending_org = '', $search_twodeclined_org = '', $search_one_org_inactive = '';
+
+    // Add Organization Modal Fields
+    #[Validate('required')]
+    public $organization_name, $date_established, $address;
+
+    #[Validate('required|email:rfc,dns')]
+    public $email;
+
+    #[Validate('required|size:11|unique:users,contactNumber')]
+    public $contact_number;
 
     public function render()
     {
@@ -442,5 +455,35 @@ class Registration extends Component
             session()->flash('status', "Rider's status has been set to active.");
             $this->reset('individualID');
         }
+    }
+
+    public function saveOrg()
+    {
+        $this->validate();
+
+        // Generate random letters and numbers for user_id
+        $timestamp = now()->timestamp;
+        $randomString = Str::random(10);
+        $user_id = strtoupper($timestamp . $randomString);
+
+        OrganizationInformationModel::create([
+            'user_id'           =>  $user_id,
+            'organization_name' =>  $this->organization_name,
+            'date_established'  =>  $this->date_established,
+            'address'           =>  $this->address,
+        ]);
+
+        User::create([
+            'user_id'                   => $user_id,
+            'email'                     => 'null',
+            'contactNumber'             => $this->contact_number,
+            'id_account_type'           => 1,
+            'password'                  => Hash::make('P@ssw0rd'),
+            'status'                    => 1,
+        ]);
+
+        $this->dispatch('close-registerOrgModal-Modal');
+        session()->flash('status', 'Organization added successfully.');
+        return redirect()->to('registration');
     }
 }

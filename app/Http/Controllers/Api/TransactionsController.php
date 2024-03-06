@@ -70,4 +70,28 @@ class TransactionsController extends Controller
             return false;
         }
     }
+
+    public function dropClient(Request $content)
+    {
+        $request = json_decode($content->getContent());
+
+        try {
+            if ($this->checkToken($request->token)) {
+                $checkClientTransaction = TransactionModel::where('id', $request->transaction->id)
+                    ->first();
+
+                if ($checkClientTransaction) {
+                    TransactionModel::where('id', $request->transaction_id)
+                        ->update([
+                            'status'    =>  $request->transaction->status
+                        ]);
+
+                    return response()->json(['message' => 'Successfully dropped.'], 200);
+                }
+                return response()->json(['error' => 'User not found.'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+    }
 }

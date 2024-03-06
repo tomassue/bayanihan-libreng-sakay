@@ -31,7 +31,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/register', [RegistrationController::class, 'register']);
 Route::get('/school', [RegistrationController::class, 'getSchool']);
-
 Route::get('/profile/{token}', [ProfileController::class, 'index']);
 Route::get('/get_qr/{token}', [ProfileController::class, 'generateQRCode']);
 Route::get('/list-of-events/{token}', [EventsController::class, 'index']);
@@ -40,6 +39,7 @@ Route::get('/joined-events/{token}', [EventsController::class, 'joinedEvents']);
 Route::get('/client-list/{token}', [ClientListController::class, 'index']);
 Route::get('/riders-list/{token}', [RidersListController::class, 'index']);
 Route::post('/transact', [TransactionsController::class, 'transaction']);
+Route::post('/drop', [TransactionsController::class, 'dropClient']);
 Route::get('/check-user/{token}', [LoginController::class, 'checkUser']);
 
 // Change Password

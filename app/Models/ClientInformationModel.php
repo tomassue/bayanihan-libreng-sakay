@@ -18,6 +18,7 @@ class ClientInformationModel extends Model
         'first_name',
         'middle_name',
         'ext_name',
+        'sex',
         'birthday',
         'address',
         'id_school',

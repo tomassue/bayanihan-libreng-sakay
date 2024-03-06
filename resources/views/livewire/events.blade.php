@@ -116,7 +116,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT NAME</th>
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
                                 <th scope="col">NO. OF CLIENTS</th>
                                 <th scope="col">NO. OF RIDERS</th>
@@ -181,7 +181,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT NAME</th>
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
                                 <th scope="col">NO. OF CLIENTS</th>
                                 <th scope="col">NO. OF RIDERS</th>
@@ -262,7 +262,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT NAME</th>
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
                                 <th scope="col">NO. OF CLIENTS</th>
                                 <th scope="col">NO. OF RIDERS</th>
@@ -327,7 +327,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT NAME</th>
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
                                 <th scope="col">NO. OF CLIENTS</th>
                                 <th scope="col">NO. OF RIDERS</th>
@@ -402,7 +402,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT NAME</th>
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
                                 <th scope="col">NO. OF CLIENTS</th>
                                 <th scope="col">NO. OF RIDERS</th>
@@ -467,7 +467,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT NAME</th>
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
                                 <th scope="col">NO. OF CLIENTS</th>
                                 <th scope="col">NO. OF RIDERS</th>
@@ -544,7 +544,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT NAME</th>
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
                                 <th scope="col">ACTION</th>
                             </tr>

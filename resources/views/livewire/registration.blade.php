@@ -133,7 +133,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">NAME</th>
+                                <th scope="col" style="width: 30%;">NAME</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">IS ACTIVE</th>
@@ -176,7 +176,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">NAME</th>
+                                <th scope="col" style="width: 30%;">NAME</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">IS ACTIVE</th>
@@ -223,7 +223,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">ORGANIZATION</th>
+                                <th scope="col" style="width: 30%;">ORGANIZATION</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">DETAILS</th>
@@ -242,7 +242,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="text-end mt-2">
+                    <div class="text-end mt-2 mb-3">
                         @if(Auth::user()->user_id == 'ADMIN')
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 204px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#registerOrgModal">ADD ORGANIZATION</button>
@@ -288,7 +288,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">NAME</th>
+                                <th scope="col" style="width: 30%;">NAME</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">ACTION</th>
@@ -333,7 +333,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">NAME</th>
+                                <th scope="col" style="width: 30%;">NAME</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">REMARKS</th>
@@ -389,7 +389,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">ORGANIZATION</th>
+                                <th scope="col" style="width: 30%;">ORGANIZATION</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">DETAILS</th>
@@ -434,7 +434,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">ORGANIZATION</th>
+                                <th scope="col" style="width: 30%;">ORGANIZATION</th>
                                 <th scope="col">CONTACT NUMBER</th>
                                 <th scope="col">ADDRESS</th>
                                 <th scope="col">REMARKS</th>
@@ -491,7 +491,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT NAME</th>
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">ORGANIZATION</th>
                                 <th scope="col">NO. OF RIDERS</th>
                                 <th scope="col">ACTION</th>
@@ -544,7 +544,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT NAME</th>
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">ORGANIZATION</th>
                                 <th scope="col">NO. OF RIDERS</th>
                                 <th scope="col">REMARKS</th>
@@ -695,13 +695,15 @@
     <div wire:ignore.self class="modal fade" id="registerOrgModal" tabindex="-1" aria-labelledby="registerOrgModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-l">
             <div class="modal-content">
+
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
                     <h1 class="modal-title fs-5 fw-bolder" id="registerOrgModalLabel">Add Organization</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
-                <div class="modal-body" wire:loading.remove>
-                    <form action="">
 
+                <form wire:submit="saveOrg">
+
+                    <div class="modal-body">
                         <div class="mb-3 row">
                             <label for="exampleFormControlInput1" class="col-12">Organization Name</label>
                             <div class="col-12">
@@ -761,12 +763,11 @@
                                 @enderror
                             </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;">SAVE</button>
+                    </div>
 
-                </div>
-                <div class="modal-footer">
-                    <input type="hidden" value="1" wire:model="account_type">
-                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;">SAVE</button>
-                </div>
                 </form>
             </div>
         </div>
@@ -791,6 +792,10 @@
 
     $wire.on('close-individualModal', () => {
         $('#individualModal').modal('hide');
+    });
+
+    $wire.on('close-registerOrgModal-Modal', () => {
+        $('#registerOrgModal').modal('hide');
     });
 </script>
 @endscript

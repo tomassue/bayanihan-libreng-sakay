@@ -73,7 +73,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="text-end mt-2">
+                        <div class="text-end mt-2 mb-3">
                             @if(Auth::user()->user_id == 'ADMIN')
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#addClientModal">ADD CLIENT</button>
@@ -169,6 +169,24 @@
                                     </div>
 
                                     <div class="mb-3 row">
+                                        <label for="exampleFormControlInput1" class="col-12">Sex</label>
+                                        <div class="col-12">
+                                            <select class="form-select @error('sex') is-invalid @enderror" aria-label="Default select example" wire:model.live="sex">
+                                                <option value="" {{ old('sex') ? '' : 'selected' }}>Select...</option>
+                                                <option value="m" {{ old('sex') ? '' : 'selected' }}>Male</option>
+                                                <option value="f" {{ old('sex') ? '' : 'selected' }}>Female</option>
+                                            </select>
+                                            @error('sex')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <div class="mb-3 row">
                                         <label for="exampleFormControlInput1" class="col-12">Birthday</label>
                                         <div class="col-12">
                                             <input type="date" class="form-control @error('birthday') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="birthday">
@@ -179,9 +197,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="col-sm-12 col-md-12 col-lg-6">
                                     <div class="mb-3 row">
                                         <label for="exampleFormControlInput1" class="col-12">Contact Number</label>
                                         <div class="col-12">

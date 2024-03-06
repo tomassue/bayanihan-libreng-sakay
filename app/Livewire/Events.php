@@ -218,9 +218,9 @@ class Events extends Component
                 'event_date'    =>      $this->eventDate,
             ]);
 
-            $this->reset('eventName', 'eventDate');
             $this->dispatch('close-eventSave-Modal');
             session()->flash('status', 'Event added successfully.');
+            return redirect()->to('events');
         }
     }
 
