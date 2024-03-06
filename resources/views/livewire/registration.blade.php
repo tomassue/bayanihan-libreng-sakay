@@ -40,6 +40,7 @@
                                         </div>
                                     </div>
 
+                                    @if(Auth::user()->user_id !== 'ADMIN')
                                     <div class="col-sm-12 col-md-12 col-lg-4 mb-1" style="padding-right: 0px; padding-left: 0px;">
                                         <div class="card m-3 border border-secondary" style="cursor: pointer; height:86%;" wire:click="pageTwo">
                                             <div class="card-header h-100" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; border: unset;" @else style="border: unset;" @endif>
@@ -47,20 +48,34 @@
                                             </div>
                                             <div class="card-body" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
                                                 <h6 class="text-center fs-1">
-                                                    @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
+                                                    {{
+                                                    App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
                                                         ->join('users', 'individual_information.user_id', 'users.user_id')
                                                         ->where('status', 0)
-                                                        ->count() }}
-                                                    @else
-                                                    {{ App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
-                                                    ->where('status', 0)
-                                                    ->count() }}
-                                                    @endif
+                                                        ->count() 
+                                                    }}
                                                 </h6>
                                             </div>
                                         </div>
                                     </div>
+                                    @else
+                                    <!-- <div class="col-sm-12 col-md-12 col-lg-4 mb-1" style="padding-right: 0px; padding-left: 0px;">
+                                        <div class="card m-3 border border-secondary" style="cursor: pointer; height:86%;" wire:click="pageTwo">
+                                            <div class="card-header h-100" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; border: unset;" @else style="border: unset;" @endif>
+                                                <h1 class="card-title text-center" @if( $filter=='' || $filter=='two' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">FOR APPROVAL</h1>
+                                            </div>
+                                            <div class="card-body" @if( $filter=='' || $filter=='two' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
+                                                <h6 class="text-center fs-1"> -->
+                                    @php
+                                    //App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
+                                    //->where('status', 0)
+                                    //->count()
+                                    @endphp
+                                    <!-- </h6>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    @endif
 
                                     @if(Auth::user()->user_id == 'ADMIN')
                                     <div class="col-sm-12 col-md-12 col-lg-4 mb-1" style="padding-right: 0px; padding-left: 0px;">
@@ -227,6 +242,12 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="text-end mt-2">
+                        @if(Auth::user()->user_id == 'ADMIN')
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 204px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#registerOrgModal">ADD ORGANIZATION</button>
+                        @endif
+                    </div>
                     {{ $org_one->links('vendor.livewire.custom-pagination') }}
                 </div>
                 @endif
@@ -666,6 +687,87 @@
                         <button type="button" class="btn {{ $approve ? 'btn-success' : 'btn-danger' }} fw-bolder mt-2" style="width: 100px;" wire:click="{{ $approve ? 'approveMember' : 'declineMember' }}('{{ $individualID }}')">{{ $approve ? 'Approve' : 'Decline' }}</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER ORGANIZATION MODAL -->
+    <div wire:ignore.self class="modal fade" id="registerOrgModal" tabindex="-1" aria-labelledby="registerOrgModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-l">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
+                    <h1 class="modal-title fs-5 fw-bolder" id="registerOrgModalLabel">Add Organization</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
+                </div>
+                <div class="modal-body" wire:loading.remove>
+                    <form action="">
+
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlInput1" class="col-12">Organization Name</label>
+                            <div class="col-12">
+                                <input type="text" class="form-control @error('organization_name') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="organization_name">
+                                @error('organization_name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlInput1" class="col-12">Date Established</label>
+                            <div class="col-12">
+                                <input type="date" class="form-control @error('date_established') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="date_established">
+                                @error('date_established')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlInput1" class="col-12">Address</label>
+                            <div class="col-12">
+                                <input type="text" class="form-control @error('address') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="address">
+                                @error('address')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlInput1" class="col-12">Contact Number</label>
+                            <div class="col-12">
+                                <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('contact_number') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="contact_number">
+                                @error('contact_number')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlInput1" class="col-12">Email</label>
+                            <div class="col-12">
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="email">
+                                @error('email')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" value="1" wire:model="account_type">
+                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;">SAVE</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
