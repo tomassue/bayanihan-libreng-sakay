@@ -90,8 +90,15 @@
         <div class="col" style="height: 98px;">
 
         </div>
-        <div class="col px-5 pb-4" style="height: 400px;">
+        <div class="col px-5 pb-4">
             <img src="assets/img/copy2.png" alt="logo" style="max-height: 100%; max-width: 100%; padding-left: 80px;" class="logo">
+        </div>
+        <div class="col py-auto pb-4" style="height: 100px; text-align:center;">
+            <img src="assets/img/pickmeup.png" alt="logo" style="height: 100px; width: 100px;">
+            <img src="assets/img/Fetch_CDO_Official_Logo.png" alt="logo" style="height: 100px; width: 100px;">
+            <img src="assets/img/fetch.png" alt="logo" style="height: 100px; width: 100px;">
+            <img src="assets/img/fastpickup.png" alt="logo" style="height: 100px; width: 100px;">
+            <img src="assets/img/dispatch.png" alt="logo" style="height: 100px; width: 100px;">
         </div>
         <div class="col pt-5 mt-5">
             <img src="assets/img/copy.png" alt="triangles" style="max-height: 100%; max-width: 100%;">

@@ -81,7 +81,7 @@ class TransactionsController extends Controller
                     ->first();
 
                 if ($checkClientTransaction) {
-                    TransactionModel::where('id', $request->transaction_id)
+                    TransactionModel::where('id', $request->transaction->id)
                         ->update([
                             'status'    =>  $request->transaction->status
                         ]);

@@ -302,6 +302,7 @@
                 </a>
             </li>
 
+            @if(Auth::user()->user_id !== 'ADMIN')
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('registration') ? '' : 'collapsed' }}" href="{{ route('registration') }}" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Registration</span>
@@ -338,6 +339,56 @@
                     @endif
                 </a>
             </li>
+            @else
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('registration', 'client-list') ? '' : 'collapsed' }}" data-bs-target="#registration-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
+                    <span class="fs-5 fw-bold">Registration</span>
+                </a>
+                <ul id="registration-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li class="nav-item">
+                        <a class="align-items-center" href="{{ route('registration') }}" style="color: white; padding-bottom: 2px;">
+                            <span style="font-size: medium;">> &nbsp; Organization</span>
+
+                            @php
+                            if(Auth::user()->user_id !== 'ADMIN') {
+                            $org_for_approval = App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
+                            ->join('users', 'individual_information.user_id', 'users.user_id')
+                            ->where('status', 0)
+                            ->count();
+                            } else {
+                            $admin_for_approval = App\Models\OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
+                            ->where('status', 0)
+                            ->count();
+                            $admin_event_registration = App\Models\EventOrganizationsModel::where('status', 0)
+                            ->count();
+                            $org_event_registration = App\Models\EventOrganizationsModel::where('status', 0)
+                            ->count();
+                            }
+                            @endphp
+
+                            @if(Auth::user()->user_id !== 'ADMIN')
+                            @if($org_for_approval > 0)
+                            <span class="ms-auto">
+                                <i class="bi bi-circle-fill" style="color: #dc3545;"></i>
+                            </span>
+                            @endif
+                            @else
+                            @if($admin_for_approval > 0 || $admin_event_registration > 0 || $org_event_registration > 0)
+                            <span class="ms-auto">
+                                <i class="bi bi-circle-fill" style="color: #dc3545;"></i>
+                            </span>
+                            @endif
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="align-items-center" href="{{ route('client-list') }}" style="color: white; padding-bottom: 2px;">
+                            <span style="font-size: medium;">> &nbsp; Clients</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @endif
 
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('events') ? '' : 'collapsed' }}" href="{{ route('events') }}" style="border-radius: unset;">
@@ -368,16 +419,16 @@
 
             @if(Auth::user()->user_id == 'ADMIN')
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('reports', 'client-list') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
+                <a class="nav-link {{ request()->is('reports') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Reports</span>
                 </a>
-                <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <!-- <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     <li class="nav-item">
                         <a class="align-items-center" href="{{ route('client-list') }}" style="color: white; padding-bottom: 2px;">
                             <span style="font-size: medium;">> &nbsp; Clients List</span>
                         </a>
                     </li>
-                </ul>
+                </ul> -->
             </li>
             @endif
         </ul>

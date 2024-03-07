@@ -30,7 +30,7 @@ Route::get('/', function () {
     return view('auth.login'); // I changed this from welcome, making the login page as landing page of the system.
 });
 
-Route::get('/success-page', [LandingPageController::class, 'index'])->name('landing-page');
+// Route::get('/success-page', [LandingPageController::class, 'index'])->name('landing-page');
 
 // This is somehow the 'landing page' of registration. Users are asked what account type they are going to register, then they will be routed to the registration form associated with the account type they prefer.
 // Route::post('/registration', [RegistrationAccountTypeController::class, 'index'])->name('registration');
