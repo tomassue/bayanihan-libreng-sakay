@@ -159,8 +159,8 @@
 
             </form>
 
-            <div class="pt-5 mt-5 text-center" style="color: #426FE0; font-size:xx-small;" id="footer">
-                <!-- <img src="{{ asset('assets/img/ict-logo.png') }}" alt="ICT LOGO">&nbsp;&nbsp;POWERED BY: CITY MANAGEMENT INFORMATION SYSTEMS AND INNOVATION DEPARTMENT -->
+            <div class="pt-5 mt-5 text-center" style="color: #426FE0; font-size:x-small;" id="footer">
+                <img src="{{ asset('assets/img/ict-logo.png') }}" alt="ICT LOGO">&nbsp;&nbsp;POWERED BY: CITY MANAGEMENT INFORMATION SYSTEMS AND INNOVATION DEPARTMENT
             </div>
 
         </div>
