@@ -25,7 +25,7 @@
         /* background-size: contain, contain; */
         background-size: 80%, 80%;
         background-position: center top, left bottom;
-        height: 1000px !important;
+        height: 1160px !important;
     }
 
     /* Right Div */
@@ -34,7 +34,7 @@
         background-repeat: no-repeat;
         background-size: cover;
         /* background-position: center; */
-        height: 1000px !important;
+        height: 1160px !important;
     }
 
     /* Ensure equal heights for right and left divs */
@@ -153,7 +153,7 @@
                 <div class="mb-1 row">
                     <label for="inputContactNumber" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Contact Number</label>
                     <div class="col-sm-7">
-                        <input type="text" name="contactNumber" class="form-control @error('contactNumber') is-invalid @enderror" id="contactNumber" value="{{ old('contactNumber') }}" autocomplete="contactNumber" autofocus>
+                        <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" name="contactNumber" class="form-control @error('contactNumber') is-invalid @enderror" id="contactNumber" value="{{ old('contactNumber') }}" autocomplete="contactNumber" autofocus>
 
                         @error('contactNumber')
                         <span class="invalid-feedback" role="alert">
@@ -173,6 +173,17 @@
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="inputSexName" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Sex</label>
+                    <div class="col-sm-7">
+                        <select class="form-select @error('sex') is-invalid @enderror" name="sex" id="sex" aria-label="sex">
+                            <option value="" disabled {{ old('sex') ? '' : 'selected' }}>Select...</option>
+                            <option value="m" {{ old('sex') == 'm' ? 'selected' : '' }}>Male</option>
+                            <option value="f" {{ old('sex') == 'f' ? 'selected' : '' }}>Female</option>
+                        </select>
                     </div>
                 </div>
 
@@ -256,12 +267,22 @@
                     </div>
                 </div>
 
-                <div class="text-center pt-2">
-                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataPrivacyModal">REGISTER</button>
+                <div class="mt-3 form-check">
+                    <input class="form-check-input" type="checkbox" name="flexCheckDefault" id="flexCheckDefault" required>
+                    <label class="form-check-label" for="flexCheckDefault" style="text-align: justify; text-justify: inter-word;">
+                        <p>By submitting the data required, YOU consent to the collection, generation, use, processing, storage and retention of your personal information to the CDO Volunteerism for the purpose of Bayanihan Libreng Sakay program.</p>
+                    </label>
                 </div>
 
-                <!-- Submit Button -->
-                @include('data-privacy-modal')
+                <div class="text-center pt-2">
+                    <!-- <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataPrivacyModal">REGISTER</button> -->
+
+                    <!-- Form submit button, including reCAPTCHA V3 attributes -->
+                    <button class="g-recaptcha btn btn-primary fw-bolder mt-2" id="myButton" data-sitekey="{{ config('services.recaptcha_v3.siteKey') }}" data-callback="onSubmit" data-action="submitRegistration">PROCEED</button>
+
+                </div>
+
+
 
             </form>
 
