@@ -26,10 +26,20 @@ class RidersListController extends Controller
             if ($this->checkToken($token)) {
                 // Riders sakayed XD
                 $riders = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                    ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                    ->join('events', 'event_organizations.id_event', '=', 'events.id')
                     ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
                     ->where('id_client', $this->indi_id)
-                    ->select('event_organization_riders.id AS event_organization_riders_id', 'event_organization_riders.id_individual', 'individual_information.id AS individual_id', DB::raw("CONCAT(COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname"), DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"), 'transactions.destination')
-                    ->orderBy('created_at', 'DESC')
+                    ->select(
+                        'event_organization_riders.id AS event_organization_riders_id',
+                        'event_organization_riders.id_individual',
+                        'individual_information.id AS individual_id',
+                        DB::raw("CONCAT(COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname"),
+                        DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"),
+                        'transactions.destination',
+                        'events.event_name AS event_name'
+                    )
+                    ->orderBy('transactions.created_at', 'DESC')
                     ->get();
 
                 return response()->json($riders);

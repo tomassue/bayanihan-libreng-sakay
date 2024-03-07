@@ -81,6 +81,8 @@ class EventsController extends Controller
                 $event_organization_riders->id_event_organization    = $request->event->id;
                 $event_organization_riders->id_individual            = $this->indi_id;
                 $event_organization_riders->save();
+
+                return response()->json(['message' => 'Joined'], 200);
             } else {
                 return response()->json(['error' => 'User not found.'], 500);
             }
@@ -103,7 +105,11 @@ class EventsController extends Controller
                     ->where('event_organizations.id_organization', $this->id_org)
                     ->where('event_organizations.status', 1)
                     ->where('event_organization_riders.id_individual', $id)
-                    ->select('event_organization_riders.id AS id', DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"), 'events.event_name')
+                    ->select(
+                        'event_organization_riders.id AS id',
+                        DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"),
+                        'events.event_name'
+                    )
                     ->get();
 
                 return response()->json($listofJoinedEvents);

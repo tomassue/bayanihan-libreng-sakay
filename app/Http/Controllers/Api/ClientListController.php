@@ -24,7 +24,9 @@ class ClientListController extends Controller
             if ($this->checkToken($token)) {
                 $id = $this->indi_id;
 
-                $servedClients = TransactionModel::class::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                $servedClients = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+                    ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+                    ->join('events', 'event_organizations.id_event', '=', 'events.id')
                     ->join('client_information', 'transactions.id_client', '=', 'client_information.id')
                     ->where('event_organization_riders.id_individual', $id)
                     ->select(
@@ -32,7 +34,8 @@ class ClientListController extends Controller
                         DB::raw("CONCAT(COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname"),
                         'event_organization_riders.id_individual',
                         DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"),
-                        'transactions.destination'
+                        'transactions.destination',
+                        'events.event_name AS event_name'
                     )
                     ->orderBy('transactions.created_at', 'DESC')
                     ->get();
