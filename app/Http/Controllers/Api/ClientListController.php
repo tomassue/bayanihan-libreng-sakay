@@ -34,7 +34,7 @@ class ClientListController extends Controller
                         DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"),
                         'transactions.destination'
                     )
-                    ->orderBy('created_at', 'DESC')
+                    ->orderBy('transactions.created_at', 'DESC')
                     ->get();
 
                 return response()->json($servedClients);
