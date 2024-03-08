@@ -25,7 +25,7 @@
         /* background-size: contain, contain; */
         background-size: 80%, 80%;
         background-position: center top, left bottom;
-        height: 1160px !important;
+        height: 1180px !important;
     }
 
     /* Right Div */
@@ -34,7 +34,7 @@
         background-repeat: no-repeat;
         background-size: cover;
         /* background-position: center; */
-        height: 1160px !important;
+        height: 1180px !important;
     }
 
     /* Ensure equal heights for right and left divs */
@@ -184,6 +184,12 @@
                             <option value="m" {{ old('sex') == 'm' ? 'selected' : '' }}>Male</option>
                             <option value="f" {{ old('sex') == 'f' ? 'selected' : '' }}>Female</option>
                         </select>
+
+                        @error('sex')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                 </div>
 
