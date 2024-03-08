@@ -126,7 +126,7 @@
                     <table class="table table-borderless">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT'S NAME</th>
+                                <th scope="col" width="30%">EVENT'S NAME</th>
                                 <th scope="col">DATE</th>
                                 <th scope="col">RIDER'S NAME</th>
                                 <th scope="col">CONTACT NO.</th>
@@ -162,39 +162,34 @@
                     <table class="table table-borderless">
                         <thead>
                             <tr>
-                                <th scope="col">EVENT'S NAME</th>
+                                <!-- <th scope="col">EVENT'S NAME</th>
                                 <th scope="col">RIDER'S NAME</th>
                                 <th scope="col">NO. OF CLIENTS</th>
-                                <th scope="col">ORGANIZATION</th>
+                                <th scope="col">ORGANIZATION</th> -->
+                                <th scope="col" width="30%">ORGANIZATION</th>
+                                <th scope="col">NO. OF RIDERS</th>
+                                <th scope="col">LIST OF RIDERS</th>
+                                <th scope="col">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="text-start" style="border-top: 1px solid black; border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black; border-radius: 10px;">
                                 <td colspan="5" style="background-image: linear-gradient(#2E8B57 53%, #0A335D 100%);"><span style="font-size:larger; font-weight:bolder; color:#FFFFFF">LIST</span></td>
                             </tr>
-                            @foreach($event as $event_detail)
+                            @foreach($event as $event_organization)
                             <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;">
-                                <th scope="row">{{ $event_detail['event_name'] }}</th>
-                                <td>{{ $event_detail['last_name'] . ', ' . $event_detail['first_name'] . ($event_detail['middle_name'] ? ' ' . $event_detail['middle_name'] : '') . ($event_detail['ext_name'] ? ' ' . $event_detail['middle_name'] . '.' : '') }}</td>
+                                <th scope="row">{{ $event_organization['organization_name'] }}</th>
                                 <td>
-                                    @php
-                                    //$event_detail['indi_id']
-
-                                    $getEventOrg = App\Models\EventOrganizationsModel::where('id_event', $id_event)
-                                    ->pluck('id');
-
-                                    $getEventOrgRiders = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $getEventOrg)
-                                    ->where('id_individual', $event_detail['indi_id'])
-                                    ->pluck('id');
-
-                                    $getTransactions = App\Models\TransactionModel::whereIn('id_event_organization_riders', $getEventOrgRiders)
-                                    ->pluck('id_client')
-                                    ->count();
-
-                                    echo $getTransactions;
-                                    @endphp
+                                    {{
+                                    $a = App\Models\EventOrganizationRidersModel::where('id_event_organization', $event_organization['id'])->count()
+                                    }}
                                 </td>
-                                <td>{{ $event_detail['organization_name'] }}</td>
+                                <td>
+                                    <span>
+                                        <img src="{{ asset('assets/img/document.png') }}" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </span>
+                                </td>
+                                <td>Approve Decline</td>
                             </tr>
                             @endforeach
                         </tbody>

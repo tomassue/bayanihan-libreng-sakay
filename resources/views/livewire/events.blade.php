@@ -127,7 +127,7 @@
                             @foreach($totalNoOfEvents_org as $total_no_of_events_org)
                             <tr wire:key="{{ $total_no_of_events_org['event_organizations_id'] }}">
                                 <th scope="row">{{ $total_no_of_events_org['event_name'] }}</th>
-                                <td>{{ $total_no_of_events_org['event_date'] }}</td>
+                                <td>{{ date('M-d-Y', strtotime($total_no_of_events_org['event_date'])) }}</td>
                                 <td>
                                     @php
                                     $one = App\Models\EventOrganizationsModel::where('id_event', $total_no_of_events_org['events_id'])
@@ -183,8 +183,8 @@
                             <tr>
                                 <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
-                                <th scope="col">NO. OF CLIENTS</th>
-                                <th scope="col">NO. OF RIDERS</th>
+                                <th scope="col">TIME</th>
+                                <th scope="col">CATEGORY</th>
                                 <th scope="col">DETAILS</th>
                             </tr>
                         </thead>
@@ -192,33 +192,35 @@
                             @foreach($totalNoOfEvents as $total_no_of_events)
                             <tr wire:key="{{ $total_no_of_events['id'] }}">
                                 <th scope="row">{{ $total_no_of_events['event_name'] }}</th>
-                                <td>{{ $total_no_of_events['event_date'] }}</td>
+                                <td>{{ date('M-d-Y', strtotime($total_no_of_events['event_date'])) }}</td>
                                 <td>
                                     @php
-                                    $one = App\Models\EventOrganizationsModel::where('id_event', $total_no_of_events['id'])
-                                    ->pluck('id');
+                                    //$one = App\Models\EventOrganizationsModel::where('id_event', $total_no_of_events['id'])
+                                    //->pluck('id');
 
-                                    $onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
-                                    ->pluck('id');
+                                    //$onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
+                                    //->pluck('id');
 
-                                    $onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
-                                    ->count();
+                                    //$onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
+                                    //->count();
 
-                                    echo $onethree;
+                                    //echo $onethree;
+                                    echo date('g:i A', strtotime($total_no_of_events['time_start'])) . ' - ' . date('g:i A', strtotime($total_no_of_events['time_end']));
                                     @endphp
                                 </td>
                                 <td>
                                     @php
                                     // We want to get all records on a specific column that satisfies the where condition through pluck('column_name')
-                                    $two = App\Models\EventOrganizationsModel::where('id_event', $total_no_of_events['id'])
-                                    ->pluck('id');
+                                    //$two = App\Models\EventOrganizationsModel::where('id_event', $total_no_of_events['id'])
+                                    //->pluck('id');
 
                                     // whereIn() method is used to check if the 'id_event_organization' column is in the array of values in $two.
-                                    echo App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organizations.id', 'event_organization_riders.id_event_organization')
-                                    ->join('events', 'events.id', '=', 'event_organizations.id_event')
-                                    ->select('events.id AS id_event', 'events.*', 'event_organizations.id AS id_event_organization', 'event_organizations.*', 'event_organization_riders.id AS id_event_organization_riders', 'event_organization_riders.*')
-                                    ->whereIn('id_event_organization', $two)
-                                    ->count();
+                                    //echo App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organizations.id', 'event_organization_riders.id_event_organization')
+                                    //->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                    //->select('events.id AS id_event', 'events.*', 'event_organizations.id AS id_event_organization', 'event_organizations.*', 'event_organization_riders.id AS id_event_organization_riders', 'event_organization_riders.*')
+                                    //->whereIn('id_event_organization', $two)
+                                    //->count();
+                                    echo ucfirst($total_no_of_events['category']);
                                     @endphp
                                 </td>
                                 <td>
@@ -273,7 +275,7 @@
                             @foreach($onGoingEvents_org as $ongoing_events_org)
                             <tr wire:key="{{ $ongoing_events_org['id'] }}">
                                 <th scope="row">{{ $ongoing_events_org['event_name'] }}</th>
-                                <td>{{ $ongoing_events_org['event_date'] }}</td>
+                                <td>{{ date('M-d-Y', strtotime($ongoing_events_org['event_date'])) }}</td>
                                 <td>
                                     @php
                                     $one = App\Models\EventOrganizationsModel::where('id_event', $ongoing_events_org['id'])
@@ -329,8 +331,8 @@
                             <tr>
                                 <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
-                                <th scope="col">NO. OF CLIENTS</th>
-                                <th scope="col">NO. OF RIDERS</th>
+                                <th scope="col">TIME</th>
+                                <th scope="col">CATEGORY</th>
                                 <th scope="col">DETAILS</th>
                             </tr>
                         </thead>
@@ -338,33 +340,35 @@
                             @foreach($onGoingEvents as $ongoing_events)
                             <tr wire:key="{{ $ongoing_events['id'] }}">
                                 <th scope="row">{{ $ongoing_events['event_name'] }}</th>
-                                <td>{{ $ongoing_events['event_date'] }}</td>
+                                <td>{{ date('M-d-Y', strtotime($ongoing_events['event_date'])) }}</td>
                                 <td>
                                     @php
-                                    $one = App\Models\EventOrganizationsModel::where('id_event', $ongoing_events['id'])
-                                    ->pluck('id');
+                                    //$one = App\Models\EventOrganizationsModel::where('id_event', $ongoing_events['id'])
+                                    //->pluck('id');
 
-                                    $onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
-                                    ->pluck('id');
+                                    //$onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
+                                    //->pluck('id');
 
-                                    $onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
-                                    ->count();
+                                    //$onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
+                                    //->count();
 
-                                    echo $onethree;
+                                    //echo $onethree;
+                                    echo date('g:i A', strtotime($ongoing_events['time_start'])) . ' - ' . date('g:i A', strtotime($ongoing_events['time_end']));
                                     @endphp
                                 </td>
                                 <td>
                                     @php
                                     // We want to get all records on a specific column that satisfies the where condition through pluck('column_name')
-                                    $two = App\Models\EventOrganizationsModel::where('id_event', $ongoing_events['id'])
-                                    ->pluck('id');
+                                    //$two = App\Models\EventOrganizationsModel::where('id_event', $ongoing_events['id'])
+                                    //->pluck('id');
 
                                     // whereIn() method is used to check if the 'id_event_organization' column is in the array of values in $two.
-                                    echo App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organizations.id', 'event_organization_riders.id_event_organization')
-                                    ->join('events', 'events.id', '=', 'event_organizations.id_event')
-                                    ->select('events.id AS id_event', 'events.*', 'event_organizations.id AS id_event_organization', 'event_organizations.*', 'event_organization_riders.id AS id_event_organization_riders', 'event_organization_riders.*')
-                                    ->whereIn('id_event_organization', $two)
-                                    ->count();
+                                    //echo App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organizations.id', 'event_organization_riders.id_event_organization')
+                                    //->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                    //->select('events.id AS id_event', 'events.*', 'event_organizations.id AS id_event_organization', 'event_organizations.*', 'event_organization_riders.id AS id_event_organization_riders', 'event_organization_riders.*')
+                                    //->whereIn('id_event_organization', $two)
+                                    //->count();
+                                    echo ucfirst($ongoing_events['category']);
                                     @endphp
                                 </td>
                                 <td>
@@ -413,7 +417,7 @@
                             @foreach($doneEvents_org as $done_Events_org)
                             <tr wire:key="{{ $done_Events_org['id'] }}">
                                 <th scope="row">{{ $done_Events_org['event_name'] }}</th>
-                                <td>{{ $done_Events_org['event_date'] }}</td>
+                                <td>{{ date('M-d-Y', strtotime($done_Events_org['event_date'])) }}</td>
                                 <td>
                                     @php
                                     $one = App\Models\EventOrganizationsModel::where('id_event', $done_Events_org['id'])
@@ -469,8 +473,8 @@
                             <tr>
                                 <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
-                                <th scope="col">NO. OF CLIENTS</th>
-                                <th scope="col">NO. OF RIDERS</th>
+                                <th scope="col">TIME</th>
+                                <th scope="col">CATEGORY</th>
                                 <th scope="col">DETAILS</th>
                             </tr>
                         </thead>
@@ -478,33 +482,35 @@
                             @foreach($doneEvents as $done_Events)
                             <tr wire:key="{{ $done_Events['id'] }}">
                                 <th scope="row">{{ $done_Events['event_name'] }}</th>
-                                <td>{{ $done_Events['event_date'] }}</td>
+                                <td>{{ date('M-d-Y', strtotime($done_Events['event_date'])) }}</td>
                                 <td>
                                     @php
-                                    $one = App\Models\EventOrganizationsModel::where('id_event', $done_Events['id'])
-                                    ->pluck('id');
+                                    //$one = App\Models\EventOrganizationsModel::where('id_event', $done_Events['id'])
+                                    //->pluck('id');
 
-                                    $onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
-                                    ->pluck('id');
+                                    //$onetwo = App\Models\EventOrganizationRidersModel::whereIn('id_event_organization', $one)
+                                    //->pluck('id');
 
-                                    $onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
-                                    ->count();
+                                    //$onethree = App\Models\TransactionModel::whereIn('id_event_organization_riders', $onetwo)
+                                    //->count();
 
-                                    echo $onethree;
+                                    //echo $onethree;
+                                    echo date('g:i A', strtotime($done_Events['time_start'])) . ' - ' . date('g:i A', strtotime($done_Events['time_end']));
                                     @endphp
                                 </td>
                                 <td>
                                     @php
                                     // We want to get all records on a specific column that satisfies the where condition through pluck('column_name')
-                                    $two = App\Models\EventOrganizationsModel::where('id_event', $done_Events['id'])
-                                    ->pluck('id');
+                                    //$two = App\Models\EventOrganizationsModel::where('id_event', $done_Events['id'])
+                                    //->pluck('id');
 
                                     // whereIn() method is used to check if the 'id_event_organization' column is in the array of values in $two.
-                                    echo App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organizations.id', 'event_organization_riders.id_event_organization')
-                                    ->join('events', 'events.id', '=', 'event_organizations.id_event')
-                                    ->select('events.id AS id_event', 'events.*', 'event_organizations.id AS id_event_organization', 'event_organizations.*', 'event_organization_riders.id AS id_event_organization_riders', 'event_organization_riders.*')
-                                    ->whereIn('id_event_organization', $two)
-                                    ->count();
+                                    //echo App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organizations.id', 'event_organization_riders.id_event_organization')
+                                    //->join('events', 'events.id', '=', 'event_organizations.id_event')
+                                    //->select('events.id AS id_event', 'events.*', 'event_organizations.id AS id_event_organization', 'event_organizations.*', 'event_organization_riders.id AS id_event_organization_riders', 'event_organization_riders.*')
+                                    //->whereIn('id_event_organization', $two)
+                                    //->count();
+                                    echo ucfirst($done_Events['category']);
                                     @endphp
                                 </td>
                                 <td>

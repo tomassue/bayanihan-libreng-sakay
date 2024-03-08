@@ -24,24 +24,32 @@ class EventDetails extends Component
 
     public function render()
     {
-        $event = EventModel::join('event_organizations', 'event_organizations.id_event', '=', 'events.id')
-            ->join('event_organization_riders', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
-            ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
-            ->join('organization_information', 'organization_information.id', '=', 'event_organizations.id_organization')
+        // $event = EventModel::join('event_organizations', 'event_organizations.id_event', '=', 'events.id')
+        //     ->join('event_organization_riders', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+        //     ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
+        //     ->join('organization_information', 'organization_information.id', '=', 'event_organizations.id_organization')
+        //     ->select(
+        //         'individual_information.id AS indi_id',
+        //         'individual_information.*',
+        //         'events.id AS eventID',
+        //         'events.*',
+        //         'event_organizations.id AS event_organizationsID',
+        //         'event_organizations.*',
+        //         'event_organization_riders.id AS event_organization_ridersID',
+        //         'event_organization_riders.*',
+        //         'organization_information.id AS organization_informationID',
+        //         'organization_information.*'
+        //     )
+        //     ->where('event_organizations.id_event', $this->id_event)
+        //     ->orderBy('event_organizations.created_at', 'DESC')
+        //     ->paginate(10, pageName: 'event-details');
+
+        $event = EventOrganizationsModel::join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
+            ->where('id_event', $this->id_event)
             ->select(
-                'individual_information.id AS indi_id',
-                'individual_information.*',
-                'events.id AS eventID',
-                'events.*',
-                'event_organizations.id AS event_organizationsID',
-                'event_organizations.*',
-                'event_organization_riders.id AS event_organization_ridersID',
-                'event_organization_riders.*',
-                'organization_information.id AS organization_informationID',
-                'organization_information.*'
+                'event_organizations.id AS id',
+                'organization_information.organization_name'
             )
-            ->where('event_organizations.id_event', $this->id_event)
-            ->orderBy('event_organizations.created_at', 'DESC')
             ->paginate(10, pageName: 'event-details');
 
         if (Auth::user()->user_id !== 'ADMIN') {
