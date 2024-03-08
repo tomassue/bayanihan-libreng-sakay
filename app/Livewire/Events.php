@@ -29,8 +29,10 @@ class Events extends Component
     public $event_ID;
 
     // Input fields
+    public  $google_map_link;
+
     #[Validate('required')]
-    public $eventName;
+    public $eventName, $event_location, $time_start, $time_end, $category, $estimated_number_of_participants;
 
     #[Validate('required|date|after_or_equal:today')]
     public $eventDate;
@@ -201,6 +203,7 @@ class Events extends Component
 
     public function save()
     {
+        // dd($this->time_start, $this->time_end);
         $this->validate();
 
         $checkExistingRecord = EventModel::where('event_name', $this->eventName)
@@ -214,8 +217,14 @@ class Events extends Component
             $this->addError('eventDate', 'Duplicate record found for the given event name and date.');
         } else {
             EventModel::create([
-                'event_name'    =>      $this->eventName,
-                'event_date'    =>      $this->eventDate,
+                'event_name'                        => $this->eventName,
+                'event_date'                        => $this->eventDate,
+                'event_location'                    => $this->event_location,
+                'google_map_link'                   => $this->google_map_link,
+                'time_start'                        => $this->time_start,
+                'time_end'                          => $this->time_end,
+                'category'                          => $this->category,
+                'estimated_number_of_participants'  => $this->estimated_number_of_participants,
             ]);
 
             $this->dispatch('close-eventSave-Modal');

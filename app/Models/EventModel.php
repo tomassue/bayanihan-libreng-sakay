@@ -14,6 +14,12 @@ class EventModel extends Model
     protected $fillable = [
         'event_name',
         'event_date',
+        'event_location',
+        'google_map_link',
+        'time_start',
+        'time_end',
+        'category',
+        'estimated_number_of_participants',
         'status',
         'tag',
     ];
