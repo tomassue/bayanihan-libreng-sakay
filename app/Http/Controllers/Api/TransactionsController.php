@@ -99,7 +99,7 @@ class TransactionsController extends Controller
                     ->first();
 
                 if ($checkClientTransaction) {
-                    TransactionModel::where('id', $request->transaction->trans_id)
+                    TransactionModel::where('id', $request->trans_id)
                         ->update([
                             'status'    =>  1
                         ]);
