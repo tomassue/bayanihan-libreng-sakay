@@ -95,7 +95,7 @@ class TransactionsController extends Controller
 
         try {
             if ($this->checkToken($request->token)) {
-                $checkClientTransaction = TransactionModel::where('id', $request->transaction->trans_id)
+                $checkClientTransaction = TransactionModel::where('id', $request->trans_id)
                     ->first();
 
                 if ($checkClientTransaction) {
