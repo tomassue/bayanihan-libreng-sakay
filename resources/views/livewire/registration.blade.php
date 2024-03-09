@@ -491,31 +491,33 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col" style="width: 30%;">EVENT NAME</th>
+                                <!-- <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">ORGANIZATION</th>
                                 <th scope="col">NO. OF RIDERS</th>
-                                <th scope="col">ACTION</th>
+                                <th scope="col">ACTION</th> -->
+                                <th scope="col" style="width: 30%;">EVENT NAME</th>
+                                <th scope="col">DATE</th>
+                                <th scope="col">TIME</th>
+                                <th scope="col">CATEGORY</th>
+                                <th scope="col">DETAILS</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($events as $event)
-                            <tr wire:key="{{ $event['org_info_id'] }}">
+                            <!-- <tr wire:key="{{ $event['org_info_id'] }}"> -->
+                            <!-- <th scope="row">{{ $event['event_name'] }}</th>
+                                <td>{{ $event['organization_name'] }}</td> -->
+                            <tr wire:key="{{ $event['events_id'] }}">
                                 <th scope="row">{{ $event['event_name'] }}</th>
-                                <td>{{ $event['organization_name'] }}</td>
+                                <td>{{ date('M-d-Y', strtotime($event['event_date'])) }}</td>
+                                <td>{{ date('g:i A', strtotime($event['time_start'])) . ' - ' . date('g:i A', strtotime($event['time_end'])) }}</td>
+                                <td>{{ ucfirst($event['category']) }}</td>
                                 <td>
-                                    {{
-                                        // App\Models\IndividualInformationModel::where('id_organization', $event['org_id'])->count()
-
-                                        App\Models\EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
-                                        ->select('event_organizations.id AS event_org_id', 'event_organizations.*', 'event_organization_riders.*')
-                                        ->where('event_organizations.id_organization', $event['org_id'])
-                                        ->where('event_organizations.id_event', $event['events_id'])
-                                        ->count()
-                                    }}
-                                </td>
-                                <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmApproveEvent('{{ $event['org_info_id'] }}')">APPROVE </span>
-                                    <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmDeclineEvent('{{ $event['org_info_id'] }}')">DECLINE</span>
+                                    <!-- <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmApproveEvent('{{ $event['org_info_id'] }}')">APPROVE </span> -->
+                                    <!-- <span class="ms-1" style="font-weight: bolder; color: #BF0000; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmModal3" wire:click="confirmDeclineEvent('{{ $event['org_info_id'] }}')">DECLINE</span> -->
+                                    <a href="{{ route('event-details', $event['events_id']) }}" target="_blank">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach
@@ -701,9 +703,8 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
 
-                <form wire:submit="saveOrg">
-
-                    <div class="modal-body">
+                <div class="modal-body">
+                    <form wire:submit="saveOrg">
                         <div class="mb-3 row">
                             <label for="exampleFormControlInput1" class="col-12">Organization Name</label>
                             <div class="col-12">
@@ -741,6 +742,30 @@
                         </div>
 
                         <div class="mb-3 row">
+                            <label for="exampleFormControlInput1" class="col-12">Representative's Name</label>
+                            <div class="col-12">
+                                <input type="text" class="form-control @error('representative_name') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="representative_name">
+                                @error('representative_name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlInput1" class="col-12">Representative's Position</label>
+                            <div class="col-12">
+                                <input type="text" class="form-control @error('representative_position') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="representative_position">
+                                @error('representative_position')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
                             <label for="exampleFormControlInput1" class="col-12">Contact Number</label>
                             <div class="col-12">
                                 <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('contact_number') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="contact_number">
@@ -763,11 +788,10 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;">SAVE</button>
-                    </div>
-
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;">SAVE</button>
+                </div>
                 </form>
             </div>
         </div>

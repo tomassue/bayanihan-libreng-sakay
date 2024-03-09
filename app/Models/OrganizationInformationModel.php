@@ -17,7 +17,9 @@ class OrganizationInformationModel extends Model
         'organization_name',
         'date_established',
         'address',
-        'status',
+        'representative_name',
+        'representative_position',
+        // 'status',
     ];
 
     // Join user table

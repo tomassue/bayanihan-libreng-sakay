@@ -12,6 +12,7 @@ use Livewire\WithPagination;
 use App\Models\EventModel;
 use App\Models\EventOrganizationsModel;
 use App\Models\EventOrganizationRidersModel;
+use Livewire\Attributes\Validate;
 
 #[Layout('components.layouts.page')]
 #[Title('Event Details')]
@@ -21,6 +22,11 @@ class EventDetails extends Component
     use WithPagination;
 
     public $id_event;
+
+    // Modal
+    public $approve, $eventID;
+    #[Validate('required')]
+    public $remarks_event;
 
     public function render()
     {
@@ -46,6 +52,7 @@ class EventDetails extends Component
 
         $event = EventOrganizationsModel::join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
             ->where('id_event', $this->id_event)
+            ->where('status', 0)
             ->select(
                 'event_organizations.id AS id',
                 'organization_information.organization_name'
@@ -92,5 +99,55 @@ class EventDetails extends Component
     public function mount($eventID)
     {
         $this->id_event = $eventID;
+    }
+
+    public function confirmApproveEvent($event_ID)
+    {
+        $this->approve = true;
+        $this->eventID = $event_ID;
+    }
+
+    public function confirmDeclineEvent($event_ID)
+    {
+        $this->approve = false;
+        $this->eventID = $event_ID;
+    }
+
+    public function approveEvent($eventID)
+    {
+        if ($eventID) {
+            $item = EventOrganizationsModel::where('id', $eventID)->first();
+            if ($item) {
+                $item->update([
+                    'status'    =>  1
+                ]);
+
+                session()->flash('status', 'Event approved.');
+
+                // We need to close the modal after the process.
+                $this->dispatch('close-confirmApproveEvent');
+                $this->reset('eventID', 'approve');
+            }
+        }
+    }
+
+    public function declineEvent($eventID)
+    {
+        $this->validate();
+        if ($eventID) {
+            $item = EventOrganizationsModel::where('id', $eventID)->first();
+            if ($item) {
+                $item->update([
+                    'status'    =>  2,
+                    'remarks'   =>  $this->remarks_event
+                ]);
+
+                session()->flash('status', 'Event declined.');
+
+                // We need to close the modal after the process.
+                $this->dispatch('close-confirmDeclineEvent');
+                $this->reset('eventID', 'approve');
+            }
+        }
     }
 }

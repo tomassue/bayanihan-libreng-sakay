@@ -37,7 +37,7 @@ class Registration extends Component
 
     // Add Organization Modal Fields
     #[Validate('required')]
-    public $organization_name, $date_established, $address;
+    public $organization_name, $date_established, $address, $representative_name, $representative_position;
 
     #[Validate('required|email:rfc,dns')]
     public $email;
@@ -467,15 +467,17 @@ class Registration extends Component
         $user_id = strtoupper($timestamp . $randomString);
 
         OrganizationInformationModel::create([
-            'user_id'           =>  $user_id,
-            'organization_name' =>  $this->organization_name,
-            'date_established'  =>  $this->date_established,
-            'address'           =>  $this->address,
+            'user_id'                   =>  $user_id,
+            'organization_name'         =>  $this->organization_name,
+            'date_established'          =>  $this->date_established,
+            'address'                   =>  $this->address,
+            'representative_name'       =>  $this->representative_name,
+            'representative_position'   =>  $this->representative_position,
         ]);
 
         User::create([
             'user_id'                   => $user_id,
-            'email'                     => 'null',
+            'email'                     => $this->email,
             'contactNumber'             => $this->contact_number,
             'id_account_type'           => 1,
             'password'                  => Hash::make('P@ssw0rd'),

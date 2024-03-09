@@ -8,8 +8,8 @@
                 <h1 class="modal-title fs-5 fw-bolder" id="eventSaveModalLabel">Event Details</h1>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
             </div>
-            <form wire:submit="save">
-                <div class="modal-body">
+            <div class="modal-body">
+                <form wire:submit="save">
                     <div class="row mb-3 fw-bolder" style="color: #0A335D;">
                         <label for="inputText" class="col-sm-3 col-form-label">Event Name</label>
                         <div class="col-sm-9">
@@ -82,10 +82,10 @@
                             @enderror
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;">SAVE</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;">SAVE</button>
+            </div>
             </form>
         </div>
     </div>
@@ -95,7 +95,7 @@
 <div wire:ignore.self class="modal fade" id="confirmJoinModal" tabindex="-1" aria-labelledby="confirmJoinModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
+            <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF;">
                 <h1 class="modal-title fs-5 fw-bolder" id="confirmJoinModalLabel">Confirmation</h1>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
             </div>

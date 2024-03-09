@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('organization_name');
             $table->date('date_established');
             $table->string('address');
-            $table->string('contact_number');
+            $table->string('representative_name');
+            $table->string('representative_position');
             $table->timestamps();
         });
     }

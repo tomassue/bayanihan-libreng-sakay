@@ -26,9 +26,13 @@
                 </div>
                 @endif
 
-                <div class="col-12 mb-2">
+                <!-- <div class="col-12 mb-2">
                     <a href="{{ route('events') }}"><button type="button" class="btn btn-primary"><i class="bi bi-arrow-bar-left"></i> Go Back</button></a>
-                </div>
+                </div> -->
+
+                <!-- <div class="col-12 mb-2">
+                    <a href="{{ route('registration') }}"><button type="button" class="btn btn-primary"><i class="bi bi-arrow-bar-left"></i> Go Back</button></a>
+                </div> -->
 
                 <div class="col">
                     <div class="card h-100 border border-secondary">
@@ -41,12 +45,16 @@
                                                 <h1 class="card-title text-center h-50" style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" style="font-size: 23px; font-weight: 1000 !important;">TOTAL NO. OF EVENTS</h1>
                                                 <h6 class="text-center fs-1">
                                                     @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
+                                                    {{
+                                                    App\Models\EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                                                         ->join('events', 'events.id', '=', 'event_organizations.id_event')
                                                         ->where('event_organizations.status', 1)
-                                                        ->count() }}
+                                                        ->count() 
+                                                    }}
                                                     @else
-                                                    {{ App\Models\EventModel::all()->count() }}
+                                                    {{
+                                                    App\Models\EventModel::all()->count() 
+                                                    }}
                                                     @endif
                                                 </h6>
                                             </div>
@@ -177,7 +185,7 @@
                                 <td colspan="5" style="background-image: linear-gradient(#2E8B57 53%, #0A335D 100%);"><span style="font-size:larger; font-weight:bolder; color:#FFFFFF">LIST</span></td>
                             </tr>
                             @foreach($event as $event_organization)
-                            <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;">
+                            <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;" wire:key="{{ $event_organization['id'] }}">
                                 <th scope="row">{{ $event_organization['organization_name'] }}</th>
                                 <td>
                                     {{
@@ -185,11 +193,14 @@
                                     }}
                                 </td>
                                 <td>
-                                    <span>
+                                    <span data-bs-toggle="modal" data-bs-target="#listOfRidersModal">
                                         <img src="{{ asset('assets/img/document.png') }}" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </span>
                                 </td>
-                                <td>Approve Decline</td>
+                                <td>
+                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmApproveEvent" wire:click="confirmApproveEvent('{{ $event_organization['id'] }}')">APPROVE </span>
+                                    <span class="ms-{{ $event_organization['id'] }}" style="font-weight: bolder; color: #BF0000; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#confirmDeclineEvent" wire:click="confirmDeclineEvent('{{ $event_organization['id'] }}')">DECLINE</span>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -199,7 +210,25 @@
                 @endif
                 @endif
             </div>
-
         </div>
     </div>
+
+    <!-- Modals -->
+    @if(!$noRecords)
+    @include('list-of-riders-modal')
+    @endif
+
+    @include('event-confirm-registration-modal')
 </div>
+
+@script
+<script>
+    $wire.on('close-confirmApproveEvent', () => {
+        $('#confirmApproveEvent').modal('hide');
+    });
+
+    $wire.on('close-confirmDeclineEvent', () => {
+        $('#confirmDeclineEvent').modal('hide');
+    });
+</script>
+@endscript
