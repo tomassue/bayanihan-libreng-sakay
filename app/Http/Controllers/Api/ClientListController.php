@@ -30,6 +30,7 @@ class ClientListController extends Controller
                     ->join('client_information', 'transactions.id_client', '=', 'client_information.id')
                     ->where('event_organization_riders.id_individual', $id)
                     ->select(
+                        'transactions.id AS trans_id',
                         'client_information.id AS client_id',
                         DB::raw("CONCAT(COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname"),
                         'event_organization_riders.id_individual',

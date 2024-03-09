@@ -95,11 +95,11 @@ class TransactionsController extends Controller
 
         try {
             if ($this->checkToken($request->token)) {
-                $checkClientTransaction = TransactionModel::where('id', $request->transaction->id)
+                $checkClientTransaction = TransactionModel::where('id', $request->transaction->trans_id)
                     ->first();
 
                 if ($checkClientTransaction) {
-                    TransactionModel::where('id', $request->transaction->id)
+                    TransactionModel::where('id', $request->transaction->trans_id)
                         ->update([
                             'status'    =>  1
                         ]);
