@@ -151,9 +151,12 @@
                                     }}
                                 </td>
                                 <td>
-                                    <a href="{{ route('event-details', $total_no_of_events_org['event_organizations_id']) }}">
+                                    <!-- <a href="{{ route('event-details', $total_no_of_events_org['event_organizations_id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
-                                    </a>
+                                    </a> -->
+                                    <span data-bs-toggle="modal" data-bs-target="#eventDetailsModal">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </span>
                                 </td>
                             </tr>
                             @endforeach
@@ -224,9 +227,12 @@
                                     @endphp
                                 </td>
                                 <td>
-                                    <a href="{{ route('event-details', $total_no_of_events['id']) }}">
+                                    <!-- <a href="{{ route('event-details', $total_no_of_events['id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
-                                    </a>
+                                    </a> -->
+                                    <span data-bs-toggle="modal" data-bs-target="#eventDetailsModal" wire:click="eventDetails('{{ $total_no_of_events['id'] }}')">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </span>
                                 </td>
                             </tr>
                             @endforeach

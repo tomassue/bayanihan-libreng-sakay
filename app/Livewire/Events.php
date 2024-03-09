@@ -25,11 +25,14 @@ class Events extends Component
     // FILTER
     public $filter, $approve, $join;
 
+    // Event details Modal
+    public $id_event;
+
     #[Locked]
     public $event_ID;
 
     // Input fields
-    public  $google_map_link;
+    public $google_map_link;
 
     #[Validate('required')]
     public $eventName, $event_location, $time_start, $time_end, $category, $estimated_number_of_participants;
@@ -113,6 +116,10 @@ class Events extends Component
             ->orderBy('created_at', 'DESC')
             ->search($this->search_doneEvents_admin)
             ->paginate(10, pageName: 'done-events');
+
+        // Event details
+        $eventsDetails = EventModel::where('id', $this->id_event)
+            ->get();
         /** END ADMINISTRATION */
 
         return view('livewire.events', [
@@ -160,6 +167,9 @@ class Events extends Component
             'totalPagesdoneEvents'         =>      $doneEvents->lastPage(),
             'totalRecordsdoneEvents'       =>      $doneEvents->total(),
             'noRecordsdoneEvents'          =>      $doneEvents->isEmpty(),
+
+            // Event details modal
+            'eventsDetails'                =>       $eventsDetails
             // END ADMINISTRATION
         ]);
     }
@@ -264,5 +274,11 @@ class Events extends Component
         $pastDueRecords->update([
             'tag'   =>  1,
         ]);
+    }
+
+    // This is for the event details modal, we will get the wire:key id and assign it in a property to make it accessible throughout the page
+    public function eventDetails($id_event)
+    {
+        $this->id_event = $id_event;
     }
 }

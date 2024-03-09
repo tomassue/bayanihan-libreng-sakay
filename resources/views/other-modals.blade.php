@@ -112,3 +112,28 @@
 </div>
 
 <!-- --------------------------------------------------- END EVENTS ----------------------------------------------------- -->
+
+<!-- EVENT DETAILS -->
+<div wire:ignore.self class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF;">
+                <h1 class="modal-title fs-5 fw-bolder" id="eventDetailsLabel">Event Details</h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
+            </div>
+            <div class="modal-body" wire:loading.remove>
+                @if(Auth::user()->user_id !== 'ADMIN')
+                <p>I am an organization!</p>
+                @else
+                <div class="container row">
+                    {{ $eventsDetails }}
+                </div>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END -->
