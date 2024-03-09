@@ -7,20 +7,21 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
             </div>
             <div class="modal-body">
+                @php
+                $riders = App\Models\EventOrganizationRidersModel::where('id_event_organization', $event_organization['id'])
+                ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
+                ->select(
+                'event_organization_riders.id_individual',
+                DB::raw(" CONCAT(COALESCE(individual_information.first_name, '' ), ' ' , COALESCE(individual_information.middle_name, '' ), ' ' , COALESCE(individual_information.last_name, '' ), ' ' , COALESCE(individual_information.ext_name, '' )) AS rider_fullname"), ) ->get();
+                $no = 1;
+                @endphp
                 @if(empty($riders))
                 <div class="pagination-info pt-4">
                     <p class="text-center">No riders.</p>
                 </div>
                 @else
                 <div class="container row">
-                    @php
-                    $riders = App\Models\EventOrganizationRidersModel::where('id_event_organization', $event_organization['id'])
-                    ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
-                    ->select(
-                    'event_organization_riders.id_individual',
-                    DB::raw(" CONCAT(COALESCE(individual_information.first_name, '' ), ' ' , COALESCE(individual_information.middle_name, '' ), ' ' , COALESCE(individual_information.last_name, '' ), ' ' , COALESCE(individual_information.ext_name, '' )) AS rider_fullname"), ) ->get();
-                    $no = 1;
-                    @endphp
+
                     <table class="table table-borderless">
                         <thead>
                             <tr>
