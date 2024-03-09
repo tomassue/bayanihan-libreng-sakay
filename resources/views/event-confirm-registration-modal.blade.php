@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body" wire:loading.remove>
                 <div class="row mb-3 fw-bolder" style="color: #0A335D;">
-                    <h4>Are you sure you want to proceed? {{ $eventID }}</h4>
+                    <h4>Are you sure you want to proceed?</h4>
                 </div>
                 @if (!$approve)
                 <div class="row mb-3">

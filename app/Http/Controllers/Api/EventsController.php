@@ -25,6 +25,7 @@ class EventsController extends Controller
                 $listOfEvent = EventOrganizationsModel::join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
                     ->join('events', 'event_organizations.id_event', '=', 'events.id')
                     ->where('events.tag', 0)
+                    ->where('event_organizations.status', 0)
                     ->where('event_organizations.id_organization', $this->id_org)
                     ->select("event_organizations.id", DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"), "events.event_name")
                     ->whereNotExists(function ($query) use ($id) {
