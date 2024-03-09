@@ -101,7 +101,7 @@ class TransactionsController extends Controller
                 if ($checkClientTransaction) {
                     TransactionModel::where('id', $request->transaction->id)
                         ->update([
-                            'status'    =>  $request->transaction->status
+                            'status'    =>  1
                         ]);
 
                     return response()->json(['message' => 'Successfully dropped.'], 200);
