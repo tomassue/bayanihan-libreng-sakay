@@ -115,7 +115,7 @@
 
 <!-- EVENT DETAILS -->
 <div wire:ignore.self class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+    <div class="modal-dialog modal-dialog-scrollable modal-l">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF;">
                 <h1 class="modal-title fs-5 fw-bolder" id="eventDetailsLabel">Event Details</h1>
@@ -125,11 +125,47 @@
                 @if(Auth::user()->user_id !== 'ADMIN')
                 <p>I am an organization!</p>
                 @else
-                <div class="container row">
-                    {{ $eventsDetails }}
+                @if($eventsDetails)
+                <div class="container">
+                    <div class="col-12 mb-3">
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Name:</span> {{ucfirst($eventsDetails->event_name)}}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;"> Date:</span> {{$eventsDetails->event_date}}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;"> Location:</span> {{ucfirst($eventsDetails->event_location)}}
+                        </div>
+                        <div class="col-12 mb-2 text-truncate">
+                            <span style="color:black;">Google Map Link:</span> @if(empty($eventsDetails->google_map_link)) {{'N/A'}} @else <a href="{{$eventsDetails->google_map_link}}" target="_blank">{{$eventsDetails->google_map_link}}</a> @endif
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Time:</span> {{$eventsDetails->time}}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Category:</span> {{ucfirst($eventsDetails->category)}}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Status:</span> @if($eventsDetails->status == 1) {{'Approved'}} @elseif($eventsDetails->status == 2) {{'Declined'}} @endif
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Tag:</span> @if($eventsDetails->tag == 0) {{'Ongoing'}} @elseif($eventsDetails->tag == 1) {{'Done'}} @endif
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">No. of Organization:</span> {{ $noOfOrganization ? $noOfOrganization : $noOfOrganization }}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">No. of Riders:</span> {{ $noOfRiders ? $noOfRiders : $noOfRiders }}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">No. of Clients:</span> {{ $noOfClients ? $noOfClients : $noOfClients }}
+                        </div>
+                    </div>
                 </div>
                 @endif
             </div>
+            @endif
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>

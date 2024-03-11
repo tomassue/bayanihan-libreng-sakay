@@ -466,8 +466,8 @@
 
                 <div class="pagination-info my-2 text-end">
                     <div class="btn-group" role="group" aria-label="Basic outlined example">
-                        <button type="button" class="btn {{ $pagethree == '' || $pagethree == 'threepending' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageThreePending">Pending</button>
-                        <button type="button" class="btn {{ $pagethree == 'threedeclined' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageThreeDeclined">Declined</button>
+                        <button type="button" class="btn {{ $pagethree == '' || $pagethree == 'threepending' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageThreePending">Pending ({{$events->count()}})</button>
+                        <button type="button" class="btn {{ $pagethree == 'threedeclined' ? 'btn-primary' : 'btn-outline-primary' }}" wire:click="pageThreeDeclined">Declined ({{$events_declined->count()}})</button>
                     </div>
                 </div>
 
@@ -730,6 +730,18 @@
                         </div>
 
                         <div class="mb-3 row">
+                            <label for="exampleFormControlInput1" class="col-12">Organization's Contact Number</label>
+                            <div class="col-12">
+                                <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('contact_number') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="contact_number">
+                                @error('contact_number')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
                             <label for="exampleFormControlInput1" class="col-12">Address</label>
                             <div class="col-12">
                                 <input type="text" class="form-control @error('address') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="address">
@@ -766,10 +778,10 @@
                         </div>
 
                         <div class="mb-3 row">
-                            <label for="exampleFormControlInput1" class="col-12">Contact Number</label>
+                            <label for="exampleFormControlInput1" class="col-12">Representative's Contact Number</label>
                             <div class="col-12">
-                                <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('contact_number') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="contact_number">
-                                @error('contact_number')
+                                <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('representative_contact_number') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="representative_contact_number">
+                                @error('representative_contact_number')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

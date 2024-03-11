@@ -14,6 +14,7 @@ use App\Livewire\EventDetails;
 use App\Livewire\Registration;
 use App\Livewire\Events;
 use App\Livewire\Reports;
+use App\Livewire\UpdateProfile;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,9 @@ Route::get('/', function () {
 // This is somehow the 'landing page' of registration. Users are asked what account type they are going to register, then they will be routed to the registration form associated with the account type they prefer.
 // Route::post('/registration', [RegistrationAccountTypeController::class, 'index'])->name('registration');
 // Route::get('/registration/org', [RegistrationAccountTypeController::class, 'registerOrg'])->name('register.org');
+
 Route::get('/registration/ind', [RegistrationAccountTypeController::class, 'registerInd'])->name('register.ind');
+
 // Route::get('/registration/client', [RegistrationAccountTypeController::class, 'registerClient'])->name('register.client');
 
 Route::get('/qr/{ClientUserID}', [GenerateClientQRController::class, 'generateQRPage'])->name('qr'); // QR PAGE
@@ -54,6 +57,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/registration/organization-details/{id_organization}', OrganizationDetails::class)->name('organization.details');
     Route::get('/registration/event-details/{eventID}', EventDetails::class)->name('event-details');
+
+    Route::get('/update-profile/{id}', UpdateProfile::class)->name('update.profile');
 
     Route::get('/client-list', Reports::class)->name('client-list');
     Route::get('/generate-qr/{clientID}', [Reports::class, 'generateQr'])->name('generate.qr');

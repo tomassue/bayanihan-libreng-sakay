@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\ClientInformationModel;
+use App\Models\TransactionModel;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
@@ -12,6 +13,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Livewire\Attributes\Validate;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 #[Layout('components.layouts.page')]
 #[Title('Reports')]
@@ -26,6 +28,9 @@ class Reports extends Component
     public $user_type, $last_name, $first_name, $birthday, $sex, $address, $school, $emergency_name;
     #[Validate('required|size:11|unique:users,contactNumber|unique:client_information,guardian_contact_number')]
     public $contact_number, $emergency_contact_no;
+
+    // Transaction History
+    public $id_client;
 
     // Search
     public $search_client;
@@ -43,13 +48,38 @@ class Reports extends Component
             ->orderBy('created_at', 'DESC')
             ->paginate(10, pageName: 'list-of-clients');
 
+        $client_transact = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', 'event_organization_riders.id')
+            ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
+            ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+            ->join('events', 'event_organizations.id_event', '=', 'events.id')
+            ->select(
+                'events.event_name AS event_name',
+                'events.event_date AS event_date',
+                'events.event_location AS event_location',
+                DB::raw("CONCAT(COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_name"),
+                'transactions.destination AS transaction_destination',
+                DB::raw("DATE_FORMAT(transactions.created_at, '%h:%i%p') AS transaction_time"),
+                DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y') AS transaction_date"),
+                'transactions.destination AS destination'
+            )
+            ->where('id_client', $this->id_client)
+            ->orderBy('transactions.created_at', 'DESC')
+            ->get();
+
         return view('livewire.reports', [
             'clients'                   =>      $clients,
             'currentPageclients'        =>      $clients->currentPage(),
             'totalPagesclients'         =>      $clients->lastPage(),
             'totalRecordsclients'       =>      $clients->total(),
             'noRecordsclients'          =>      $clients->isEmpty(),
+
+            'client_transact'           =>      $client_transact
         ]);
+    }
+
+    public function transactHistory($id)
+    {
+        $this->id_client = $id;
     }
 
     public function updating()

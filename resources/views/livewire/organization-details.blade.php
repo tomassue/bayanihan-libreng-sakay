@@ -106,6 +106,38 @@
             </div>
 
             <div class="row mx-5 mt-4 mb-4">
+                <div class="col-12 row">
+                    <div class="col-4 fw-bold fs-5">Organization Name: </div>
+                    <div class="col-8 fs-5">{{$org_details->organization_name}}</div>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-4 fw-bold fs-5">Date Established: </div>
+                    <div class="col-8 fs-5">{{$org_details->date_established}}</div>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-4 fw-bold fs-5">Address: </div>
+                    <div class="col-8 fs-5">{{$org_details->address}}</div>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-4 fw-bold fs-5">Representative: </div>
+                    <div class="col-8 fs-5">{{$org_details->representative_name}}</div>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-4 fw-bold fs-5">Representative's Position: </div>
+                    <div class="col-8 fs-5">{{$org_details->representative_position}}</div>
+                </div>
+                <div class="col-12 row">
+                    <div class="col-4 fw-bold fs-5">Representative's contact no.: </div>
+                    <div class="col-8 fs-5">{{$org_details->representative_contact_number}}</div>
+                </div>
+
+            </div>
+
+            <div class="row mx-5 mt-3">
+                <hr>
+            </div>
+
+            <div class="row mx-5 mt-4 mb-4">
                 @if($noRecords)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No records found.</p>

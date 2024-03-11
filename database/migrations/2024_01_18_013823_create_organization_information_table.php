@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('representative_name');
             $table->string('representative_position');
+            $table->string('representative_contact_number');
             $table->timestamps();
         });
     }

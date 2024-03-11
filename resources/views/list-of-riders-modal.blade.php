@@ -15,7 +15,7 @@
                 DB::raw(" CONCAT(COALESCE(individual_information.first_name, '' ), ' ' , COALESCE(individual_information.middle_name, '' ), ' ' , COALESCE(individual_information.last_name, '' ), ' ' , COALESCE(individual_information.ext_name, '' )) AS rider_fullname"), ) ->get();
                 $no = 1;
                 @endphp
-                @if(empty($riders))
+                @if($riders->count() == 0)
                 <div class="pagination-info pt-4">
                     <p class="text-center">No riders.</p>
                 </div>

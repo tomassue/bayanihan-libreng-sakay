@@ -20,6 +20,17 @@ class OrganizationDetails extends Component
 
     public function render()
     {
+        $org_details = OrganizationInformationModel::where('id', $this->id_org['id'])
+            ->select(
+                'organization_name',
+                'date_established',
+                'address',
+                'representative_name',
+                'representative_position',
+                'representative_contact_number'
+            )
+            ->first();
+
         $individual = IndividualInformationModel::where('id_organization', $this->id_org['id'])
             ->join('users', 'individual_information.user_id', '=', 'users.user_id')
             // ->where('users.status', 1)
@@ -33,6 +44,8 @@ class OrganizationDetails extends Component
             'totalPages'       =>      $individual->lastPage(),
             'totalRecords'     =>      $individual->total(),
             'noRecords'        =>      $individual->isEmpty(),
+
+            'org_details'      =>      $org_details
         ]);
     }
 

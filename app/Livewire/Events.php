@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\EventModel;
+use App\Models\EventOrganizationRidersModel;
 use App\Models\EventOrganizationsModel;
+use App\Models\TransactionModel;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
 
@@ -119,7 +121,31 @@ class Events extends Component
 
         // Event details
         $eventsDetails = EventModel::where('id', $this->id_event)
-            ->get();
+            ->select(
+                'event_name',
+                DB::raw("DATE_FORMAT(event_date, '%b %d, %Y') AS event_date"),
+                'event_location',
+                'google_map_link',
+                DB::raw("CONCAT(TIME_FORMAT(time_start, '%l:%i %p'), ' - ', TIME_FORMAT(time_end, '%l:%i %p')) AS time"),
+                'category',
+                'estimated_number_of_participants',
+                'status',
+                'tag'
+            )
+            ->first();
+
+        $noOfOrganization = EventOrganizationsModel::where('id_event', $this->id_event)
+            ->get()
+            ->count();
+
+        $a = EventOrganizationsModel::where('id_event', $this->id_event)->pluck('id'); // Pluck the id of the model where it meets the condition.
+        $noOfRiders = EventOrganizationRidersModel::whereIn('id_event_organization', $a)->count(); // Count all rows where it meets the condition
+
+        $b = EventOrganizationRidersModel::whereIn('id_event_organization', $a)->pluck('id');
+        $noOfClients = TransactionModel::whereIn('id_event_organization_riders', $b)->count();
+        // End Event details
+
+
         /** END ADMINISTRATION */
 
         return view('livewire.events', [
@@ -169,7 +195,10 @@ class Events extends Component
             'noRecordsdoneEvents'          =>      $doneEvents->isEmpty(),
 
             // Event details modal
-            'eventsDetails'                =>       $eventsDetails
+            'eventsDetails'                =>       $eventsDetails,
+            'noOfOrganization'             =>       $noOfOrganization,
+            'noOfRiders'                   =>       $noOfRiders,
+            'noOfClients'                  =>       $noOfClients
             // END ADMINISTRATION
         ]);
     }

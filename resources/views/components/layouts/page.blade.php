@@ -274,11 +274,19 @@
                     </span>
                 </a>
                 <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+
                     <li class="nav-item">
                         <a class="align-items-center" href="{{ route('change-password') }}" style="color: white; padding-bottom: 2px;">
                             <span style="font-size: medium;">> &nbsp; Change Password</span>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="align-items-center" href="{{ route('update.profile', Auth::user()->organization_information->id) }}" style="color: white; color: white;padding-top: 2px; padding-bottom: 4px;">
+                            <span style="font-size: medium;">> &nbsp; Update Profile</span>
+                        </a>
+                    </li>
+
                     <li class="nav-item pt-0">
                         <a class="align-items-center" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                     document.getElementById('logout-form').submit();" style="color: white; padding-top: 2px;">
@@ -288,6 +296,7 @@
                             @csrf
                         </form>
                     </li>
+
                 </ul>
             </li>
 

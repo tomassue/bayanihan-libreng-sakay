@@ -19,6 +19,7 @@ class OrganizationInformationModel extends Model
         'address',
         'representative_name',
         'representative_position',
+        'representative_contact_number'
         // 'status',
     ];
 

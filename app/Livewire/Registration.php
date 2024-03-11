@@ -45,6 +45,9 @@ class Registration extends Component
     #[Validate('required|size:11|unique:users,contactNumber')]
     public $contact_number;
 
+    #[Validate('required|size:11|unique:organization_information,representative_contact_number')]
+    public $representative_contact_number;
+
     public function render()
     {
         $organization_one = OrganizationInformationModel::orderBy('organization_information.created_at', 'DESC')
@@ -467,12 +470,13 @@ class Registration extends Component
         $user_id = strtoupper($timestamp . $randomString);
 
         OrganizationInformationModel::create([
-            'user_id'                   =>  $user_id,
-            'organization_name'         =>  $this->organization_name,
-            'date_established'          =>  $this->date_established,
-            'address'                   =>  $this->address,
-            'representative_name'       =>  $this->representative_name,
-            'representative_position'   =>  $this->representative_position,
+            'user_id'                       =>  $user_id,
+            'organization_name'             =>  $this->organization_name,
+            'date_established'              =>  $this->date_established,
+            'address'                       =>  $this->address,
+            'representative_name'           =>  $this->representative_name,
+            'representative_position'       =>  $this->representative_position,
+            'representative_contact_number' =>  $this->representative_contact_number
         ]);
 
         User::create([

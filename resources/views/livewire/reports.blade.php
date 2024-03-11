@@ -66,8 +66,16 @@
                                     <td>{{ $client->contact_number }}</td>
                                     <td>
                                         <a href="{{ route('generate.qr', encrypt($client->id)) }}" target="_blank">
-                                            <button type="button" class="btn btn-success fw-bold mx-auto" style="width: 100px; height: 30px; padding-right: 0px; padding-top: 0px; padding-left: 0px; padding-bottom: 0px;">GENERATE</button>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                                <path d="M2 9V6.5C2 4.01 4.01 2 6.5 2H9M15 2h2.5C19.99 2 22 4.01 22 6.5V9M22 16v1.5c0 2.49-2.01 4.5-4.5 4.5H16M9 22H6.5C4.01 22 2 19.99 2 17.5V15M10.5 7v2c0 1-.5 1.5-1.5 1.5H7c-1 0-1.5-.5-1.5-1.5V7C5.5 6 6 5.5 7 5.5h2c1 0 1.5.5 1.5 1.5ZM18.5 7v2c0 1-.5 1.5-1.5 1.5h-2c-1 0-1.5-.5-1.5-1.5V7c0-1 .5-1.5 1.5-1.5h2c1 0 1.5.5 1.5 1.5ZM10.5 15v2c0 1-.5 1.5-1.5 1.5H7c-1 0-1.5-.5-1.5-1.5v-2c0-1 .5-1.5 1.5-1.5h2c1 0 1.5.5 1.5 1.5ZM18.5 15v2c0 1-.5 1.5-1.5 1.5h-2c-1 0-1.5-.5-1.5-1.5v-2c0-1 .5-1.5 1.5-1.5h2c1 0 1.5.5 1.5 1.5Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
                                         </a>
+                                        <span style="cursor: pointer;" wire:click="transactHistory('{{ $client->id }}')" data-bs-toggle="modal" data-bs-target="#clientHistoryModal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                                <path d="M21 7v10c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V7c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5Z" stroke="#000000" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                <path d="M14.5 4.5v2c0 1.1.9 2 2 2h2M8 13h4M8 17h8" stroke="#000000" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                        </span>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -81,6 +89,59 @@
                         </div>
                         {{ $clients->links('vendor.livewire.custom-pagination') }}
                         @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- clientHistoryModal -->
+    <div wire:ignore.self class="modal fade" id="clientHistoryModal" tabindex="-1" aria-labelledby="clientHistoryModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
+                    <h1 class="modal-title fs-5 fw-bolder" id="clientHistoryModalLabel">Transaction History</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
+                </div>
+                <div class="modal-body" wire:loading.remove>
+                    <div class="row justify-content-center">
+                        <div class="activity">
+                            @if($client_transact->count() == 0)
+                            <div class="text-center">
+                                No transactions found.
+                            </div>
+                            @else
+                            @foreach($client_transact as $client_transactions)
+                            <div class="activity-item d-flex">
+                                <div class="activite-label">{{$client_transactions->transaction_time}}</div>
+                                <i class="bi bi-circle-fill activity-badge text-success align-self-start"></i>
+                                <div class="activity-content">
+                                    <div>
+                                        <i class="ri-calendar-event-fill"></i>
+                                        {{$client_transactions->event_name}}
+                                    </div>
+                                    <div>
+                                        <i class="ri-map-pin-2-line"></i>
+                                        {{$client_transactions->event_location}}
+                                    </div>
+                                    <div>
+                                        <i class="ri-calendar-2-fill"></i>
+                                        {{$client_transactions->transaction_date}}
+                                    </div>
+                                    <div>
+                                        <i class="ri-user-2-line"></i>
+                                        {{$client_transactions->rider_name}}
+                                    </div>
+                                    <div>
+                                        <i class="ri-account-pin-circle-line"></i>
+                                        {{ucfirst($client_transactions->destination)}}
+                                    </div>
+                                    <!-- <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae -->
+                                </div>
+                            </div><!-- End activity item--><!-- End activity item-->
+                            @endforeach
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
