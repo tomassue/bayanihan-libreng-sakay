@@ -48,6 +48,19 @@ class Reports extends Component
             ->orderBy('created_at', 'DESC')
             ->paginate(10, pageName: 'list-of-clients');
 
+        $client_details = ClientInformationModel::join('school_information', 'client_information.id_school', '=', 'school_information.id')
+            ->where('client_information.id', $this->id_client)
+            ->select(
+                DB::raw("CONCAT(COALESCE(first_name, ''), ' ', COALESCE(middle_name, ''), ' ', COALESCE(last_name, ''), ' ', COALESCE(ext_name, '')) AS client_fullname"),
+                'sex',
+                DB::raw("DATE_FORMAT(birthday, '%b %d, %Y') AS birthday"),
+                'address',
+                DB::raw("COALESCE(school_information.school_name, '') AS school"),
+                'guardian_name',
+                'guardian_contact_number',
+            )
+            ->first();
+
         $client_transact = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', 'event_organization_riders.id')
             ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
             ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
@@ -73,7 +86,8 @@ class Reports extends Component
             'totalRecordsclients'       =>      $clients->total(),
             'noRecordsclients'          =>      $clients->isEmpty(),
 
-            'client_transact'           =>      $client_transact
+            'client_transact'           =>      $client_transact,
+            'client_details'            =>      $client_details
         ]);
     }
 

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('birthday');
             $table->string('contact_number');
             $table->string('address');
-            $table->integer('id_school'); // id from school
+            $table->string('id_school')->default('NULL'); // id from school
             $table->string('guardian_name');
             $table->string('guardian_contact_number');
             $table->timestamps();

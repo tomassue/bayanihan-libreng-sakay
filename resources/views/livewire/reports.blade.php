@@ -97,20 +97,56 @@
 
     <!-- clientHistoryModal -->
     <div wire:ignore.self class="modal fade" id="clientHistoryModal" tabindex="-1" aria-labelledby="clientHistoryModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                    <h1 class="modal-title fs-5 fw-bolder" id="clientHistoryModalLabel">Transaction History</h1>
+                    <h1 class="modal-title fs-5 fw-bolder" id="clientHistoryModalLabel">Details</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
                 <div class="modal-body" wire:loading.remove>
-                    <div class="row justify-content-center">
-                        <div class="activity">
+                    <div class="row">
+                        @if($client_details)
+                        <div class="col-7 row">
+                            <div class="col row">
+                                <div class="col-12">
+                                    <h5 class="card-title" style="padding-top: 0px;">Clients' profile</span></h5>
+                                    <div class="col">
+                                        Name: {{$client_details->client_fullname}}
+                                    </div>
+                                    <div class="col">
+                                        Sex: {{strtoupper($client_details->sex)}}
+                                    </div>
+                                    <div class="col">
+                                        Birthday: {{$client_details->birthday}}
+                                    </div>
+                                    <div class="col">
+                                        Address: {{$client_details->address}}
+                                    </div>
+                                    <div class="col">
+                                        School: {{$client_details->school != 'NULL' ? $client_details->school : 'N/A'}}
+                                    </div>
+                                    <div class="col">
+                                        Guardian: {{$client_details->guardian_name}}
+                                    </div>
+                                    <div class="col">
+                                        Guardians' phone no.: {{$client_details->guardian_contact_number}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-6">
+                                Other details
+                            </div> -->
+                        </div>
+                        @endif
+
+                        <div class="col-5 activity">
                             @if($client_transact->count() == 0)
                             <div class="text-center">
                                 No transactions found.
                             </div>
                             @else
+                            <h5 class="card-title" style="padding-top: 0px;">Transaction History</span></h5>
                             @foreach($client_transact as $client_transactions)
                             <div class="activity-item d-flex">
                                 <div class="activite-label">{{$client_transactions->transaction_time}}</div>

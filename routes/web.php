@@ -70,6 +70,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/client-reports', ClientsReport::class)->name('client-reports');
     Route::get('/org-reports', OrgReports::class)->name('org-reports');
     Route::get('/rider-reports', RidersReports::class)->name('rider-reports');
+    Route::get('/pdf-events', [EventsReport::class, 'printPDF'])->name('pdf-events');
 
     // REPORTS (ORGANIZATION)
     Route::get('/ind-reports', IndiReports::class)->name('indi-reports');

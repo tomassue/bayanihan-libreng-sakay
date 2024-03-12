@@ -472,13 +472,13 @@
 
             @if(Auth::user()->user_id == 'ADMIN')
             <li class="nav-item">
-                <a class="nav-link {{ request()->is('reports') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
+                <a class="nav-link {{ request()->is('client-reports', 'org-reports', 'rider-reports', 'event-reports') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Reports</span>
                 </a>
                 <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                     @if(Auth::user()->user_id == 'ADMIN')
                     <li class="nav-item">
-                        <a class="align-items-center" href="{{ route('client-reports') }}" style="color: white; padding-bottom: 2px;">
+                        <a class="align-items-center" href="{{ route('event-reports') }}" style="color: white; padding-bottom: 2px;">
                             <span style="font-size: medium;">> &nbsp; Events</span>
                         </a>
                     </li>
@@ -488,12 +488,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="align-items-center" href="" style="color: white; padding-bottom: 2px;">
+                        <a class="align-items-center" href="{{ route('org-reports') }}" style="color: white; padding-bottom: 2px;">
                             <span style="font-size: medium;">> &nbsp; Organization</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="align-items-center" href="" style="color: white; padding-bottom: 2px;">
+                        <a class="align-items-center" href="{{ route('rider-reports') }}" style="color: white; padding-bottom: 2px;">
                             <span style="font-size: medium;">> &nbsp; Riders</span>
                         </a>
                     </li>

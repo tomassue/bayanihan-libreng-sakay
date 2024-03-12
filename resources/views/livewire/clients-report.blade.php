@@ -1,61 +1,104 @@
 <div>
     <div class="col">
         <div class="card">
-
             <div class="card-body pt-3">
-                <div class="pt-2 pb-5">
-                    <h1>Client Report</h1>
-                </div>
 
-                <form wire:submit="search">
-                    <div class="row mb-4">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Account Type</label>
-                        <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" wire:model="query">
-                                <option value="" selected="">All</option>
-                                <option value="student">Student</option>
-                                <option value="school_staff">School Staff</option>
-                                <option value="city_hall_employee">City Hall Employee</option>
-                                <option value="city_hall_client">City Hall Client</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
+                <div class="row g-2">
+                    <div class="col-12 pb-3">
+                        <h1>Client Report</h1>
                     </div>
 
-                    <div class="text-center">
+                    <!-- <div class="col-sm-12 col-lg-9 mb-4">
+                        <form wire:submit="search">
+                            <div class="row">
+                                <label for="inputEmail3" class="col-sm-4 col-md-4 col-lg-3 col-form-label">Account Type</label>
+                                <div class="col-sm-8">
+                                    <select class="form-select" aria-label="Default select example" wire:model="query">
+                                        <option value="" selected="">All</option>
+                                        <option value="student">Student</option>
+                                        <option value="school_staff">School Staff</option>
+                                        <option value="city_hall_employee">City Hall Employee</option>
+                                        <option value="city_hall_client">City Hall Client</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="col-sm-12 col-lg-3 text-center">
                         <button type="submit" class="btn btn-primary">Filter</button>
-                </form>
-                <button type="button" class="btn btn-secondary" wire:click="clear">Clear</button>
-            </div>
+                        <button type="button" class="btn btn-secondary" wire:click="clear">Clear</button>
+                        </form>
+                    </div> -->
+
+                    <div class="col-sm-12 col-lg-9 mb-4">
+                        <form wire:submit="search">
+                            <div class="row g-2">
+                                <label for="inputEmail3" class="col-sm-1 col-md-2 col-lg-2 col-form-label">Date</label>
+                                <div class="col-sm-4 col-md-5 col-lg-5">
+                                    <input type="date" class="form-control" wire:model="start_date" required>
+                                </div>
+                                <div class="col-sm-4 col-md-5 col-lg-5">
+                                    <input type="date" class="form-control" wire:model="end_date" required>
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="col-sm-12 col-lg-3 text-end">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <button type="button" class="btn btn-secondary" wire:click="clear">Clear</button>
+                        </form>
+                    </div>
+
+                    <!-- <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary">Print</button>
+                    </div> -->
+
+                    <div class="col-12">
+                        @if($noRecords)
+                        <div class="mt-5 mb-5 text-center">
+                            <span>No records found.</span>
+                        </div>
+                        @else
+                        <div class="row g-2 mb-2 mt-2">
+                            <div class="col-sm-2 text-start">
+                                <button type="submit" class="btn btn-primary">Print</button>
+                            </div>
+
+                            <div class="col-sm-10">
+                                <div class="pagination-info pb-4 text-end">
+                                    Page {{ $currentPage }} out of {{ $totalPages }}, Total Records: {{ $totalRecords }}
+                                </div>
+                            </div>
+                        </div>
 
 
-            <div class="pagination-info pt-5 pb-4 text-start">
-                Page {{ $currentPage }} out of {{ $totalPages }}, Total Records: {{ $totalRecords }}
-            </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Client Name</th>
+                                        <th scope="col">Contact Number</th>
+                                        <th scope="col">User Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($clients as $client)
+                                    <tr>
+                                        <td>{{$client->client_fullname}}</td>
+                                        <td>{{$client->contactNumber}}</td>
+                                        <td>{{ucfirst(str_replace("_"," ", $client->user_type))}}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        {{$clients->links('vendor.livewire.custom-pagination')}}
+                        @endif
+                    </div>
+                </div>
 
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Client Name</th>
-                            <th scope="col">Contact Number</th>
-                            <th scope="col">User Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($clients as $client)
-                        <tr>
-                            <td>{{$client->client_fullname}}</td>
-                            <td>{{$client->contactNumber}}</td>
-                            <td>{{ucfirst(str_replace("_"," ", $client->user_type))}}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
             </div>
-            {{$clients->links('vendor.livewire.custom-pagination')}}
         </div>
     </div>
-
-</div>
 </div>

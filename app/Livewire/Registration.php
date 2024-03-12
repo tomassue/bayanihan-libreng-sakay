@@ -77,6 +77,7 @@ class Registration extends Component
             // ->select('event_organizations.id AS org_info_id', 'events.*', 'organization_information.id AS org_id', 'organization_information.*')
             ->select('event_organizations.id AS org_info_id', 'events.id AS events_id', 'events.*', 'organization_information.id AS org_id', 'organization_information.*')
             ->where('event_organizations.status', 0)
+            ->where('events.tag', 0) // Ongoing events should only display here.
             ->orderBy('event_organizations.created_at', 'DESC')
             ->search($this->search_threepending_admin)
             ->paginate(10, pageName: 'event-registrations');
