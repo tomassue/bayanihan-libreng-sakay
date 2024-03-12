@@ -28,6 +28,19 @@
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BQJZKX6FYZ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-BQJZKX6FYZ');
+    </script>
+
     <style>
         .titlenav {
             font-family: Anybody !important;
@@ -275,17 +288,21 @@
                 </a>
                 <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
 
+                    @if(Auth::user()->user_id == 'ADMIN')
                     <li class="nav-item">
                         <a class="align-items-center" href="{{ route('change-password') }}" style="color: white; padding-bottom: 2px;">
                             <span style="font-size: medium;">> &nbsp; Change Password</span>
                         </a>
                     </li>
+                    @endif
 
+                    @if(Auth::user()->user_id !== 'ADMIN')
                     <li class="nav-item">
-                        <a class="align-items-center" href="{{ route('update.profile', Auth::user()->organization_information->id) }}" style="color: white; color: white;padding-top: 2px; padding-bottom: 4px;">
+                        <a class="align-items-center" href="{{ route('update.profile') }}" style="color: white; color: white;padding-top: 2px; padding-bottom: 4px;">
                             <span style="font-size: medium;">> &nbsp; Update Profile</span>
                         </a>
                     </li>
+                    @endif
 
                     <li class="nav-item pt-0">
                         <a class="align-items-center" href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -458,13 +475,31 @@
                 <a class="nav-link {{ request()->is('reports') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
                     <span class="fs-5 fw-bold">Reports</span>
                 </a>
-                <!-- <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    @if(Auth::user()->user_id == 'ADMIN')
                     <li class="nav-item">
-                        <a class="align-items-center" href="{{ route('client-list') }}" style="color: white; padding-bottom: 2px;">
-                            <span style="font-size: medium;">> &nbsp; Clients List</span>
+                        <a class="align-items-center" href="{{ route('client-reports') }}" style="color: white; padding-bottom: 2px;">
+                            <span style="font-size: medium;">> &nbsp; Events</span>
                         </a>
                     </li>
-                </ul> -->
+                    <li class="nav-item">
+                        <a class="align-items-center" href="{{ route('client-reports') }}" style="color: white; padding-bottom: 2px;">
+                            <span style="font-size: medium;">> &nbsp; Clients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="align-items-center" href="" style="color: white; padding-bottom: 2px;">
+                            <span style="font-size: medium;">> &nbsp; Organization</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="align-items-center" href="" style="color: white; padding-bottom: 2px;">
+                            <span style="font-size: medium;">> &nbsp; Riders</span>
+                        </a>
+                    </li>
+                    @else
+                    @endif
+                </ul>
             </li>
             @endif
         </ul>

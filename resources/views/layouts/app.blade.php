@@ -25,6 +25,19 @@
     <!-- Icons -->
     <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet" />
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BQJZKX6FYZ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-BQJZKX6FYZ');
+    </script>
+
     <!-- GOOGLE RECAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <script>

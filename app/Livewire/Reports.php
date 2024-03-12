@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 #[Layout('components.layouts.page')]
-#[Title('Reports')]
+#[Title('Registration')]
 
 class Reports extends Component
 {

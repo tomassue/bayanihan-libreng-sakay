@@ -2,18 +2,23 @@
 
 use App\Http\Controllers\GenerateClientQRController;
 use App\Http\Controllers\HomeController;
+use App\Livewire\EventsReport;
 use App\Livewire\OrganizationDetails;
+use App\Livewire\OrgReports;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\RegistrationAccountTypeController;
 use App\Http\Controllers\LandingPageController;
 use App\Livewire\ChangePassword;
+use App\Livewire\ClientsReport;
 use App\Livewire\Dashboard;
 use App\Livewire\EventDetails;
 use App\Livewire\Registration;
 use App\Livewire\Events;
+use App\Livewire\IndiReports;
 use App\Livewire\Reports;
+use App\Livewire\RidersReports;
 use App\Livewire\UpdateProfile;
 
 /*
@@ -58,7 +63,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/registration/organization-details/{id_organization}', OrganizationDetails::class)->name('organization.details');
     Route::get('/registration/event-details/{eventID}', EventDetails::class)->name('event-details');
 
-    Route::get('/update-profile/{id}', UpdateProfile::class)->name('update.profile');
+    Route::get('/update-profile', UpdateProfile::class)->name('update.profile');
+
+    // REPORTS (ADMIN)
+    Route::get('/event-reports', EventsReport::class)->name('event-reports');
+    Route::get('/client-reports', ClientsReport::class)->name('client-reports');
+    Route::get('/org-reports', OrgReports::class)->name('org-reports');
+    Route::get('/rider-reports', RidersReports::class)->name('rider-reports');
+
+    // REPORTS (ORGANIZATION)
+    Route::get('/ind-reports', IndiReports::class)->name('indi-reports');
 
     Route::get('/client-list', Reports::class)->name('client-list');
     Route::get('/generate-qr/{clientID}', [Reports::class, 'generateQr'])->name('generate.qr');
