@@ -76,7 +76,7 @@
     <table class="w-full">
         <tr>
             <td style="text-align: center;">
-                <img src="{{ asset('assets/img/copy2.png') }}" alt="laravel daily" width="300" />
+                <img src="data:image/png;base64,{{ $bls_logo }}" alt="laravel daily" width="300" />
             </td>
             <!-- <td class="w-half">
                 <h2>Report</h2>

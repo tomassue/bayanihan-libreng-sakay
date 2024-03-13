@@ -188,7 +188,7 @@ class Events extends Component
             'totalRecordsOnedoneEvents_org'       => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org->total() : null,
             'noRecordsOnedoneEvents_org'          => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org->isEmpty() : null,
 
-            'eventDetails_org'                    => $eventDetails_org,
+            'eventDetails_org'                    => (Auth::user()->user_id !== 'ADMIN') ? $eventDetails_org : null,
             // END ORGANIZATION
 
             // ADMINISTRATION

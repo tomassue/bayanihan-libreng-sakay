@@ -17,6 +17,7 @@ use App\Livewire\EventDetails;
 use App\Livewire\Registration;
 use App\Livewire\Events;
 use App\Livewire\IndiReports;
+use App\Livewire\References;
 use App\Livewire\Reports;
 use App\Livewire\RidersReports;
 use App\Livewire\UpdateProfile;
@@ -77,13 +78,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/pdf-org/{start_date?}/{end_date?}', [OrgReports::class, 'printPDF'])->name('pdf-org');
     Route::get('/pdf-riders/{start_date?}/{end_date?}/{query_org?}', [RidersReports::class, 'printPDF'])->name('pdf-riders');
 
-    // REPORTS EXPORT EXCEL
-    // Route::get('/export-events-reports/{start_date?}/{end_date?}/{acct_type?}', [EventsReport::class, 'exportEXCEL'])->name('export-events-reports');
-    // Route::get('/export-clients-reports/{start_date?}/{end_date?}', [ClientsReport::class, 'exportEXCEL'])->name('export-clients-reports');
-
     // REPORTS (ORGANIZATION)
     Route::get('/ind-reports', IndiReports::class)->name('indi-reports');
 
     Route::get('/client-list', Reports::class)->name('client-list');
     Route::get('/generate-qr/{clientID}', [Reports::class, 'generateQr'])->name('generate.qr');
+
+    // REFERENCE
+    Route::get('/references', References::class)->name('references');
 });

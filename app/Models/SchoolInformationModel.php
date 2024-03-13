@@ -10,4 +10,8 @@ class SchoolInformationModel extends Model
     use HasFactory;
 
     protected $table = 'school_information';
+
+    protected $fillable = [
+        'school_name',
+    ];
 }

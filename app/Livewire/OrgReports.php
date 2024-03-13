@@ -83,10 +83,15 @@ class OrgReports extends Component
 
         $organizations = $query->get();
 
+        // Logos to base64
+        $bls_logo = public_path('assets/img/copy2.png');
+        $bls_logo64 = base64_encode(file_get_contents($bls_logo));
+
         // Generate PDF with QR code
         $pdf = PDF::loadView(
             'pdf-reports.org-report-pdf',
             [
+                'bls_logo'          => $bls_logo64,
                 'organizations'     => $organizations,
                 'start_date'        => $start_date,
                 'end_date'          => $end_date,
