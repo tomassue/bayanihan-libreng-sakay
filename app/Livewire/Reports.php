@@ -23,9 +23,9 @@ class Reports extends Component
     use WithPagination;
 
     // Add Client Modal
-    public $middle_name, $ext_name;
+    public $middle_name, $ext_name, $school;
     #[Validate('required')]
-    public $user_type, $last_name, $first_name, $birthday, $sex, $address, $school, $emergency_name;
+    public $user_type, $last_name, $first_name, $birthday, $sex, $address, $emergency_name;
     #[Validate('required|size:11|unique:users,contactNumber|unique:client_information,guardian_contact_number')]
     public $contact_number, $emergency_contact_no;
 
@@ -101,6 +101,13 @@ class Reports extends Component
         $this->resetPage('list-of-clients');
     }
 
+    public function updatedUserType($value) // To achieve the behavior where the selected value in the "School" input field is reset to null if the user selects an option other than "Student" or "School Staff", you can utilize Livewire's lifecycle hooks to reset the value of the "School" input field when the "User Type" input field changes.  
+    { // In the updatedUserType method, we listen for changes in the "User Type" input field. If the selected value is not "Student" or "School Staff", we reset the value of the "School" input field to null. Now, whenever the user selects an option other than "Student" or "School Staff" in the "User Type" select field, the value of the "School" select field will be automatically reset to null, reducing the chance of human error.
+        if (!in_array($value, ['student', 'school_staff'])) {
+            $this->school = null;
+        }
+    }
+
     public function saveClient()
     {
         $this->validate();
@@ -135,7 +142,7 @@ class Reports extends Component
         ]);
 
         $this->dispatch('close-addClientModal-Modal');
-        session()->flash('status', 'Event added successfully.');
+        session()->flash('status', 'Client added successfully.');
         return redirect()->to('client-list');
     }
 
