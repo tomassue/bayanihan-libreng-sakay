@@ -154,7 +154,7 @@
                                     <!-- <a href="{{ route('event-details', $total_no_of_events_org['event_organizations_id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </a> -->
-                                    <span data-bs-toggle="modal" data-bs-target="#eventDetailsModal">
+                                    <span data-bs-toggle="modal" data-bs-target="#eventDetailsModal" wire:click="eventDetails('{{ $total_no_of_events_org['events_id'] }}')">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
                                     </span>
                                 </td>
@@ -305,9 +305,12 @@
                                     }}
                                 </td>
                                 <td>
-                                    <a href="{{ route('event-details', $ongoing_events_org['event_organizations_id']) }}">
+                                    <!-- <a href="{{ route('event-details', $ongoing_events_org['event_organizations_id']) }}">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
-                                    </a>
+                                    </a> -->
+                                    <span data-bs-toggle="modal" data-bs-target="#eventDetailsModal" wire:click="eventDetails('{{ $ongoing_events_org['events_id'] }}')">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </span>
                                 </td>
                             </tr>
                             @endforeach
@@ -378,9 +381,9 @@
                                     @endphp
                                 </td>
                                 <td>
-                                    <a href="{{ route('event-details', $ongoing_events['id']) }}">
+                                    <span data-bs-toggle="modal" data-bs-target="#eventDetailsModal" wire:click="eventDetails('{{ $ongoing_events['id'] }}')">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
-                                    </a>
+                                    </span>
                                 </td>
                             </tr>
                             @endforeach
@@ -447,9 +450,12 @@
                                     }}
                                 </td>
                                 <td>
-                                    <a href="{{ route('event-details', $done_Events_org['event_organizations_id']) }}">
+                                    <span data-bs-toggle="modal" data-bs-target="#eventDetailsModal" wire:click="eventDetails('{{ $done_Events_org['events_id'] }}')">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
-                                    </a>
+                                    </span>
+                                    <!-- <a href="{{ route('event-details', $done_Events_org['event_organizations_id']) }}">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </a> -->
                                 </td>
                             </tr>
                             @endforeach
@@ -520,9 +526,9 @@
                                     @endphp
                                 </td>
                                 <td>
-                                    <a href="{{ route('event-details', $done_Events['id']) }}">
+                                    <span data-bs-toggle="modal" data-bs-target="#eventDetailsModal" wire:click="eventDetails('{{ $done_Events['id'] }}')">
                                         <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
-                                    </a>
+                                    </span>
                                 </td>
                             </tr>
                             @endforeach
@@ -557,6 +563,7 @@
                         <thead>
                             <tr>
                                 <th scope="col" style="width: 30%;">EVENT NAME</th>
+                                <th scope="col">LOCATION</th>
                                 <th scope="col">DATE</th>
                                 <th scope="col">ACTION</th>
                             </tr>
@@ -565,6 +572,7 @@
                             @foreach($listOfEvents as $list_of_events)
                             <tr wire:key="{{ $list_of_events['id'] }}">
                                 <th scope="row">{{ $list_of_events['event_name'] }}</th>
+                                <td>{{ $list_of_events['event_location'] }}</td>
                                 <td>{{ $list_of_events['event_date'] }}</td>
                                 <td>
                                     <button type="button" class="btn btn-success fw-bold mx-auto" style="width: 100px;padding-right: 0px;padding-top: 0px;padding-left: 0px;padding-bottom: 0px;" data-bs-toggle="modal" data-bs-target="#confirmJoinModal" wire:click="confirmJoinEvent('{{ $list_of_events['id'] }}')">JOIN</button>

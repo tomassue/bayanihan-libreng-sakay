@@ -57,6 +57,20 @@ class Events extends Component
             //     ->search($this->search_totalNoOfEvents_org)
             //     ->paginate(10, pageName: 'organization-total-no-of-events');
 
+            $eventDetails_org = EventModel::where('id', $this->id_event)
+                ->select(
+                    'event_name',
+                    DB::raw("DATE_FORMAT(event_date, '%b %d, %Y') AS event_date"),
+                    'event_location',
+                    'google_map_link',
+                    DB::raw("CONCAT(TIME_FORMAT(time_start, '%l:%i %p'), ' - ', TIME_FORMAT(time_end, '%l:%i %p')) AS time"),
+                    'category',
+                    'estimated_number_of_participants',
+                    'status',
+                    'tag'
+                )
+                ->first();
+
             $totalNoOfEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'event_organizations.id_event', '=', 'events.id')
                 ->select(
@@ -89,7 +103,7 @@ class Events extends Component
                 ->where('event_organizations.status', 1)
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 0)
-                ->select('event_organizations.id AS event_organizations_id', 'events.*')
+                ->select('event_organizations.id AS event_organizations_id', 'events.id AS events_id', 'events.*')
                 ->orderBy('events.created_at', 'DESC')
                 ->search($this->search_onGoingEvents_org)
                 ->paginate(10, pageName: 'organization-ongoing-events');
@@ -97,7 +111,7 @@ class Events extends Component
             $doneEvents_org = EventOrganizationsModel::where('id_organization', [Auth::user()->organization_information->id])
                 ->join('events', 'events.id', '=', 'event_organizations.id_event')
                 ->where('events.tag', 1)
-                ->select('event_organizations.id AS event_organizations_id', 'events.*')
+                ->select('event_organizations.id AS event_organizations_id', 'events.id AS events_id', 'events.*')
                 ->orderBy('events.created_at', 'DESC')
                 ->search($this->search_doneEvents_org)
                 ->paginate(10, pageName: 'organization-ongoing-events');
@@ -173,6 +187,8 @@ class Events extends Component
             'totalPagesOnedoneEvents_org'         => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org->lastPage() : null,
             'totalRecordsOnedoneEvents_org'       => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org->total() : null,
             'noRecordsOnedoneEvents_org'          => (Auth::user()->user_id !== 'ADMIN') ? $doneEvents_org->isEmpty() : null,
+
+            'eventDetails_org'                    => $eventDetails_org,
             // END ORGANIZATION
 
             // ADMINISTRATION

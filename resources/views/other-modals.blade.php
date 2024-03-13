@@ -123,7 +123,36 @@
             </div>
             <div class="modal-body" wire:loading.remove>
                 @if(Auth::user()->user_id !== 'ADMIN')
-                <p>I am an organization!</p>
+                @if($eventDetails_org)
+                <div class="container">
+                    <div class="col-12 mb-3">
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Name:</span> {{ucfirst($eventDetails_org->event_name)}}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;"> Date:</span> {{$eventDetails_org->event_date}}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;"> Location:</span> {{ucfirst($eventDetails_org->event_location)}}
+                        </div>
+                        <div class="col-12 mb-2 text-truncate">
+                            <span style="color:black;">Google Map Link:</span> @if(empty($eventDetails_org->google_map_link)) {{'N/A'}} @else <a href="{{$eventDetails_org->google_map_link}}" target="_blank">{{$eventDetails_org->google_map_link}}</a> @endif
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Time:</span> {{$eventDetails_org->time}}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Category:</span> {{ucfirst($eventDetails_org->category)}}
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Status:</span> @if($eventDetails_org->status == 1) {{'Approved'}} @elseif($eventDetails_org->status == 2) {{'Declined'}} @endif
+                        </div>
+                        <div class="col-12 mb-2">
+                            <span style="color:black;">Tag:</span> @if($eventDetails_org->tag == 0) {{'Ongoing'}} @elseif($eventDetails_org->tag == 1) {{'Done'}} @endif
+                        </div>
+                    </div>
+                </div>
+                @endif
                 @else
                 @if($eventsDetails)
                 <div class="container">
