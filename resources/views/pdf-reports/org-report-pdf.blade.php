@@ -88,12 +88,6 @@
                     </div>
                     <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div>
                 </td>
-                <td class="w-half">
-                    <div>
-                        <h4>Account Type:</h4>
-                    </div>
-                    <div>{{empty($account_type) ? 'ALL' : ucfirst(str_replace("_"," ", $account_type))}}</div>
-                </td>
             </tr>
         </table>
     </div>
@@ -101,33 +95,37 @@
     <div class="margin-top">
         <table class="products">
             <tr>
-                <th>Client</th>
-                <th>Event</th>
-                <th>Date</th>
-                <th>Location</th>
-                <th>Destination</th>
-                <th>Rider</th>
+                <th>Organization Name</th>
+                <th>Date established</th>
+                <th>Address</th>
+                <th>Organizations' phone no.</th>
+                <th>Representatives' name</th>
+                <th>Representatives' position</th>
+                <th>Representatives' phone no.</th>
             </tr>
-            @foreach($clients_transact as $item)
+            @foreach($organizations as $item)
             <tr class="items">
 
                 <td>
-                    {{ $item['client_fullname'] }}
+                    {{ strtoupper($item['organization_name']) }}
                 </td>
                 <td>
-                    {{ $item['event_name'] }}
+                    {{ $item['date_established'] }}
                 </td>
                 <td>
-                    {{ $item['event_date'] }}
+                    {{ $item['address'] }}
                 </td>
                 <td>
-                    {{ $item['event_location'] }}
+                    {{ $item['representative_name'] }}
                 </td>
                 <td>
-                    {{ $item['destination'] }}
+                    {{ $item['representative_position'] }}
                 </td>
                 <td>
-                    {{ $item['rider_fullname'] }}
+                    {{ $item['representative_contact_number'] }}
+                </td>
+                <td>
+                    {{ $item['contact_number'] }}
                 </td>
 
             </tr>
@@ -136,7 +134,7 @@
     </div>
 
     <div class="total">
-        Total: {{$clients_transact->count()}}
+        Total: {{$organizations->count()}}
     </div>
 
     <div class="footer margin-top">

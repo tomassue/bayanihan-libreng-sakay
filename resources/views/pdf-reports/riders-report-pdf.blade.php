@@ -90,9 +90,18 @@
                 </td>
                 <td class="w-half">
                     <div>
-                        <h4>Account Type:</h4>
+                        <h4>Organization:</h4>
                     </div>
-                    <div>{{empty($account_type) ? 'ALL' : ucfirst(str_replace("_"," ", $account_type))}}</div>
+                    <div>
+                        @php
+                        $org = App\Models\OrganizationInformationModel::where('id', $query_org)
+                        ->select('organization_name')
+                        ->first();
+
+                        echo empty($query_org) ? 'ALL' : ucfirst($org->organization_name);
+
+                        @endphp
+                    </div>
                 </td>
             </tr>
         </table>
@@ -101,33 +110,24 @@
     <div class="margin-top">
         <table class="products">
             <tr>
-                <th>Client</th>
-                <th>Event</th>
-                <th>Date</th>
-                <th>Location</th>
-                <th>Destination</th>
                 <th>Rider</th>
+                <th>Organization</th>
+                <th>Total no. of clients served</th>
             </tr>
-            @foreach($clients_transact as $item)
+            @foreach($riders as $item)
             <tr class="items">
 
                 <td>
-                    {{ $item['client_fullname'] }}
-                </td>
-                <td>
-                    {{ $item['event_name'] }}
-                </td>
-                <td>
-                    {{ $item['event_date'] }}
-                </td>
-                <td>
-                    {{ $item['event_location'] }}
-                </td>
-                <td>
-                    {{ $item['destination'] }}
-                </td>
-                <td>
                     {{ $item['rider_fullname'] }}
+                </td>
+                <td>
+                    {{ $item['organization'] }}
+                </td>
+                <td>
+                    @php
+                    $a = App\Models\EventOrganizationRidersModel::where('id_individual', $item['id'])->pluck('id');
+                    echo $b = App\Models\TransactionModel::whereIn('id_event_organization_riders', $a)->count();
+                    @endphp
                 </td>
 
             </tr>
@@ -136,7 +136,7 @@
     </div>
 
     <div class="total">
-        Total: {{$clients_transact->count()}}
+        Total: {{$riders->count()}}
     </div>
 
     <div class="footer margin-top">

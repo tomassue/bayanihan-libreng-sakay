@@ -88,12 +88,6 @@
                     </div>
                     <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div>
                 </td>
-                <td class="w-half">
-                    <div>
-                        <h4>Account Type:</h4>
-                    </div>
-                    <div>{{empty($account_type) ? 'ALL' : ucfirst(str_replace("_"," ", $account_type))}}</div>
-                </td>
             </tr>
         </table>
     </div>
@@ -102,32 +96,20 @@
         <table class="products">
             <tr>
                 <th>Client</th>
-                <th>Event</th>
-                <th>Date</th>
-                <th>Location</th>
-                <th>Destination</th>
-                <th>Rider</th>
+                <th>Contact Number</th>
+                <th>User Type</th>
             </tr>
-            @foreach($clients_transact as $item)
+            @foreach($clients as $item)
             <tr class="items">
 
                 <td>
                     {{ $item['client_fullname'] }}
                 </td>
                 <td>
-                    {{ $item['event_name'] }}
+                    {{ $item['contactNumber'] }}
                 </td>
                 <td>
-                    {{ $item['event_date'] }}
-                </td>
-                <td>
-                    {{ $item['event_location'] }}
-                </td>
-                <td>
-                    {{ $item['destination'] }}
-                </td>
-                <td>
-                    {{ $item['rider_fullname'] }}
+                    {{ ucfirst(str_replace("_"," ", $item['user_type'])) }}
                 </td>
 
             </tr>
@@ -136,7 +118,7 @@
     </div>
 
     <div class="total">
-        Total: {{$clients_transact->count()}}
+        Total: {{$clients->count()}}
     </div>
 
     <div class="footer margin-top">

@@ -497,9 +497,14 @@
                             <span style="font-size: medium;">> &nbsp; Riders</span>
                         </a>
                     </li>
-                    @else
                     @endif
                 </ul>
+            </li>
+            @else
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('indi-reports') ? '' : 'collapsed' }}" href="{{ route('indi-reports') }}" style="border-radius: unset;">
+                    <span class="fs-5 fw-bold">Reports</span>
+                </a>
             </li>
             @endif
         </ul>
