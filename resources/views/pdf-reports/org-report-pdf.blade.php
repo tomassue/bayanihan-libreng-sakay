@@ -7,6 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>report-pdf</title>
     <style>
+        body {
+            font-family: DejaVu Sans;
+        }
+
         h4 {
             margin: 0;
         }
@@ -39,7 +43,7 @@
         }
 
         table.products tr {
-            background-color: rgb(96 165 250);
+            background-color: rgb(10, 52, 94);
         }
 
         table.products th {
@@ -57,6 +61,7 @@
 
         table th {
             text-align: left;
+            text-transform: uppercase;
         }
 
         .total {

@@ -71,10 +71,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/org-reports', OrgReports::class)->name('org-reports');
     Route::get('/rider-reports', RidersReports::class)->name('rider-reports');
 
+    // REPORTS GENERATE PDF
     Route::get('/pdf-events/{start_date?}/{end_date?}/{acct_type?}', [EventsReport::class, 'printPDF'])->name('pdf-events');
     Route::get('/pdf-clients/{start_date?}/{end_date?}', [ClientsReport::class, 'printPDF'])->name('pdf-clients');
     Route::get('/pdf-org/{start_date?}/{end_date?}', [OrgReports::class, 'printPDF'])->name('pdf-org');
     Route::get('/pdf-riders/{start_date?}/{end_date?}/{query_org?}', [RidersReports::class, 'printPDF'])->name('pdf-riders');
+
+    // REPORTS EXPORT EXCEL
+    // Route::get('/export-events-reports/{start_date?}/{end_date?}/{acct_type?}', [EventsReport::class, 'exportEXCEL'])->name('export-events-reports');
+    // Route::get('/export-clients-reports/{start_date?}/{end_date?}', [ClientsReport::class, 'exportEXCEL'])->name('export-clients-reports');
 
     // REPORTS (ORGANIZATION)
     Route::get('/ind-reports', IndiReports::class)->name('indi-reports');

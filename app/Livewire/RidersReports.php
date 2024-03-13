@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\RidersReportsExport;
 use App\Models\IndividualInformationModel;
 use App\Models\OrganizationInformationModel;
 use Livewire\Component;
@@ -11,6 +12,7 @@ use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.page')]
 #[Title('Rider Report')]
@@ -102,5 +104,14 @@ class RidersReports extends Component
         // return response()->streamDownload(function () use ($pdf) {
         //     echo $pdf->stream();
         // }, 'reports.pdf');
+    }
+
+    public function export()
+    {
+        $start_date     = $this->start_date;
+        $end_date       = $this->end_date;
+        $query_org      = $this->query_org;
+
+        return Excel::download(new RidersReportsExport($start_date, $end_date, $query_org), 'ridersreport.xlsx');
     }
 }

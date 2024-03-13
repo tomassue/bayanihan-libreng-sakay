@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\OrgReportsExport;
 use App\Models\OrganizationInformationModel;
 use Livewire\Component;
 
@@ -10,6 +11,7 @@ use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.page')]
 #[Title('Organization Report')]
@@ -99,5 +101,13 @@ class OrgReports extends Component
         // return response()->streamDownload(function () use ($pdf) {
         //     echo $pdf->stream();
         // }, 'reports.pdf');
+    }
+
+    public function export()
+    {
+        $start_date     = $this->start_date;
+        $end_date       = $this->end_date;
+
+        return Excel::download(new OrgReportsExport($start_date, $end_date), 'orgreport.xlsx');
     }
 }

@@ -8,29 +8,6 @@
                         <h1>Client Report</h1>
                     </div>
 
-                    <!-- <div class="col-sm-12 col-lg-9 mb-4">
-                        <form wire:submit="search">
-                            <div class="row">
-                                <label for="inputEmail3" class="col-sm-4 col-md-4 col-lg-3 col-form-label">Account Type</label>
-                                <div class="col-sm-8">
-                                    <select class="form-select" aria-label="Default select example" wire:model="query">
-                                        <option value="" selected="">All</option>
-                                        <option value="student">Student</option>
-                                        <option value="school_staff">School Staff</option>
-                                        <option value="city_hall_employee">City Hall Employee</option>
-                                        <option value="city_hall_client">City Hall Client</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                    </div>
-
-                    <div class="col-sm-12 col-lg-3 text-center">
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <button type="button" class="btn btn-secondary" wire:click="clear">Clear</button>
-                        </form>
-                    </div> -->
-
                     <div class="col-sm-12 col-lg-9 mb-4">
                         <form wire:submit="search">
                             <div class="row g-2">
@@ -70,6 +47,14 @@
                                         </svg>
                                     </button>
                                 </a>
+
+                                <button type="button" class="btn btn-primary" wire:click="export">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 11v6l2-2M9 17l-2-2" stroke="#d9e3f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M22 10v5c0 5-2 7-7 7H9c-5 0-7-2-7-7V9c0-5 2-7 7-7h5" stroke="#d9e3f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M22 10h-4c-3 0-4-1-4-4V2l8 8Z" stroke="#d9e3f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </button>
                             </div>
 
                             <div class="col-sm-10">

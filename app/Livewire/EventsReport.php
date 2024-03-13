@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\EventsReportExport;
 use App\Models\ClientInformationModel;
 use App\Models\TransactionModel;
 use Livewire\Component;
@@ -11,6 +12,7 @@ use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.page')]
 #[Title('Event Report')]
@@ -117,5 +119,14 @@ class EventsReport extends Component
         // return response()->streamDownload(function () use ($pdf) {
         //     echo $pdf->stream();
         // }, 'reports.pdf');
+    }
+
+    public function export()
+    {
+        $start_date     = $this->start_date;
+        $end_date       = $this->end_date;
+        $query_acc_type = $this->query_acc_type;
+
+        return Excel::download(new EventsReportExport($start_date, $end_date, $query_acc_type), 'eventsreport.xlsx');
     }
 }

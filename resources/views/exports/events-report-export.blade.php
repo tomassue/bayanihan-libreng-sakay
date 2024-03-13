@@ -1,0 +1,24 @@
+<table>
+    <thead>
+        <tr>
+            <th>Client</th>
+            <th>Event</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Destination</th>
+            <th>Rider</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($clients_transact as $client_trans)
+        <tr>
+            <td>{{$client_trans->client_fullname}}</td>
+            <td>{{$client_trans->event_name}}</td>
+            <td>{{$client_trans->event_date}}</td>
+            <td>{{ucfirst($client_trans->event_location)}}</td>
+            <td>{{ucfirst($client_trans->destination)}}</td>
+            <td>{{ucfirst($client_trans->rider_fullname)}}</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\ClientsReportExport;
 use App\Models\ClientInformationModel;
 use Livewire\Component;
 
@@ -10,6 +11,7 @@ use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.page')]
 #[Title('Client Report')]
@@ -86,5 +88,13 @@ class ClientsReport extends Component
             ->setOption('isRemoteEnabled', true);
 
         return $pdf->stream();
+    }
+
+    public function export()
+    {
+        $start_date     = $this->start_date;
+        $end_date       = $this->end_date;
+
+        return Excel::download(new ClientsReportExport($start_date, $end_date), 'clientsreport.xlsx');
     }
 }
