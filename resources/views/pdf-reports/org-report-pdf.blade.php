@@ -135,7 +135,7 @@
                 <td>{{$item->representative_name}}</td>
                 <td>{{$item->representative_position}}</td>
                 <td>{{$item->representative_contact_number}}</td>
-                <td>
+                <td style="text-align: center;">
                     {{
                     $a = App\Models\EventOrganizationsModel::where('id_organization', $item->org_id)->count()
                     }}

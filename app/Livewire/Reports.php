@@ -48,7 +48,7 @@ class Reports extends Component
             ->orderBy('created_at', 'DESC')
             ->paginate(10, pageName: 'list-of-clients');
 
-        $client_details = ClientInformationModel::join('school_information', 'client_information.id_school', '=', 'school_information.id')
+        $client_details = ClientInformationModel::leftJoin('school_information', 'client_information.id_school', '=', 'school_information.id')
             ->where('client_information.id', $this->id_client)
             ->select(
                 DB::raw("CONCAT(COALESCE(first_name, ''), ' ', COALESCE(middle_name, ''), ' ', COALESCE(last_name, ''), ' ', COALESCE(ext_name, '')) AS client_fullname"),
@@ -57,7 +57,7 @@ class Reports extends Component
                 'address',
                 DB::raw("COALESCE(school_information.school_name, '') AS school"),
                 'guardian_name',
-                'guardian_contact_number',
+                'guardian_contact_number'
             )
             ->first();
 

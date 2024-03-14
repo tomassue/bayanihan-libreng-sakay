@@ -324,7 +324,7 @@
                                         <div class="col-12">
                                             <select class="form-select @error('school') is-invalid @enderror" aria-label="Default select example" wire:model.live="school" @if($user_type !=='student' && $user_type !=='school_staff' ) disabled @endif>
                                                 <option value="" {{ old('school') ? '' : 'selected' }}>Select...</option>
-                                                @foreach(\App\Models\SchoolInformationModel::all() as $school)
+                                                @foreach(\App\Models\SchoolInformationModel::where('status', 1)->get() as $school)
                                                 <option value="{{ $school['id'] }}" {{ old('school') == $school['id'] ? 'selected' : '' }}>{{ $school['school_name'] }}</option>
                                                 @endforeach
                                             </select>

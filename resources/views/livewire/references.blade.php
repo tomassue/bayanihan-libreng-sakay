@@ -54,6 +54,7 @@
                                 <tr>
                                     <th scope="col">NO.</th>
                                     <th scope="col">SCHOOL NAME</th>
+                                    <th scope="col">STATUS</th>
                                     <th scope="col">ACTION</th>
                                 </tr>
                             </thead>
@@ -63,6 +64,7 @@
                                 <tr wire:key="{{$item->id}}">
                                     <td>{{$no}}</td>
                                     <td>{{ $item->school_name }}</td>
+                                    <td>{{ $item->status == 1 ? 'Active' : 'Inactive' }}</td>
                                     <td>
                                         <span style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#schoolModal" wire:click="editSchool('{{$item->id}}')">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
@@ -106,6 +108,22 @@
                             <div class="col-12">
                                 <input type="text" class="form-control @error('school_name') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model="school_name">
                                 @error('school_name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="exampleFormControlInput1" class="col-12">Status</label>
+                            <div class="col-12">
+                                <select class="form-select @error('school_status') is-invalid @enderror" wire:model="school_status" aria-label="School status">
+                                    <option selected="">Open this select menu</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                                @error('school_status')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

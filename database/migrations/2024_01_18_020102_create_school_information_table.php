@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('school_information', function (Blueprint $table) {
             $table->id();
             $table->string('school_name');
+            $table->integer('status');
             $table->timestamps();
         });
     }

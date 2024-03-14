@@ -143,7 +143,7 @@ class RegistrationController extends Controller
 
     public function getSchool(Request $request)
     {
-        $school = SchoolInformationModel::all();
+        $school = SchoolInformationModel::where('status', 1)->get();
         return response()->json($school);
     }
 }

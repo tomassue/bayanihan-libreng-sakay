@@ -27,11 +27,11 @@ class References extends Component
 
     // Input fields
     #[Validate('required')]
-    public $school_name;
+    public $school_name, $school_status;
 
     public function render()
     {
-        $school = SchoolInformationModel::select('id', 'school_name')
+        $school = SchoolInformationModel::select('id', 'school_name', 'status')
             ->where('school_name', 'like', '%' . $this->search_school . '%')
             ->paginate(10);
 
@@ -51,6 +51,7 @@ class References extends Component
 
     public function addSchool()
     {
+        $this->reset('school_name', 'school_status');
         $this->add_school = true;
     }
 
@@ -62,6 +63,7 @@ class References extends Component
             ->first();
 
         $this->school_name = $query->school_name;
+        $this->school_status = $query->status;
         $this->post_school_id = $query->id;
     }
 
@@ -71,7 +73,8 @@ class References extends Component
 
         $query = new SchoolInformationModel;
         $query->create([
-            'school_name'   =>  $this->school_name
+            'school_name'   =>  $this->school_name,
+            'status'        =>  $this->school_status
         ]);
 
         $this->dispatch('close-School-Modal');
@@ -86,7 +89,8 @@ class References extends Component
         if ($this->post_school_id) {
             $query = SchoolInformationModel::findOrFail($this->post_school_id);
             $query->update([
-                'school_name'   => $this->school_name
+                'school_name'   => $this->school_name,
+                'status'        =>  $this->school_status
             ]);
         }
         $this->reset('post_school_id');

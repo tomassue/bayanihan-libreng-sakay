@@ -148,7 +148,7 @@
                 <td>
                     {{ $item['organization'] }}
                 </td>
-                <td>
+                <td style="text-align: center;">
                     @php
                     $a = App\Models\EventOrganizationRidersModel::where('id_individual', $item['id'])->pluck('id');
                     echo $b = App\Models\TransactionModel::whereIn('id_event_organization_riders', $a)->count();
