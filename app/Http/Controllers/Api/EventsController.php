@@ -27,7 +27,13 @@ class EventsController extends Controller
                     ->where('events.tag', 0)
                     ->where('event_organizations.status', 0)
                     ->where('event_organizations.id_organization', $this->id_org)
-                    ->select("event_organizations.id", DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"), "events.event_name")
+                    ->select(
+                        "event_organizations.id",
+                        DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"),
+                        "events.event_name",
+                        "events.event_location AS location",
+                        "events.google_map_link AS gmap"
+                    )
                     ->whereNotExists(function ($query) use ($id) {
                         $query->select(DB::raw(1))
                             ->from('event_organization_riders')
@@ -42,8 +48,8 @@ class EventsController extends Controller
                 return response()->json(["error" => 'User not found.'], 500);
             }
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Something went wrong.'], 500);
-            // return response()->json($e->getMessage());
+            // return response()->json(['error' => 'Something went wrong.'], 500);
+            return response()->json($e->getMessage());
         }
     }
 
