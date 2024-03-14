@@ -7,6 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>report-pdf</title>
     <style>
+        html {
+            font-size: x-small;
+        }
+
         body {
             font-family: DejaVu Sans;
         }
@@ -64,9 +68,14 @@
             text-transform: uppercase;
         }
 
+        .third {
+            font-size: 8px !important;
+        }
+
         .total {
             text-align: right;
             margin-top: 1rem;
+            margin-right: 50px;
             font-size: 0.875rem;
         }
     </style>
@@ -75,12 +84,23 @@
 <body>
     <table class="w-full">
         <tr>
-            <td style="text-align: center;">
+            <!-- <td style="text-align: center;">
                 <img src="data:image/png;base64,{{ $bls_logo }}" alt="laravel daily" width="300" />
-            </td>
+            </td> -->
             <!-- <td class="w-half">
                 <h2>Report</h2>
             </td> -->
+            <td style="text-align: left;">
+                <img src="data:image/png;base64,{{ $city_logo }}" alt="city-logo" width="100" />
+            </td>
+
+            <td style="text-align: center;">
+                <img src="data:image/png;base64,{{ $bls_logo }}" alt="bls-log" width="300" />
+            </td>
+
+            <td style="text-align: right;">
+                <img src="data:image/png;base64,{{ $rise_logo }}" alt="rise-logo" width="150" />
+            </td>
         </tr>
     </table>
 
@@ -89,23 +109,23 @@
             <tr>
                 <td class="w-half">
                     <div>
-                        <h4>Date:</h4>
+                        <h4>Date: <span style="font-weight: lighter;">{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</span></h4>
                     </div>
-                    <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div>
+                    <!-- <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div> -->
                 </td>
                 <td class="w-half">
                     <div>
-                        <h4>Organization:</h4>
-                    </div>
-                    <div>
-                        @php
-                        $org = App\Models\OrganizationInformationModel::where('id', $query_org)
-                        ->select('organization_name')
-                        ->first();
+                        <h4>Organization:
+                            <span style="font-weight: lighter;">
+                                @php
+                                $org = App\Models\OrganizationInformationModel::where('id', $query_org)
+                                ->select('organization_name')
+                                ->first();
 
-                        echo empty($query_org) ? 'ALL' : ucfirst($org->organization_name);
-
-                        @endphp
+                                echo empty($query_org) ? 'ALL' : ucfirst($org->organization_name);
+                                @endphp
+                            </span>
+                        </h4>
                     </div>
                 </td>
             </tr>
@@ -117,7 +137,7 @@
             <tr>
                 <th>Rider</th>
                 <th>Organization</th>
-                <th>Total no. of clients served</th>
+                <th width="100px" class="third">Total no. of <br> clients served</th>
             </tr>
             @foreach($riders as $item)
             <tr class="items">
@@ -145,7 +165,7 @@
     </div>
 
     <div class="footer margin-top">
-        <div>--END--</div>
+        <!-- <div>--END--</div> -->
         <div>&copy; Bayanihan Libreng Sakay</div>
     </div>
 </body>

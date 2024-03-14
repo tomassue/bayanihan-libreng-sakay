@@ -38,6 +38,7 @@ class OrgReports extends Component
     {
         $query = OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
             ->select(
+                'organization_information.id AS org_id',
                 'organization_name',
                 DB::raw("DATE_FORMAT(date_established, '%b %d, %Y') AS date_established"),
                 'address',
@@ -52,7 +53,7 @@ class OrgReports extends Component
             $query->whereBetween('organization_information.created_at', [$this->start_date, $this->end_date]);
         }
 
-        $organizations = $query->paginate(5);
+        $organizations = $query->paginate(10);
 
         return view('livewire.org-reports', [
             'organizations'     =>  $organizations,
@@ -67,6 +68,7 @@ class OrgReports extends Component
     {
         $query = OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
             ->select(
+                'organization_information.id AS org_id',
                 'organization_name',
                 DB::raw("DATE_FORMAT(date_established, '%b %d, %Y') AS date_established"),
                 'address',
@@ -85,13 +87,20 @@ class OrgReports extends Component
 
         // Logos to base64
         $bls_logo = public_path('assets/img/copy2.png');
+        $city_logo = public_path('assets/img/cdo-seal.png');
+        $rise_logo = public_path('assets/img/rise.png');
+
         $bls_logo64 = base64_encode(file_get_contents($bls_logo));
+        $city_logo64 = base64_encode(file_get_contents($city_logo));
+        $rise_logo64 = base64_encode(file_get_contents($rise_logo));
 
         // Generate PDF with QR code
         $pdf = PDF::loadView(
             'pdf-reports.org-report-pdf',
             [
                 'bls_logo'          => $bls_logo64,
+                'city_logo'         => $city_logo64,
+                'rise_logo'         => $rise_logo64,
                 'organizations'     => $organizations,
                 'start_date'        => $start_date,
                 'end_date'          => $end_date,

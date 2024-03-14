@@ -87,13 +87,20 @@ class RidersReports extends Component
 
         // Logos to base64
         $bls_logo = public_path('assets/img/copy2.png');
+        $city_logo = public_path('assets/img/cdo-seal.png');
+        $rise_logo = public_path('assets/img/rise.png');
+
         $bls_logo64 = base64_encode(file_get_contents($bls_logo));
+        $city_logo64 = base64_encode(file_get_contents($city_logo));
+        $rise_logo64 = base64_encode(file_get_contents($rise_logo));
 
         // Generate PDF with QR code
         $pdf = PDF::loadView(
             'pdf-reports.riders-report-pdf',
             [
                 'bls_logo'          => $bls_logo64,
+                'city_logo'         => $city_logo64,
+                'rise_logo'         => $rise_logo64,
                 'riders'            => $riders,
                 'start_date'        => $start_date,
                 'end_date'          => $end_date,

@@ -61,7 +61,7 @@ class EventsReport extends Component
             $query->whereBetween('events.event_date', [$this->start_date, $this->end_date]);
         }
 
-        $clients_transact = $query->paginate(5);
+        $clients_transact = $query->paginate(10);
 
         return view('livewire.events-report', [
             'clients_transact'       =>  $clients_transact,
@@ -102,13 +102,20 @@ class EventsReport extends Component
 
         // Logos to base64
         $bls_logo = public_path('assets/img/copy2.png');
+        $city_logo = public_path('assets/img/cdo-seal.png');
+        $rise_logo = public_path('assets/img/rise.png');
+
         $bls_logo64 = base64_encode(file_get_contents($bls_logo));
+        $city_logo64 = base64_encode(file_get_contents($city_logo));
+        $rise_logo64 = base64_encode(file_get_contents($rise_logo));
 
         // Generate PDF with QR code
         $pdf = PDF::loadView(
             'pdf-reports.events-report-pdf',
             [
                 'bls_logo'          => $bls_logo64,
+                'city_logo'         => $city_logo64,
+                'rise_logo'         => $rise_logo64,
                 'clients_transact'  => $clients_transact,
                 'start_date'        => $start_date,
                 'end_date'          => $end_date,

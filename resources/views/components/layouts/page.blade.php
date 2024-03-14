@@ -227,8 +227,14 @@
 
         <div class="d-flex align-items-center justify-content-between">
             <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center">
-                <img src={{ asset('assets/img/cdo-seal.png') }} alt="CDO SEAL">
-                <span id="titlenav" class="d-none d-lg-block">LIBRENG SAKAY</span>
+                @php
+                $cdo_seal = base64_encode(file_get_contents('assets/img/cdo-seal.png'));
+                $bls_logo = base64_encode(file_get_contents('assets/img/bls-logo-bg2.png'));
+                @endphp
+                <img src="data:image/png;base64,{{ $cdo_seal }}" alt="bls-logo" />
+                <img src="data:image/png;base64,{{ $bls_logo }}" alt="cdo-seal" />
+                <!-- <img src={{ asset('assets/img/cdo-seal.png') }} alt="CDO SEAL"> -->
+                <!-- <span id="titlenav" class="d-none d-lg-block">LIBRENG SAKAY</span> -->
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div>
@@ -269,7 +275,7 @@
         </nav> -->
 
         <nav class="header-nav ms-auto">
-            <ul class="d-flex align-items-center">
+            <ul class="d-flex align-items-center me-5">
                 @livewire('offline')
             </ul>
         </nav>
@@ -281,7 +287,10 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed fs-5" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#" aria-expanded="false" style="border-radius: unset;">
-                    <img src="{{ asset('assets/img/profile.png') }}" alt="Profile" class="rounded-circle me-2" style="height: 50px; width: 50px;">
+                    @php
+                    $user_img = base64_encode(file_get_contents('assets/img/profile.png'));
+                    @endphp
+                    <img src="data:image/png;base64,{{ $user_img }}" alt="Profile" class="rounded-circle me-2" style="height: 50px; width: 50px;" />
                     <span class="text-truncate col-9">
                         {{ Auth::user()->user_id == 'ADMIN' ? 'Administrator' : Auth::user()->organization_information->organization_name }}
                     </span>

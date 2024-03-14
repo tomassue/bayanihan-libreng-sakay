@@ -32,30 +32,56 @@ class RegistrationController extends Controller
         $this->validator = $validator;
     }
 
-    protected function validator(array $data)
+    protected function validator(array $data, Request $request)
     {
-        return Validator::make($data, [
-            'accountType'           => ['required', 'string', 'max:1'],
-            'userType'              => ['required', 'string'],
-            'lastName'              => ['required', 'string'],
-            'firstName'             => ['required', 'string'],
-            'middleName'            => ['string', 'nullable'],
-            'birthday'              => ['required'],
-            'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
-            'address'               => ['required'],
-            'school'                => ['required'],
-            'guardianName'          => ['required'],
-            'guardianNumber'        => ['required', 'numeric', 'digits:11', 'unique:users'],
+        if ($request->userType == 'student' || $request->userType == 'school_staff') {
+            return Validator::make($data, [
+                'accountType'           => ['required', 'string', 'max:1'],
+                'userType'              => ['required', 'string'],
+                'lastName'              => ['required', 'string'],
+                'firstName'             => ['required', 'string'],
+                'middleName'            => ['string', 'nullable'],
+                'birthday'              => ['required'],
+                'sex'                   => ['required'],
+                'school'                => ['required'],
+                'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
+                'address'               => ['required'],
+                'guardianName'          => ['required'],
+                'guardianNumber'        => ['required', 'numeric', 'digits:11', 'unique:users'],
 
-            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password'              => [
-                'required',
-                'string',
-                'min:8',
-                'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-                'confirmed'
-            ],
-        ]);
+                'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password'              => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
+                    'confirmed'
+                ],
+            ]);
+        } else {
+            return Validator::make($data, [
+                'accountType'           => ['required', 'string', 'max:1'],
+                'userType'              => ['required', 'string'],
+                'lastName'              => ['required', 'string'],
+                'firstName'             => ['required', 'string'],
+                'middleName'            => ['string', 'nullable'],
+                'birthday'              => ['required'],
+                'sex'                   => ['required'],
+                'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
+                'address'               => ['required'],
+                'guardianName'          => ['required'],
+                'guardianNumber'        => ['required', 'numeric', 'digits:11', 'unique:users'],
+
+                'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password'              => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
+                    'confirmed'
+                ],
+            ]);
+        }
     }
 
     public function register(Request $content)
@@ -71,6 +97,8 @@ class RegistrationController extends Controller
             //     // Return validation errors with status code 422
             //     return response()->json(['errors' => $validator->errors()], 422);
             // }
+
+
 
             // Generate random letters and numbers for doctype_code
             $timestamp = now()->timestamp;

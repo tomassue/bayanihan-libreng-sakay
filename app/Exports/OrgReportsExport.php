@@ -21,6 +21,7 @@ class OrgReportsExport implements FromView
     {
         $query = OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
             ->select(
+                'organization_information.id AS org_id',
                 'organization_name',
                 DB::raw("DATE_FORMAT(date_established, '%b %d, %Y') AS date_established"),
                 'address',

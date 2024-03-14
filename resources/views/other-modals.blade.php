@@ -64,7 +64,6 @@
                                 <option value="" {{ old('category') ? '' : 'selected' }}>Select...</option>
                                 <option value="major" {{ old('category') ? '' : 'selected' }}>Major</option>
                                 <option value="minor" {{ old('category') ? '' : 'selected' }}>Minor</option>
-                                <option value="normal" {{ old('category') ? '' : 'selected' }}>Normal</option>
                             </select>
                             @error('category')
                             <div class="invalid-feedback">
@@ -125,80 +124,109 @@
                 @if(Auth::user()->user_id !== 'ADMIN')
                 @if($eventDetails_org)
                 <div class="container">
-                    <div class="col-12 mb-3">
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Name:</span> {{ucfirst($eventDetails_org->event_name)}}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;"> Date:</span> {{$eventDetails_org->event_date}}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;"> Location:</span> {{ucfirst($eventDetails_org->event_location)}}
-                        </div>
-                        <div class="col-12 mb-2 text-truncate">
-                            <span style="color:black;">Google Map Link:</span> @if(empty($eventDetails_org->google_map_link)) {{'N/A'}} @else <a href="{{$eventDetails_org->google_map_link}}" target="_blank">{{$eventDetails_org->google_map_link}}</a> @endif
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Time:</span> {{$eventDetails_org->time}}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Category:</span> {{ucfirst($eventDetails_org->category)}}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Status:</span> @if($eventDetails_org->status == 1) {{'Approved'}} @elseif($eventDetails_org->status == 2) {{'Declined'}} @endif
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Tag:</span> @if($eventDetails_org->tag == 0) {{'Ongoing'}} @elseif($eventDetails_org->tag == 1) {{'Done'}} @endif
-                        </div>
-                    </div>
+
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th>Name: </th>
+                                <td>{{ucfirst($eventDetails_org->event_name)}}</td>
+                            </tr>
+                            <tr>
+                                <th>Date: </th>
+                                <td>{{$eventDetails_org->event_date}}</td>
+                            </tr>
+                            <tr>
+                                <th>Location: </th>
+                                <td>{{ucfirst($eventDetails_org->event_location)}}</td>
+                            </tr>
+                            <tr>
+                                <th>Google Map Link: </th>
+                                <div class="text-truncate">
+                                    <td>@if(empty($eventDetails_org->google_map_link)) {{'N/A'}} @else <a href="{{$eventDetails_org->google_map_link}}" target="_blank">{{$eventDetails_org->google_map_link}}</a> @endif</td>
+
+                                </div>
+                            </tr>
+                            <tr>
+                                <th>Time: </th>
+                                <td>{{$eventDetails_org->time}}</td>
+                            </tr>
+                            <tr>
+                                <th>Category: </th>
+                                <td>{{ucfirst($eventDetails_org->category)}}</td>
+                            </tr>
+                            <tr>
+                                <th>Status: </th>
+                                <td>@if($eventDetails_org->status == 1) {{'Approved'}} @elseif($eventDetails_org->status == 2) {{'Declined'}} @endif</td>
+                            </tr>
+                            <tr>
+                                <th>Tag: </th>
+                                <td>@if($eventDetails_org->tag == 0) {{'Ongoing'}} @elseif($eventDetails_org->tag == 1) {{'Done'}} @endif</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </div>
                 @endif
                 @else
                 @if($eventsDetails)
                 <div class="container">
-                    <div class="col-12 mb-3">
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Name:</span> {{ucfirst($eventsDetails->event_name)}}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;"> Date:</span> {{$eventsDetails->event_date}}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;"> Location:</span> {{ucfirst($eventsDetails->event_location)}}
-                        </div>
-                        <div class="col-12 mb-2 text-truncate">
-                            <span style="color:black;">Google Map Link:</span> @if(empty($eventsDetails->google_map_link)) {{'N/A'}} @else <a href="{{$eventsDetails->google_map_link}}" target="_blank">{{$eventsDetails->google_map_link}}</a> @endif
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Time:</span> {{$eventsDetails->time}}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Category:</span> {{ucfirst($eventsDetails->category)}}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Status:</span> @if($eventsDetails->status == 1) {{'Approved'}} @elseif($eventsDetails->status == 2) {{'Declined'}} @endif
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">Tag:</span> @if($eventsDetails->tag == 0) {{'Ongoing'}} @elseif($eventsDetails->tag == 1) {{'Done'}} @endif
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">No. of Organization:</span> {{ $noOfOrganization ? $noOfOrganization : $noOfOrganization }}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">No. of Riders:</span> {{ $noOfRiders ? $noOfRiders : $noOfRiders }}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span style="color:black;">No. of Clients:</span> {{ $noOfClients ? $noOfClients : $noOfClients }}
-                        </div>
-                    </div>
+
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Name:</th>
+                                <td>{{ucfirst($eventsDetails->event_name)}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Date:</th>
+                                <td>{{$eventsDetails->event_date}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Location:</th>
+                                <td>{{ucfirst($eventsDetails->event_location)}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Google Map Link</th>
+                                <td>@if(empty($eventsDetails->google_map_link)) {{'N/A'}} @else <a href="{{$eventsDetails->google_map_link}}" target="_blank">{{$eventsDetails->google_map_link}}</a> @endif</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Time:</th>
+                                <td>{{$eventsDetails->time}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Category:</th>
+                                <td>{{ucfirst($eventsDetails->category)}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Status:</th>
+                                <td>@if($eventsDetails->status == 1) {{'Approved'}} @elseif($eventsDetails->status == 2) {{'Declined'}} @endif</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Tag:</th>
+                                <td>@if($eventsDetails->tag == 0) {{'Ongoing'}} @elseif($eventsDetails->tag == 1) {{'Done'}} @endif</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">No. of Organization:</th>
+                                <td>{{ $noOfOrganization ? $noOfOrganization : $noOfOrganization }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">No. of Riders:</th>
+                                <td>{{ $noOfRiders ? $noOfRiders : $noOfRiders }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">No. of Clients:</th>
+                                <td>{{ $noOfClients ? $noOfClients : $noOfClients }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    @endif
                 </div>
                 @endif
-            </div>
-            @endif
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- END -->
+    <!-- END -->

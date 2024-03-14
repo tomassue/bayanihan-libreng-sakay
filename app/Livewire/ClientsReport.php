@@ -41,7 +41,7 @@ class ClientsReport extends Component
             $query->whereBetween('client_information.created_at', [$this->start_date, $this->end_date]);
         }
 
-        $clients = $query->paginate(5);
+        $clients = $query->paginate(10);
 
         return view('livewire.clients-report', [
             'clients'       =>  $clients,
@@ -76,13 +76,20 @@ class ClientsReport extends Component
 
         // Logos to base64
         $bls_logo = public_path('assets/img/copy2.png');
+        $city_logo = public_path('assets/img/cdo-seal.png');
+        $rise_logo = public_path('assets/img/rise.png');
+
         $bls_logo64 = base64_encode(file_get_contents($bls_logo));
+        $city_logo64 = base64_encode(file_get_contents($city_logo));
+        $rise_logo64 = base64_encode(file_get_contents($rise_logo));
 
         // Generate PDF with QR code
         $pdf = PDF::loadView(
             'pdf-reports.clients-report-pdf',
             [
                 'bls_logo'          => $bls_logo64,
+                'city_logo'         => $city_logo64,
+                'rise_logo'         => $rise_logo64,
                 'clients'           => $clients,
                 'start_date'        => $start_date,
                 'end_date'          => $end_date

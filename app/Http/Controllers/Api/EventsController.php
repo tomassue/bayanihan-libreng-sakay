@@ -30,6 +30,7 @@ class EventsController extends Controller
                     ->select(
                         "event_organizations.id",
                         DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"),
+                        DB::raw("CONCAT(TIME_FORMAT(events.time_start, '%h:%i %p'), ' - ', TIME_FORMAT(events.time_end, '%h:%i %p')) AS events_time"),
                         "events.event_name",
                         "events.event_location AS location",
                         "events.google_map_link AS gmap"
@@ -115,7 +116,9 @@ class EventsController extends Controller
                     ->select(
                         'event_organization_riders.id AS id',
                         DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"),
-                        'events.event_name'
+                        'events.event_name',
+                        'events.event_location AS location',
+                        DB::raw("CONCAT(TIME_FORMAT(events.time_start, '%h:%i %p'), ' - ', TIME_FORMAT(events.time_end, '%h:%i %p')) AS events_time"),
                     )
                     ->get();
 
