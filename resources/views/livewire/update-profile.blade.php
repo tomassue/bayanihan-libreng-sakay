@@ -68,7 +68,7 @@
 
                                 <div class="row">
                                     <div class="col-lg-3 col-md-4 label">Date Established</div>
-                                    <div class="col-lg-9 col-md-8">{{Auth::user()->organization_information->organization_name}}</div>
+                                    <div class="col-lg-9 col-md-8">{{Auth::user()->organization_information->date_established}}</div>
                                 </div>
 
                                 <div class="row">
