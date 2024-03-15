@@ -116,10 +116,10 @@
                         </div>
 
                         <div class="mb-3 row">
-                            <label for="exampleFormControlInput1" class="col-12">Status</label>
+                            <label for="exampleFormControlInput1" class="col-12">Active</label>
                             <div class="col-12">
                                 <select class="form-select @error('school_status') is-invalid @enderror" wire:model="school_status" aria-label="School status">
-                                    <option selected="">Open this select menu</option>
+                                    <option selected="">Select...</option>
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
                                 </select>

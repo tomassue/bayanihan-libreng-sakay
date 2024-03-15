@@ -162,17 +162,25 @@
                             </tr>
                             @foreach($individual as $rider)
                             <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;">
-                                <th scope="row">{{ $rider['last_name'] . ', ' . $rider['first_name'] . ($rider['middle_name'] ? ' ' . $rider['middle_name'] : '') . ($rider['ext_name'] ? ' ' . $rider['middle_name'] . '.' : '') }}</th>
+                                <th scope="row">{{ $rider['last_name'] . ', ' . $rider['first_name'] . ($rider['middle_name'] ? ' ' . $rider['middle_name'] : '') . ($rider['ext_name'] ? ' ' . $rider['ext_name'] . '.' : '') }}</th>
                                 <td>{{ $rider['contactNumber'] }}</td>
                                 <td>{{ $rider['address'] }}</td>
                                 <td>
-                                    @if($rider['status'] == 0)
+                                    @if($rider['status'] == 3)
                                     <span style="color: #343541;">
                                         Inactive
                                     </span>
-                                    @else
+                                    @elseif($rider['status'] == 1)
                                     <span style="color: #2E8B57;">
                                         Active
+                                    </span>
+                                    @elseif($rider['status'] == 0)
+                                    <span style="color: #343541;">
+                                        Pending
+                                    </span>
+                                    @elseif($rider['status'] == 2)
+                                    <span style="color: #ff6262;">
+                                        Declined
                                     </span>
                                     @endif
                                 </td>

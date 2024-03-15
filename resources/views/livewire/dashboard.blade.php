@@ -192,27 +192,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12 col-md-4 col-lg-3 mb-1">
-                                        <div class="card mt-3 border border-secondary" style="height: 86%;">
-                                            <div class="card-header" style="border: unset; height: 100%;">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">RIDERS</h1>
-                                            </div>
-                                            <div class="card-body">
-                                                <h6 class="text-center fs-1">
-                                                    @if(Auth::user()->user_id !== 'ADMIN')
-                                                    {{ App\Models\IndividualInformationModel::where('id_organization', Auth::user()->organization_information->id)
-                                                        ->join('users', 'individual_information.user_id', 'users.user_id')
-                                                        ->where('status', 1)
-                                                        ->count() }}
-                                                    @else
-                                                    {{ App\Models\IndividualInformationModel::join('users', 'individual_information.user_id', 'users.user_id')
-                                                        ->where('status', 1)
-                                                        ->count() }}
-                                                    @endif
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <!-- REMOVED RIDERS CARD HERE -->
                                 </div>
                             </div>
                         </div>

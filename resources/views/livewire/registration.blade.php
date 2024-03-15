@@ -8,7 +8,7 @@
     </div>
     @endif
 
-    <div class="col-12">
+    <div class="col-12" wire:loading.class="opacity-50">
         <div class="card border border-secondary" wire:target="pageOne, pageTwo, pageThree">
             <div class="row mx-5 mt-4">
 
@@ -77,22 +77,6 @@
                                     </div> -->
                                     @endif
 
-                                    @if(Auth::user()->user_id == 'ADMIN')
-                                    <div class="col-sm-12 col-md-12 col-lg-4 mb-1" style="padding-right: 0px; padding-left: 0px;">
-                                        <div class="card m-3 border border-secondary" style="cursor: pointer; height:86%;" wire:click="pageThree">
-                                            <div class="card-header h-100" @if( $filter=='' || $filter=='three' ) style="background-color: #2E8B57; border: unset" @else style="border: unset;" @endif>
-                                                <h1 class="card-title text-center" @if( $filter=='' || $filter=='three' ) style="font-size: 23px; font-weight: 1000 !important; color: #FFFFFF;" @endif style="font-size: 23px; font-weight: 1000 !important;">EVENT REGISTRATION</h1>
-                                            </div>
-                                            <div class="card-body" @if( $filter=='' || $filter=='three' ) style="background-color: #2E8B57; color: #FFFFFF;" @endif>
-                                                <h6 class="text-center fs-1">
-                                                    {{ App\Models\EventOrganizationsModel::where('status', 0)
-                                                    ->count() }}
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endif
-
                                     <!-- <button wire:click="$refresh">Refresh</button> -->
                                 </div>
                             </div>
@@ -142,7 +126,7 @@
                         <tbody>
                             @foreach($registered_members as $reg_members)
                             <tr wire:key="{{ $reg_members['user_id'] }}">
-                                <th scope="row">{{ $reg_members['last_name'] . ', ' . $reg_members['first_name'] . ($reg_members['middle_name'] ? ' ' . $reg_members['middle_name'] : '') . ($reg_members['ext_name'] ? ' ' . $reg_members['middle_name'] . '.' : '') }}</th>
+                                <th scope="row">{{ $reg_members['last_name'] . ', ' . $reg_members['first_name'] . ($reg_members['middle_name'] ? ' ' . $reg_members['middle_name'] : '') . ($reg_members['ext_name'] ? ' ' . $reg_members['ext_name'] . '.' : '') }}</th>
                                 <td>{{ $reg_members['contact_number'] }}</td>
                                 <td>{{ $reg_members['address'] }}</td>
                                 <td>
@@ -242,15 +226,15 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="text-end mt-2 mb-3">
-                        @if(Auth::user()->user_id == 'ADMIN')
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 220px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#registerOrgModal">ADD ORGANIZATION</button>
-                        @endif
-                    </div>
                     {{ $org_one->links('vendor.livewire.custom-pagination') }}
                 </div>
                 @endif
+                <div class="text-end mt-2 mb-3">
+                    @if(Auth::user()->user_id == 'ADMIN')
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 220px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#registerOrgModal">ADD ORGANIZATION</button>
+                    @endif
+                </div>
             </div>
             @endif
 
@@ -297,7 +281,7 @@
                         <tbody>
                             @foreach($for_approval_members as $for_app_members)
                             <tr wire:key="{{ $for_app_members['user_id'] }}">
-                                <th scope="row">{{ $for_app_members['last_name'] . ', ' . $for_app_members['first_name'] . ($for_app_members['middle_name'] ? ' ' . $for_app_members['middle_name'] : '') . ($for_app_members['ext_name'] ? ' ' . $for_app_members['middle_name'] . '.' : '') }}</th>
+                                <th scope="row">{{ $for_app_members['last_name'] . ', ' . $for_app_members['first_name'] . ($for_app_members['middle_name'] ? ' ' . $for_app_members['middle_name'] : '') . ($for_app_members['ext_name'] ? ' ' . $for_app_members['ext_name'] . '.' : '') }}</th>
                                 <td>{{ $for_app_members['contact_number'] }}</td>
                                 <td>{{ $for_app_members['address'] }}</td>
                                 <td>
@@ -342,7 +326,7 @@
                         <tbody>
                             @foreach($declined_members as $dec_members)
                             <tr wire:key="{{ $dec_members['user_id'] }}">
-                                <th scope="row">{{ $dec_members['last_name'] . ', ' . $dec_members['first_name'] . ($dec_members['middle_name'] ? ' ' . $dec_members['middle_name'] : '') . ($dec_members['ext_name'] ? ' ' . $dec_members['middle_name'] . '.' : '') }}</th>
+                                <th scope="row">{{ $dec_members['last_name'] . ', ' . $dec_members['first_name'] . ($dec_members['middle_name'] ? ' ' . $dec_members['middle_name'] : '') . ($dec_members['ext_name'] ? ' ' . $dec_members['ext_name'] . '.' : '') }}</th>
                                 <td>{{ $dec_members['contact_number'] }}</td>
                                 <td>{{ $dec_members['address'] }}</td>
                                 <td>
@@ -802,7 +786,7 @@
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;">SAVE</button>
+                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;" wire:loading.class="opacity-50">SAVE</button>
                 </div>
                 </form>
             </div>

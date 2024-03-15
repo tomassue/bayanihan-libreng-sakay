@@ -79,6 +79,7 @@
                                     <tr>
                                         <th scope="col">Riders' Name</th>
                                         <th scope="col">Organization</th>
+                                        <th scope="col">Total no. of events joined</th>
                                         <th scope="col">Total no. of clients served</th>
                                     </tr>
                                 </thead>
@@ -87,6 +88,11 @@
                                     <tr>
                                         <td>{{$rider->rider_fullname}}</td>
                                         <td>{{$rider->organization}}</td>
+                                        <td>
+                                            @php
+                                            echo "wew";
+                                            @endphp
+                                        </td>
                                         <td>
                                             @php
                                             $a = App\Models\EventOrganizationRidersModel::where('id_individual', $rider->id)->pluck('id');

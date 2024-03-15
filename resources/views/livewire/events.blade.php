@@ -8,7 +8,7 @@
     </div>
     @endif
 
-    <div class="col-12">
+    <div class="col-12" wire:loading.class="opacity-50">
         <div class="card border border-secondary">
             <div class="row mx-5 mt-4">
                 <div class="col">
@@ -565,6 +565,7 @@
                                 <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">LOCATION</th>
                                 <th scope="col">DATE</th>
+                                <th scope="col">DETAILS</th>
                                 <th scope="col">ACTION</th>
                             </tr>
                         </thead>
@@ -574,6 +575,11 @@
                                 <th scope="row">{{ $list_of_events['event_name'] }}</th>
                                 <td>{{ $list_of_events['event_location'] }}</td>
                                 <td>{{ $list_of_events['event_date'] }}</td>
+                                <td>
+                                    <span data-bs-toggle="modal" data-bs-target="#listOfEventsDetailModal" wire:click="eventDetails('{{ $list_of_events['id'] }}')">
+                                        <img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;">
+                                    </span>
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-success fw-bold mx-auto" style="width: 100px;padding-right: 0px;padding-top: 0px;padding-left: 0px;padding-bottom: 0px;" data-bs-toggle="modal" data-bs-target="#confirmJoinModal" wire:click="confirmJoinEvent('{{ $list_of_events['id'] }}')">JOIN</button>
                                 </td>

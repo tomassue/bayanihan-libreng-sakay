@@ -205,7 +205,7 @@ class Reports extends Component
                 'qrCode'    => base64_encode($qrCode),
                 'clientID'  => $clientID,
                 'title'     => 'myQR' . $clientID,
-                'full_name' => $client_info->last_name . ', ' . $client_info->first_name . ($client_info->middle_name ? ' ' . $client_info->middle_name : '') . ($client_info->ext_name ? ' ' . $client_info->middle_name . '.' : ''),
+                'full_name' => $client_info->last_name . ', ' . $client_info->first_name . ($client_info->middle_name ? ' ' . $client_info->middle_name : '') . ($client_info->ext_name ? ' ' . $client_info->ext_name . '.' : ''),
             ]
         )
             // ->setPaper($customPaper)

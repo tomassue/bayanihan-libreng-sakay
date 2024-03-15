@@ -24,7 +24,7 @@
         @endif
 
         <div class="col-12">
-            <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo, pageThree">
+            <div class="card border border-secondary" wire:loading.class="opacity-50">
                 <div class="row mx-5 mt-4">
 
                 </div>
@@ -61,7 +61,7 @@
                                 </tr>
                                 @foreach($clients as $client)
                                 <tr style="border-right: 1px solid black; border-left: 1px solid black; border-bottom: 1px solid black;" wire:key="{{ $client->id }}">
-                                    <th scope="row">{{ $client->last_name . ', ' . $client->first_name . ($client->middle_name ? ' ' . $client->middle_name : '') . ($client->ext_name ? ' ' . $client->middle_name . '.' : '') }}</th>
+                                    <th scope="row">{{ $client->last_name . ', ' . $client->first_name . ($client->middle_name ? ' ' . $client->middle_name : '') . ($client->ext_name ? ' ' . $client->ext_name . '.' : '') }}</th>
                                     <td>{{ $client->address }}</td>
                                     <td>{{ $client->contact_number }}</td>
                                     <td>
@@ -81,14 +81,14 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        {{ $clients->links('vendor.livewire.custom-pagination') }}
+                        @endif
                         <div class="text-end mt-2 mb-3">
                             @if(Auth::user()->user_id == 'ADMIN')
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#addClientModal">ADD CLIENT</button>
                             @endif
                         </div>
-                        {{ $clients->links('vendor.livewire.custom-pagination') }}
-                        @endif
                     </div>
                 </div>
             </div>
@@ -256,7 +256,39 @@
                                     <div class="mb-3 row">
                                         <label for="exampleFormControlInput1" class="col-12">Extension Name</label>
                                         <div class="col-12">
-                                            <input type="text" class="form-control @error('ext_name') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="ext_name">
+                                            <select class="form-select @error('ext_name') is-invalid @enderror" name="ext_name" id="ext_name" aria-label="ext_name" wire:model="ext_name">
+                                                <option value="" {{ old('ext_name') ? '' : 'selected' }}>Select...</option>
+
+                                                @php
+                                                // Function to convert Arabic numbers to Roman numerals
+                                                function arabicToRoman($num) {
+                                                $roman = '';
+                                                $lookup = array(
+                                                'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9,
+                                                'V' => 5, 'IV' => 4, 'I' => 1
+                                                );
+
+                                                foreach ($lookup as $symbol => $value) {
+                                                while ($num >= $value) {
+                                                $roman .= $symbol;
+                                                $num -= $value;
+                                                }
+                                                }
+                                                return $roman;
+                                                }
+
+                                                // Loop for Jr. and Sr.
+                                                $suffixes = ['Jr.', 'Sr.'];
+                                                foreach ($suffixes as $suffix) {
+                                                echo "<option value=\"$suffix\" " . (old('ext_name') == $suffix ? 'selected' : '') . ">$suffix</option>";
+                                                }
+
+                                                // Loop for Roman numerals up to 50
+                                                for ($i = 1; $i <= 50; $i++) { $romanNumeral=arabicToRoman($i); echo "<option value=\" $romanNumeral\" " . (old('ext_name') == $romanNumeral ? 'selected' : '') . ">$romanNumeral</option>";
+                                                    }
+                                                    @endphp
+                                            </select>
+
                                             @error('ext_name')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -364,7 +396,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;">SAVE</button>
+                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;" wire:loading.class="opacity-50">SAVE</button>
                 </div>
                 </form>
             </div>

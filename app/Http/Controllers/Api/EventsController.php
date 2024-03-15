@@ -25,7 +25,7 @@ class EventsController extends Controller
                 $listOfEvent = EventOrganizationsModel::join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
                     ->join('events', 'event_organizations.id_event', '=', 'events.id')
                     ->where('events.tag', 0)
-                    ->where('event_organizations.status', 0)
+                    ->where('event_organizations.status', 1) // There are changes in the process. Once the organization joined, the riders can join w/o approval from admin.
                     ->where('event_organizations.id_organization', $this->id_org)
                     ->select(
                         "event_organizations.id",

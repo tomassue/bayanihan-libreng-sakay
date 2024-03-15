@@ -140,7 +140,47 @@
                 <div class="mb-1 row">
                     <label for="inputExtensionName" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Extension Name</label>
                     <div class="col-sm-3 col-lg-5">
-                        <input type="text" name="extensionName" class="form-control @error('extensionName') is-invalid @enderror" id="extensionName" value="{{ old('extensionName') }}" autocomplete="extensionName" autofocus>
+                        <!-- <input type="text" name="extensionName" class="form-control @error('extensionName') is-invalid @enderror" id="extensionName" value="{{ old('extensionName') }}" autocomplete="extensionName" autofocus>
+
+                        @error('extensionName')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror -->
+
+                        <select class="form-select @error('extensionName') is-invalid @enderror" name="extensionName" id="extensionName" aria-label="extensionName">
+                            <option value="" {{ old('extensionName') ? '' : 'selected' }}>Select...</option>
+
+                            @php
+                            // Function to convert Arabic numbers to Roman numerals
+                            function arabicToRoman($num) {
+                            $roman = '';
+                            $lookup = array(
+                            'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9,
+                            'V' => 5, 'IV' => 4, 'I' => 1
+                            );
+
+                            foreach ($lookup as $symbol => $value) {
+                            while ($num >= $value) {
+                            $roman .= $symbol;
+                            $num -= $value;
+                            }
+                            }
+                            return $roman;
+                            }
+
+                            // Loop for Jr. and Sr.
+                            $suffixes = ['Jr.', 'Sr.'];
+                            foreach ($suffixes as $suffix) {
+                            echo "<option value=\"$suffix\" " . (old('extensionName') == $suffix ? 'selected' : '') . ">$suffix</option>";
+                            }
+
+                            // Loop for Roman numerals up to 50
+                            for ($i = 1; $i <= 50; $i++) { $romanNumeral=arabicToRoman($i); echo "<option value=\" $romanNumeral\" " . (old('extensionName') == $romanNumeral ? 'selected' : '') . ">$romanNumeral</option>";
+                                }
+                                @endphp
+                        </select>
+
 
                         @error('extensionName')
                         <span class="invalid-feedback" role="alert">

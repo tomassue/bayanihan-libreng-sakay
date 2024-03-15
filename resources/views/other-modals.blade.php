@@ -143,7 +143,6 @@
                                 <th>Google Map Link: </th>
                                 <div class="text-truncate">
                                     <td>@if(empty($eventDetails_org->google_map_link)) {{'N/A'}} @else <a href="{{$eventDetails_org->google_map_link}}" target="_blank">{{$eventDetails_org->google_map_link}}</a> @endif</td>
-
                                 </div>
                             </tr>
                             <tr>
@@ -153,10 +152,6 @@
                             <tr>
                                 <th>Category: </th>
                                 <td>{{ucfirst($eventDetails_org->category)}}</td>
-                            </tr>
-                            <tr>
-                                <th>Status: </th>
-                                <td>@if($eventDetails_org->status == 1) {{'Approved'}} @elseif($eventDetails_org->status == 2) {{'Declined'}} @endif</td>
                             </tr>
                             <tr>
                                 <th>Tag: </th>
@@ -198,10 +193,6 @@
                                 <td>{{ucfirst($eventsDetails->category)}}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Status:</th>
-                                <td>@if($eventsDetails->status == 1) {{'Approved'}} @elseif($eventsDetails->status == 2) {{'Declined'}} @endif</td>
-                            </tr>
-                            <tr>
                                 <th scope="row">Tag:</th>
                                 <td>@if($eventsDetails->tag == 0) {{'Ongoing'}} @elseif($eventsDetails->tag == 1) {{'Done'}} @endif</td>
                             </tr>
@@ -229,4 +220,48 @@
             </div>
         </div>
     </div>
-    <!-- END -->
+</div>
+<!-- END -->
+
+<!-- LIST OF EVENTS DETAILS -->
+@if(Auth::user()->user_id !== 'ADMIN')
+<div wire:ignore.self class="modal fade" id="listOfEventsDetailModal" aria-labelledby="listOfEventsDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF;">
+                <h1 class="modal-title fs-5 fw-bolder" id="listOfEventsDetailModalLabel">Other details</h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3 fw-bolder" style="color: #0A335D;">
+                    @if($eventDetails_org)
+                    <table class="table table-borderless">
+                        <tr>
+                            <td scope="row">Map Link</td>
+                            <td>@if(empty($eventDetails_org->google_map_link)) {{'N/A'}} @else <a href="{{$eventDetails_org->google_map_link}}" target="_blank">{{$eventDetails_org->google_map_link}}</a> @endif</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Time</td>
+                            <td>{{$eventDetails_org->time}}</td>
+
+                        </tr>
+                        <tr>
+                            <td scope="row">Category</td>
+                            <td>{{ucfirst($eventDetails_org->category)}}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Estimated no. of riders needed</td>
+                            <td>{{ucfirst($eventDetails_org->estimated_number_of_participants)}}</td>
+                        </tr>
+                    </table>
+                    @endif
+                </div>
+                <div class="row fw-bolder justify-content-center">
+                    <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 100px;" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+<!-- END -->

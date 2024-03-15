@@ -300,6 +300,7 @@ class Events extends Component
             EventOrganizationsModel::create([
                 'id_event' => $event_ID,
                 'id_organization' => (Auth::user()->user_id !== 'ADMIN') ? Auth::user()->organization_information->id : null,
+                'status' => 1
             ]);
 
             $this->reset('event_ID');

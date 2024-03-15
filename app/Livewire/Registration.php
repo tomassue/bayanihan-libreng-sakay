@@ -119,7 +119,7 @@ class Registration extends Component
             $individual_two_declined = IndividualInformationModel::orderBy('individual_information.created_at', 'DESC')
                 ->where('id_organization', Auth::user()->organization_information->id)
                 ->join('users', 'individual_information.user_id', '=', 'users.user_id')
-                ->select('users.contactNumber AS contact_number', 'individual_information.*')
+                ->select('users.contactNumber AS contact_number', 'users.remarks', 'individual_information.*')
                 ->where('status', 2)
                 ->search($this->search_twodeclined_org)
                 ->paginate(10, pageName: 'declined-members');
