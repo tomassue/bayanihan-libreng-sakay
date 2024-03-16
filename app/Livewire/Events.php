@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\EventModel;
 use App\Models\EventOrganizationRidersModel;
 use App\Models\EventOrganizationsModel;
+use App\Models\IndividualInformationModel;
+use App\Models\OrganizationInformationModel;
+use App\Models\SmsSenderModel;
 use App\Models\TransactionModel;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
@@ -297,10 +300,33 @@ class Events extends Component
     public function joinEvent($event_ID)
     {
         if ($event_ID) {
-            EventOrganizationsModel::create([
-                'id_event' => $event_ID,
-                'id_organization' => (Auth::user()->user_id !== 'ADMIN') ? Auth::user()->organization_information->id : null,
-                'status' => 1
+            // EventOrganizationsModel::create([
+            //     'id_event' => $event_ID,
+            //     'id_organization' => (Auth::user()->user_id !== 'ADMIN') ? Auth::user()->organization_information->id : null,
+            //     'status' => 1
+            // ]);
+
+            // Members under this organization will be notified via SMS about the upcoming event.
+            $org = Auth::user()->organization_information->id;
+
+            $org_info = OrganizationInformationModel::where('id', $org)
+                ->select('organization_name')
+                ->first();
+
+            $riderContactNumbers = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->where('id_organization', $org)
+                ->pluck('users.contactNumber')
+                ->toArray(); // Convert the collection to an array
+
+            // Join the contact numbers with commas
+            $recipientList = implode(', ', $riderContactNumbers);
+
+            $welcome = "BAYANIHAN LIBRENG SAKAY INFO: ";
+            SmsSenderModel::create([
+                'trans_id'          => time() . '-' . mt_rand(),
+                'received_id'       => "BAYANIHAN-LIBRENG-SAKAY-RIDER-EVENT-NOTIFICATION",
+                'recipient'         => $recipientList,
+                'recipient_message' => $welcome . " \n\n**This is a system-generated message. Please DO NOT REPLY.**"
             ]);
 
             $this->reset('event_ID');

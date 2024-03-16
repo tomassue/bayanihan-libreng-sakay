@@ -7,7 +7,9 @@ use App\Models\User;
 use App\Models\EventModel;
 use App\Models\EventOrganizationsModel;
 use App\Models\IndividualInformationModel;
+use App\Models\SmsSenderModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -399,12 +401,34 @@ class Registration extends Component
                 'status'    =>     1,
             ]);
 
+            // SMS to rider once the rider is approved by the organization.
+            $rider = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->join('organization_information', 'individual_information.id_organization', '=', 'organization_information.id')
+                ->where('individual_information.user_id', $individualID)
+                ->select(
+                    DB::raw("CONCAT(COALESCE(individual_information.last_name, '')) AS rider_lastname"),
+                    'users.contactNumber',
+                    'organization_information.organization_name'
+                )
+                ->first();
+
+            $sms = new SmsSenderModel();
+            $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nDear MR/MS. "  . $rider->rider_lastname . ",\n\n" .
+                "We are pleased to inform you that your registration as a rider with " . $rider->organization_name . " has been approved!" . "\n\n" .
+                "Welcome to our team BAYANIHAN LIBRENG SAKAY! We are grateful to have you on board. Your commitment and dedication will play a crucial role in the success of our BAYANIHAN LIBRENG SAKAY program.\n\n" .
+                "Feel free to reach out if you have any question or need further assistance. \n\n" .
+                "Sa libreng sakay, kauban ta UY!";
+            $sms->trans_id = time() . '-' . mt_rand();
+            $sms->received_id = "BAYANIHAN-LIBRENG-SAKAY-CONFIRMATION";
+            $sms->recipient = $rider->contactNumber;
+            $sms->recipient_message = $welcome . " \n\n**This is system-generated message. Please DO NOT REPLY.**";
+            $sms->save();
+
             session()->flash('status', 'Member is approved.');
 
             // We need to close the modal after the process.
             $this->dispatch('close-individualModal');
             $this->reset('individualID', 'approve');
-
             $this->resetPage(pageName: 'registered-organization');
             $this->resetPage(pageName: 'for-approval');
             $this->resetPage(pageName: 'event-registration');
@@ -414,14 +438,33 @@ class Registration extends Component
     public function declineMember($individualID)
     {
         if ($individualID) {
-
-            // dd($this->remarks_individuals);
-
             $item = User::where('user_id', $individualID)->first();
             $item->update([
                 'status'    =>     2,
                 'remarks'   =>     $this->remarks_individuals,
             ]);
+
+            // SMS to rider once the rider is approved by the organization.
+            $rider = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->join('organization_information', 'individual_information.id_organization', '=', 'organization_information.id')
+                ->where('individual_information.user_id', $individualID)
+                ->select(
+                    DB::raw("CONCAT(COALESCE(individual_information.last_name, '')) AS rider_lastname"),
+                    'users.contactNumber',
+                    'organization_information.organization_name'
+                )
+                ->first();
+
+            $sms = new SmsSenderModel();
+            $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nDear MR/MS. "  . $rider->rider_lastname . ",\n\n" .
+                "Thank you for your interest in joining the BAYANIHAN LIBRENG SAKAY under " . $rider->organization_name . ". After careful consideration, we regret to inform you that your registration as a rider has been declined." . "\n\n" .
+                "We appreciate your time and effort in applying. If you have any questions or need further clarification, feel free to reach out to our support team.\n\n" .
+                "Wishing you the best in your future endeavors.";
+            $sms->trans_id = time() . '-' . mt_rand();
+            $sms->received_id = "BAYANIHAN-LIBRENG-SAKAY-CONFIRMATION";
+            $sms->recipient = $rider->contactNumber;
+            $sms->recipient_message = $welcome . " \n\n**This is system-generated message. Please DO NOT REPLY.**";
+            $sms->save();
 
             session()->flash('status', 'Member is declined.');
 

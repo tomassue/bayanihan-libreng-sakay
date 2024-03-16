@@ -90,7 +90,7 @@
                                         <td>{{$rider->organization}}</td>
                                         <td>
                                             @php
-                                            echo "wew";
+                                            echo "later nalang ka."
                                             @endphp
                                         </td>
                                         <td>
