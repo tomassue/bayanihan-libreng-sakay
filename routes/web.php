@@ -79,7 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/pdf-riders/{start_date?}/{end_date?}/{query_org?}', [RidersReports::class, 'printPDF'])->name('pdf-riders');
 
     // REPORTS (ORGANIZATION)
-    Route::get('/ind-reports', IndiReports::class)->name('indi-reports');
+    Route::get('/indi-reports', IndiReports::class)->name('indi-reports');
 
     Route::get('/client-list', Reports::class)->name('client-list');
     Route::get('/generate-qr/{clientID}', [Reports::class, 'generateQr'])->name('generate.qr');

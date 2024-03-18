@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ClientInformationModel;
 use App\Models\IndividualInformationModel;
+use App\Models\OrganizationInformationModel;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
@@ -21,7 +22,23 @@ class LoginController extends Controller
         try {
             $user = User::where('email', $request->email)->first();
 
-            if ($user->id_account_type == '2') { // Rider or Individual
+            if ($user->id_account_type == '1') { // Admin
+
+                $organization_information = OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
+                    ->select(
+                        'organization_information.organization_name AS organization',
+                        'users.id AS userID',
+                        'users.id_account_type AS account_type'
+                    )
+                    ->where('users.user_id', $user->user_id)
+                    ->first();
+
+                if ($user != '[]' && Hash::check($request->password, $user->password)) {
+                    return response()->json(["account_type" => $organization_information->account_type, "name" => $organization_information->organization], 200);
+                } else {
+                    return response()->json("User not found.", 404);
+                }
+            } elseif ($user->id_account_type == '2') { // Rider or Individual
 
                 $individual_information = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
                     ->select('individual_information.*', 'users.id AS userID', 'users.id_account_type AS account_type')
@@ -53,8 +70,8 @@ class LoginController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Your account is not yet approved.'], 500);
-            // return response()->json($e->getMessage(), 500);
+            // return response()->json(['message' => 'Your account is not yet approved.'], 500);
+            return response()->json($e->getMessage(), 500);
         }
     }
 

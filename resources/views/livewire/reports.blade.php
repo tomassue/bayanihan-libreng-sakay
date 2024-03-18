@@ -148,30 +148,46 @@
                             @else
                             <h5 class="card-title" style="padding-top: 0px;">Transaction History</span></h5>
                             @foreach($client_transact as $client_transactions)
-                            <div class="activity-item d-flex">
+                            <div class="activity-item d-flex overflow-auto">
                                 <div class="activite-label">{{$client_transactions->transaction_time}}</div>
                                 <i class="bi bi-circle-fill activity-badge text-success align-self-start"></i>
                                 <div class="activity-content">
                                     <div>
-                                        <i class="ri-calendar-event-fill"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7Z" stroke="#0f0f0f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="m7.33 14.49 2.38-3.09c.34-.44.97-.52 1.41-.18l1.83 1.44c.44.34 1.07.26 1.41-.17l2.31-2.98" stroke="#0f0f0f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
                                         {{$client_transactions->event_name}}
                                     </div>
                                     <div>
-                                        <i class="ri-map-pin-2-line"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12 13.43a3.12 3.12 0 1 0 0-6.24 3.12 3.12 0 0 0 0 6.24Z" stroke="#0f0f0f" stroke-width="1.5"></path>
+                                            <path d="M3.62 8.49c1.97-8.66 14.8-8.65 16.76.01 1.15 5.08-2.01 9.38-4.78 12.04a5.193 5.193 0 0 1-7.21 0c-2.76-2.66-5.92-6.97-4.77-12.05Z" stroke="#0f0f0f" stroke-width="1.5"></path>
+                                        </svg>
                                         {{$client_transactions->event_location}}
                                     </div>
                                     <div>
-                                        <i class="ri-calendar-2-fill"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M8 2v3M16 2v3M3.5 9.09h17M21 8.5V17c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V8.5c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5Z" stroke="#0f0f0f" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M15.695 13.7h.009M15.695 16.7h.009M11.995 13.7h.01M11.995 16.7h.01M8.294 13.7h.01M8.294 16.7h.01" stroke="#0f0f0f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
                                         {{$client_transactions->transaction_date}}
                                     </div>
                                     <div>
-                                        <i class="ri-user-2-line"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12.16 10.87c-.1-.01-.22-.01-.33 0a4.42 4.42 0 0 1-4.27-4.43C7.56 3.99 9.54 2 12 2a4.435 4.435 0 0 1 .16 8.87ZM7.16 14.56c-2.42 1.62-2.42 4.26 0 5.87 2.75 1.84 7.26 1.84 10.01 0 2.42-1.62 2.42-4.26 0-5.87-2.74-1.83-7.25-1.83-10.01 0Z" stroke="#0f0f0f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
                                         {{$client_transactions->rider_name}}
                                     </div>
+                                    @if($client_transactions->status == 1)
                                     <div>
-                                        <i class="ri-account-pin-circle-line"></i>
-                                        {{ucfirst($client_transactions->destination)}}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M3.62 8.49c1.97-8.66 14.8-8.65 16.76.01 1.15 5.08-2.01 9.38-4.78 12.04a5.194 5.194 0 0 1-7.21 0c-2.76-2.66-5.92-6.97-4.77-12.05Z" stroke="#0f0f0f" stroke-width="1.5"></path>
+                                            <path d="m9.25 11.5 1.5 1.5 4-4" stroke="#0f0f0f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                        {{ucfirst($client_transactions->destination) . " - " . $client_transactions->time_drop}}
                                     </div>
+                                    @endif
                                     <!-- <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae -->
                                 </div>
                             </div><!-- End activity item--><!-- End activity item-->

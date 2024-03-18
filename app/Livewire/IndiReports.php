@@ -17,6 +17,9 @@ class IndiReports extends Component
 {
     use WithPagination;
 
+    // indiReportModal
+    public $indiID;
+
     public function render()
     {
         $auth_org_id = Auth::user()->organization_information->id;
@@ -26,7 +29,20 @@ class IndiReports extends Component
                 'id',
                 DB::raw("CONCAT(COALESCE(last_name, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(middle_name, ''), ' ', COALESCE(ext_name, '')) AS rider_fullname"),
             )
-            ->paginate(5);
+            ->paginate(10);
+
+        // indiReportModal
+        $riderTransactions = TransactionModel::join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
+            ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+            ->join('events', 'event_organizations.id_event', '=', 'events.id')
+            ->join('client_information', 'transactions.id_client', '=', 'client_information.id')
+            ->select(
+                'events.event_name AS event',
+                'events.event_date AS date',
+                DB::raw("CONCAT(COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname")
+            )
+            ->where('event_organization_riders.id_individual', $this->indiID)
+            ->get();
 
         return view('livewire.indi-reports', [
             'riders'                       =>      $riders,
@@ -34,6 +50,13 @@ class IndiReports extends Component
             'totalPages'                   =>      $riders->lastPage(),
             'totalRecords'                 =>      $riders->total(),
             'noRecords'                    =>      $riders->isEmpty(),
+
+            'riderTransactions'            =>      $riderTransactions
         ]);
+    }
+
+    public function getindiID($id)
+    {
+        $this->indiID = $id;
     }
 }

@@ -81,16 +81,17 @@
                                         <th scope="col">Organization</th>
                                         <th scope="col">Total no. of events joined</th>
                                         <th scope="col">Total no. of clients served</th>
+                                        <th scope="col">Details</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($riders as $rider)
-                                    <tr>
+                                    <tr wire:key="{{ $rider->id }}">
                                         <td>{{$rider->rider_fullname}}</td>
                                         <td>{{$rider->organization}}</td>
                                         <td>
                                             @php
-                                            echo "later nalang ka."
+                                            echo $c = App\Models\EventOrganizationRidersModel::where('id_individual', $rider->id)->get()->count();
                                             @endphp
                                         </td>
                                         <td>
@@ -98,6 +99,13 @@
                                             $a = App\Models\EventOrganizationRidersModel::where('id_individual', $rider->id)->pluck('id');
                                             echo $b = App\Models\TransactionModel::whereIn('id_event_organization_riders', $a)->count();
                                             @endphp
+                                        </td>
+                                        <td>
+                                            <span data-bs-toggle="modal" data-bs-target="#ridersReportModal" style="cursor: pointer;" wire:click="getriderID('{{ $rider->id }}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7ZM15.75 9h-7.5M15.75 15h-7.5" stroke="#0f0f0f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -108,7 +116,7 @@
                         @endif
                     </div>
                 </div>
-
+                @include('livewire.report-modals.riders-reports-modal')
             </div>
         </div>
     </div>

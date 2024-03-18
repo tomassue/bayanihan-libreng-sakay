@@ -137,6 +137,7 @@
             <tr>
                 <th>Rider</th>
                 <th>Organization</th>
+                <th width="100px" class="third">Total no. of events joined</th>
                 <th width="100px" class="third">Total no. of <br> clients served</th>
             </tr>
             @foreach($riders as $item)
@@ -147,6 +148,11 @@
                 </td>
                 <td>
                     {{ $item['organization'] }}
+                </td>
+                <td>
+                    @php
+                    echo $c = App\Models\EventOrganizationRidersModel::where('id_individual', $item['id'])->get()->count();
+                    @endphp
                 </td>
                 <td style="text-align: center;">
                     @php

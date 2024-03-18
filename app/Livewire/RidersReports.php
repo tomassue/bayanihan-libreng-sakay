@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Exports\RidersReportsExport;
+use App\Models\EventOrganizationRidersModel;
 use App\Models\IndividualInformationModel;
 use App\Models\OrganizationInformationModel;
 use Livewire\Component;
@@ -23,6 +24,9 @@ class RidersReports extends Component
 
     // Search
     public $start_date = "", $end_date = "", $query_org = "";
+
+    // Modal
+    public $riderID;
 
     public function search()
     {
@@ -51,10 +55,22 @@ class RidersReports extends Component
             $query->whereBetween('individual_information.created_at', [$this->start_date, $this->end_date]);
         }
 
-        $riders = $query->paginate(5);
+        $riders = $query->paginate(10);
 
         // Select Field (Organization)
         $organizations = OrganizationInformationModel::select('id AS orgID', 'organization_name')
+            ->get();
+
+        // riders-reports-modal
+        $eventsjoined = EventOrganizationRidersModel::join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
+            ->join('events', 'event_organizations.id_event', '=', 'events.id')
+            ->where('event_organization_riders.id_individual', $this->riderID)
+            ->select(
+                'event_organization_riders.id AS id',
+                'events.event_name AS event',
+                'events.event_date AS date'
+            )
+            ->orderBy('events.created_at', 'DESC')
             ->get();
 
         return view('livewire.riders-reports', [
@@ -64,7 +80,9 @@ class RidersReports extends Component
             'totalRecords'  =>  $riders->total(),
             'noRecords'     =>  $riders->isEmpty(),
 
-            'organizations' =>  $organizations
+            'organizations' =>  $organizations,
+
+            'eventsjoined'  =>  $eventsjoined
         ]);
     }
 
@@ -125,5 +143,10 @@ class RidersReports extends Component
         $query_org      = $this->query_org;
 
         return Excel::download(new RidersReportsExport($start_date, $end_date, $query_org), 'ridersreport.xlsx');
+    }
+
+    public function getriderID($id)
+    {
+        $this->riderID = $id;
     }
 }

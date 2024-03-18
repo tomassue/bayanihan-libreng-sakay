@@ -37,7 +37,8 @@ class ClientListController extends Controller
                         DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y %h:%i%p') AS formatted_created_at"),
                         'transactions.destination',
                         'transactions.status AS status',
-                        'events.event_name AS event_name'
+                        'events.event_name AS event_name',
+                        DB::raw("DATE_FORMAT(transactions.updated_at, '%b %d, %Y %h:%i%p') AS time_drop")
                     )
                     ->orderBy('transactions.created_at', 'DESC')
                     ->get();

@@ -130,7 +130,9 @@
                                 <td>{{ $reg_members['contact_number'] }}</td>
                                 <td>{{ $reg_members['address'] }}</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #0EB263; cursor: pointer;" wire:click="deactivateMember('{{ $reg_members['user_id'] }}')" wire:confirm="Are you sure you want to set this rider inactive?">ACTIVE</span>
+                                    <span class="me-1" wire:click="deactivateMember('{{ $reg_members['user_id'] }}')" wire:confirm="Are you sure you want to set this rider inactive?">
+                                        <button type="button" class="btn btn-success">ACTIVE</button>
+                                    </span>
                                 </td>
                             </tr>
                             @endforeach
@@ -173,7 +175,9 @@
                                 <td>{{ $reg_members_inactive['contact_number'] }}</td>
                                 <td>{{ $reg_members_inactive['address'] }}</td>
                                 <td>
-                                    <span class="me-1" style="font-weight: bolder; color: #bf0000; cursor: pointer;" wire:click="activateMember('{{ $reg_members_inactive['user_id'] }}')" wire:confirm="Are you sure you want to set this rider active?">INACTIVE</span>
+                                    <span class="me-1" wire:click="activateMember('{{ $reg_members_inactive['user_id'] }}')" wire:confirm="Are you sure you want to set this rider active?">
+                                        <button type="button" class="btn btn-danger">INACTIVE</button>
+                                    </span>
                                 </td>
                             </tr>
                             @endforeach

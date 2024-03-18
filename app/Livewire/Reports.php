@@ -73,7 +73,9 @@ class Reports extends Component
                 'transactions.destination AS transaction_destination',
                 DB::raw("DATE_FORMAT(transactions.created_at, '%h:%i%p') AS transaction_time"),
                 DB::raw("DATE_FORMAT(transactions.created_at, '%b %d, %Y') AS transaction_date"),
-                'transactions.destination AS destination'
+                'transactions.status AS status',
+                'transactions.destination AS destination',
+                DB::raw("DATE_FORMAT(transactions.updated_at, '%b %d, %Y %h:%i%p') AS time_drop"),
             )
             ->where('id_client', $this->id_client)
             ->orderBy('transactions.created_at', 'DESC')
