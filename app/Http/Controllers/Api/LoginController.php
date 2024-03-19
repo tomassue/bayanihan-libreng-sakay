@@ -34,6 +34,9 @@ class LoginController extends Controller
                     ->first();
 
                 if ($user != '[]' && Hash::check($request->password, $user->password)) {
+                    // $user->api_token = Str::random(16) . $user->user_id;
+                    // $user->save();
+                    // $token = Crypt::encryptString($user->api_token);
                     return response()->json(["account_type" => $organization_information->account_type, "name" => $organization_information->organization], 200);
                 } else {
                     return response()->json("User not found.", 404);

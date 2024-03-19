@@ -7,6 +7,7 @@ use App\Models\ClientInformationModel;
 use App\Models\EventOrganizationRidersModel;
 use App\Models\EventOrganizationsModel;
 use App\Models\IndividualInformationModel;
+use App\Models\NumberMessageModel;
 use App\Models\TransactionModel;
 use App\Models\SmsSenderModel;
 use App\Models\User;
@@ -32,6 +33,7 @@ class TransactionsController extends Controller
                 $a = EventOrganizationRidersModel::where('id', $request->transaction->id)->pluck('id_individual');
                 $getRider = IndividualInformationModel::where('id', $a)
                     ->select(
+                        'user_id',
                         DB::raw("CONCAT(COALESCE(last_name, ''), ', ', COALESCE(first_name, ''), ' ', COALESCE(middle_name, ''), ' ', COALESCE(ext_name, '')) AS rider_fullname"),
                     )
                     ->first();
@@ -45,12 +47,21 @@ class TransactionsController extends Controller
 
                     // SMS to guardian once client's QR is scanned successfully.
                     $sms = new SmsSenderModel();
+                    $blaster = new NumberMessageModel();
+
                     $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nSi " . $checkClient->first_name . ' ' . $checkClient->middle_name . ' ' . $checkClient->last_name . " ay nag-avail ng Libreng Sakay papuntang " . $request->transaction->destination . ". Ang kaniyang rider ay si " . $getRider->rider_fullname . ".";
                     $sms->trans_id = time() . '-' . mt_rand();
                     $sms->received_id = "BAYANIHAN-LIBRENG-SAKAY-OTP";
                     $sms->recipient = $checkClient->guardian_contact_number;
                     $sms->recipient_message = $welcome . " \n\n**This is system-generated message. Please DO NOT REPLY.**";
                     $sms->save();
+
+                    $blaster->user_id       =  $getRider->user_id;
+                    $blaster->phone_number  =  $checkClient->guardian_contact_number;
+                    $blaster->sms_trans_id  =  $sms->trans_id;
+                    $blaster->otp_type      =  "SCANNED NOTIFICATION";
+                    $blaster->sms_status    =  "SAVED";
+                    $blaster->save();
 
                     // return response()->json($getRider->rider_fullname);
                     return response()->json(['message' => 'Scanned Successfully.'], 200);

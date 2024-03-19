@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\NumberMessageModel;
 use App\Models\OrganizationInformationModel;
 use App\Models\User;
 use App\Models\EventModel;
@@ -406,6 +407,7 @@ class Registration extends Component
                 ->join('organization_information', 'individual_information.id_organization', '=', 'organization_information.id')
                 ->where('individual_information.user_id', $individualID)
                 ->select(
+                    'users.user_id',
                     DB::raw("CONCAT(COALESCE(individual_information.last_name, '')) AS rider_lastname"),
                     'users.contactNumber',
                     'organization_information.organization_name'
@@ -414,15 +416,23 @@ class Registration extends Component
 
             $sms = new SmsSenderModel();
             $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nDear MR/MS. "  . $rider->rider_lastname . ",\n\n" .
-                "We are pleased to inform you that your registration as a rider with " . $rider->organization_name . " has been approved!" . "\n\n" .
+                "We are pleased to inform you that your registration as a rider with " . $rider->organization_name . " has been APPROVED!" . "\n\n" .
                 "Welcome to our team BAYANIHAN LIBRENG SAKAY! We are grateful to have you on board. Your commitment and dedication will play a crucial role in the success of our BAYANIHAN LIBRENG SAKAY program.\n\n" .
                 "Feel free to reach out if you have any question or need further assistance. \n\n" .
                 "Sa libreng sakay, kauban ta UY!";
-            $sms->trans_id = time() . '-' . mt_rand();
-            $sms->received_id = "BAYANIHAN-LIBRENG-SAKAY-CONFIRMATION";
-            $sms->recipient = $rider->contactNumber;
+            $sms->trans_id          = time() . '-' . mt_rand();
+            $sms->received_id       = "BAYANIHAN-LIBRENG-SAKAY-CONFIRMATION";
+            $sms->recipient         = $rider->contactNumber;
             $sms->recipient_message = $welcome . " \n\n**This is system-generated message. Please DO NOT REPLY.**";
             $sms->save();
+
+            $blaster                = new NumberMessageModel();
+            $blaster->user_id       =  $rider->user_id;
+            $blaster->phone_number  =  $rider->contactNumber;
+            $blaster->sms_trans_id  =  $sms->trans_id;
+            $blaster->otp_type      =  "BAYANIHAN-LIBRENG-SAKAY-CONFIRMATION";
+            $blaster->sms_status    =  "SAVED";
+            $blaster->save();
 
             session()->flash('status', 'Member is approved.');
 
@@ -449,6 +459,7 @@ class Registration extends Component
                 ->join('organization_information', 'individual_information.id_organization', '=', 'organization_information.id')
                 ->where('individual_information.user_id', $individualID)
                 ->select(
+                    'users.user_id',
                     DB::raw("CONCAT(COALESCE(individual_information.last_name, '')) AS rider_lastname"),
                     'users.contactNumber',
                     'organization_information.organization_name'
@@ -465,6 +476,14 @@ class Registration extends Component
             $sms->recipient = $rider->contactNumber;
             $sms->recipient_message = $welcome . " \n\n**This is system-generated message. Please DO NOT REPLY.**";
             $sms->save();
+
+            $blaster = new NumberMessageModel();
+            $blaster->user_id       =  $rider->user_id;
+            $blaster->phone_number  =  $rider->contactNumber;
+            $blaster->sms_trans_id  =  $sms->trans_id;
+            $blaster->otp_type      =  "BAYANIHAN-LIBRENG-SAKAY-CONFIRMATION";
+            $blaster->sms_status    =  "SAVED";
+            $blaster->save();
 
             session()->flash('status', 'Member is declined.');
 

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\NumberMessageModel;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -17,6 +18,7 @@ use App\Models\IndividualInformationModel;
 use App\Models\OrganizationInformationModel;
 use App\Models\SmsSenderModel;
 use App\Models\TransactionModel;
+use App\Models\User;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
 
@@ -306,7 +308,8 @@ class Events extends Component
                 'status' => 1
             ]);
 
-            // Members under this organization will be notified via SMS about the upcoming event.
+            // Members under this organization will be notified via SMS about the upcoming event. 
+            // ------ THIS METHOD STORES DATA WITH COMMA
             // $org = Auth::user()->organization_information->id;
 
             // $riderContactNumbers = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
@@ -324,6 +327,38 @@ class Events extends Component
             //     'recipient'         => $recipientList,
             //     'recipient_message' => $welcome . " \n\n**This is a system-generated message. Please DO NOT REPLY.**"
             // ]);
+
+            // <<<--It's a good practice to save data to NumberMessageModel (LOCAL) for duplicate record.-->>>
+
+            // ------ THIS METHOD STORES DATA BY ROW
+            $org = Auth::user()->organization_information->id;
+            $riderContactNumbers = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
+                ->where('users.status', 1)
+                ->where('id_organization', $org)
+                ->pluck('users.contactNumber');
+
+            foreach ($riderContactNumbers as $rider_contactNumber) {
+                $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nYour organization just joined an event. Please check your app for further details. \n\nThank you.";
+                SmsSenderModel::create([
+                    'trans_id'          => time() . '-' . mt_rand(),
+                    'received_id'       => "BAYANIHAN-LIBRENG-SAKAY-RIDER-EVENT-NOTIFICATION",
+                    'recipient'         => $rider_contactNumber,
+                    'recipient_message' => $welcome . " \n\n**This is a system-generated message. Please DO NOT REPLY.**"
+                ]);
+
+                $get_rider_userID = User::where('contactNumber', $rider_contactNumber)
+                    ->where('status', 1)
+                    ->select('user_id')
+                    ->first();
+
+                NumberMessageModel::create([
+                    'user_id'       => $get_rider_userID->user_id,
+                    'phone_number'  => $rider_contactNumber,
+                    'sms_trans_id'  => time() . '-' . mt_rand(),
+                    'otp_type'      => 'BAYANIHAN-LIBRENG-SAKAY-RIDER-EVENT-NOTIFICATION',
+                    'sms_status'    => 'STATUS'
+                ]);
+            }
 
             $this->reset('event_ID');
             $this->dispatch('close-confirmJoin-Modal');
@@ -344,7 +379,7 @@ class Events extends Component
         ]);
     }
 
-    // This is for the event details modal, we will get the wire:key id and assign it in a property to make it accessible throughout the page
+    // This is for the event details modal, we will get the wire:key id and assign it in a property to make it accessible throughout the page and modal
     public function eventDetails($id_event)
     {
         $this->id_event = $id_event;
