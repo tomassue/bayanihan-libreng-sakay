@@ -8,8 +8,8 @@
     </div>
     @endif
 
-    <div class="col-12" wire:loading.class="opacity-50">
-        <div class="card border border-secondary" wire:target="pageOne, pageTwo, pageThree">
+    <div class="col-12">
+        <div class="card border border-secondary" wire:loading.class="opacity-50" wire:target="pageOne, pageTwo">
             <div class="row mx-5 mt-4">
 
                 <div class="col">

@@ -22,12 +22,12 @@ class LoginController extends Controller
         try {
             $user = User::where('email', $request->email)->first();
 
-            if ($user->id_account_type == '1') { // Admin
+            if ($user->id_account_type == '1') { // Organization
 
                 $organization_information = OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
                     ->select(
                         'organization_information.organization_name AS organization',
-                        'users.id AS userID',
+                        'organization_information.id AS id',
                         'users.id_account_type AS account_type'
                     )
                     ->where('users.user_id', $user->user_id)
@@ -37,7 +37,7 @@ class LoginController extends Controller
                     // $user->api_token = Str::random(16) . $user->user_id;
                     // $user->save();
                     // $token = Crypt::encryptString($user->api_token);
-                    return response()->json(["account_type" => $organization_information->account_type, "name" => $organization_information->organization], 200);
+                    return response()->json(["account_type" => $organization_information->account_type, "id" => $organization_information->id, "name" => $organization_information->organization], 200);
                 } else {
                     return response()->json("User not found.", 404);
                 }

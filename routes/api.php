@@ -40,6 +40,8 @@ Route::get('/client-list/{token}', [ClientListController::class, 'index']);
 Route::get('/riders-list/{token}', [RidersListController::class, 'index']);
 Route::post('/transact', [TransactionsController::class, 'transaction']);
 Route::post('/drop', [TransactionsController::class, 'dropClient']);
+Route::get('/event-list-attendance/{id}', [TransactionsController::class, 'event_list_for_attendance']); // List of Events
+Route::post('/attendance', [TransactionsController::class, 'attendance']); // Attendance
 Route::get('/check-user/{token}', [LoginController::class, 'checkUser']);
 
 // Change Password

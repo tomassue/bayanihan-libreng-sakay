@@ -8,6 +8,7 @@ use App\Models\EventOrganizationRidersModel;
 use App\Models\EventOrganizationsModel;
 use App\Models\IndividualInformationModel;
 use App\Models\NumberMessageModel;
+use App\Models\OrganizationInformationModel;
 use App\Models\TransactionModel;
 use App\Models\SmsSenderModel;
 use App\Models\User;
@@ -121,6 +122,53 @@ class TransactionsController extends Controller
             }
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function event_list_for_attendance($id)
+    {
+        try {
+            $check_admin = OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
+                ->where('organization_information.id', $id)
+                ->where('users.id_account_type', 1)
+                ->select(
+                    'organization_information.id AS org_id',
+                    'users.id_account_type AS account_type'
+                )
+                ->first();
+
+            if ($check_admin) {
+                $event_organizations = EventOrganizationsModel::join('events', 'event_organizations.id_event', '=', 'events.id')
+                    ->where('events.tag', 0)
+                    ->where('events.status', 1)
+                    ->where('event_organizations.id_organization', $check_admin->org_id)
+                    ->select(
+                        'event_organizations.id AS id',
+                        DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"),
+                        DB::raw("CONCAT(TIME_FORMAT(events.time_start, '%h:%i %p'), ' - ', TIME_FORMAT(events.time_end, '%h:%i %p')) AS events_time"),
+                        "events.event_name",
+                        "events.event_location AS location",
+                        "events.google_map_link AS gmap"
+                    )
+                    ->get();
+
+                return response()->json($event_organizations);
+            } else {
+                return response()->json(["error" => "Unauthorized access."], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
+        }
+    }
+
+    public function attendance(Request $content)
+    {
+        $request = json_decode($content->getContent());
+
+        try {
+            return response()->json($request->id_event_organization, $request->id_individual);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage());
         }
     }
 }
