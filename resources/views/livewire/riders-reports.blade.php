@@ -77,10 +77,10 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Riders' Name</th>
+                                        <th scope="col" width="400px">Riders' Name</th>
                                         <th scope="col">Organization</th>
-                                        <th scope="col">Total no. of events joined</th>
-                                        <th scope="col">Total no. of clients served</th>
+                                        <th scope="col" style="text-align: center;">Total no. of <br> events joined</th>
+                                        <th scope="col" style="text-align: center;">Total no. of <br> clients served</th>
                                         <th scope="col">Details</th>
                                     </tr>
                                 </thead>
@@ -89,12 +89,12 @@
                                     <tr wire:key="{{ $rider->id }}">
                                         <td>{{$rider->rider_fullname}}</td>
                                         <td>{{$rider->organization}}</td>
-                                        <td>
+                                        <td style="text-align: center;">
                                             @php
                                             echo $c = App\Models\EventOrganizationRidersModel::where('id_individual', $rider->id)->get()->count();
                                             @endphp
                                         </td>
-                                        <td>
+                                        <td style="text-align: center;">
                                             @php
                                             $a = App\Models\EventOrganizationRidersModel::where('id_individual', $rider->id)->pluck('id');
                                             echo $b = App\Models\TransactionModel::whereIn('id_event_organization_riders', $a)->count();

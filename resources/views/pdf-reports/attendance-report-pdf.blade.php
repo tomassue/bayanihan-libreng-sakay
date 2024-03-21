@@ -103,20 +103,31 @@
     <div class="margin-top">
         <table class="w-full">
             <tr>
+                <td class="w-full">
+                    <div style="text-align: center; margin-bottom: 30px; text-transform: uppercase;">
+                        <h1>ATTENDANCE FORM <br> <span style="font-size: small;">({{$org}})</span></h1>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <table class="w-full">
+            <tr>
                 <td class="w-half">
                     <div>
-                        <h4>Event: <span style="font-weight: lighter;">{{empty($attendance->events_name) ? 'ALL' : $attendance->events_name }}</span></h4>
+                        <h4>Event: <span style="font-weight: lighter;">{{empty($event->event_name) ? 'ALL' : $event->event_name }}</span></h4>
                     </div>
                     <div>
-                        <h4>Date: <span style="font-weight: lighter;">{{empty($attendance->events_date) ? 'ALL' : $attendance->events_date }}</span></h4>
-                    </div>
-                    <div>
-                        <h4>Time: <span style="font-weight: lighter;">{{empty($attendance->events_time) ? 'ALL' : $attendance->events_time }}</span></h4>
-                    </div>
-                    <div>
-                        <h4>Location: <span style="font-weight: lighter;">{{empty($attendance->events_location) ? 'ALL' : $attendance->events_location }}</span></h4>
+                        <h4>Date: <span style="font-weight: lighter;">{{empty($event->events_date) ? 'ALL' : $event->events_date }}</span></h4>
                     </div>
                     <!-- <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div> -->
+                </td>
+                <td class="w-half">
+                    <div>
+                        <h4>Time: <span style="font-weight: lighter;">{{empty($event->events_time) ? 'ALL' : $event->events_time }}</span></h4>
+                    </div>
+                    <div>
+                        <h4>Location: <span style="font-weight: lighter;">{{empty($event->event_location) ? 'ALL' : $event->event_location }}</span></h4>
+                    </div>
                 </td>
             </tr>
         </table>

@@ -6,6 +6,7 @@ use App\Models\EventAttendanceModel;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceReportExport implements FromView
 {
@@ -30,6 +31,7 @@ class AttendanceReportExport implements FromView
                 DB::raw("CONCAT(TIME_FORMAT(events.time_start, '%h:%i %p'), ' - ', TIME_FORMAT(events.time_end, '%h:%i %p')) AS events_time"),
                 'events.event_location AS location',
             )
+            ->where('individual_information.id_organization', [Auth::user()->organization_information->id])
             ->where('event_organizations.id_event', 'LIKE', '%' . $this->query . '%')
             ->paginate(10);
 
