@@ -16,7 +16,7 @@
                     <div class="card h-70 border border-secondary">
                         <div class="card-body" style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
                             <div class="container">
-                                <div class="row justify-content-center">
+                                <div class="row @if(Auth::user()->user_id == 'ADMIN') justify-content-start @else justify-content-center @endif">
 
                                     <div class="col-sm-12 col-md-12 col-lg-4 mb-1" style="padding-right: 0px; padding-left: 0px;">
                                         <div class="card m-3 border border-secondary" style="cursor: pointer;" wire:click="pageOne">

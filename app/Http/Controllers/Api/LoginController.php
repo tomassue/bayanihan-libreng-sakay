@@ -37,7 +37,7 @@ class LoginController extends Controller
                     // $user->api_token = Str::random(16) . $user->user_id;
                     // $user->save();
                     // $token = Crypt::encryptString($user->api_token);
-                    return response()->json(["account_type" => $organization_information->account_type, "id" => $organization_information->id, "name" => $organization_information->organization], 200);
+                    return response()->json(["api_token" => $organization_information->id, "account_type" => $organization_information->account_type, "name" => $organization_information->organization], 200);
                 } else {
                     return response()->json("User not found.", 404);
                 }

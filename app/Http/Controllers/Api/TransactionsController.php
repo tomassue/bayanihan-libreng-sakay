@@ -125,11 +125,11 @@ class TransactionsController extends Controller
         }
     }
 
-    public function event_list_for_attendance($id)
+    public function event_list_for_attendance($token) // id_organization was used here
     {
         try {
             $check_admin = OrganizationInformationModel::join('users', 'organization_information.user_id', '=', 'users.user_id')
-                ->where('organization_information.id', $id)
+                ->where('organization_information.id', $token)
                 ->where('users.id_account_type', 1)
                 ->select(
                     'organization_information.id AS org_id',

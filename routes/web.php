@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GenerateClientQRController;
 use App\Http\Controllers\HomeController;
+use App\Livewire\AttendanceReport;
 use App\Livewire\EventsReport;
 use App\Livewire\OrganizationDetails;
 use App\Livewire\OrgReports;
@@ -80,6 +81,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // REPORTS (ORGANIZATION)
     Route::get('/indi-reports', IndiReports::class)->name('indi-reports');
+    Route::get('/attendance-reports', AttendanceReport::class)->name('attendance-reports');
 
     Route::get('/client-list', Reports::class)->name('client-list');
     Route::get('/generate-qr/{clientID}', [Reports::class, 'generateQr'])->name('generate.qr');
