@@ -113,6 +113,7 @@ class EventsController extends Controller
                     ->where('event_organizations.id_organization', $this->id_org)
                     ->where('event_organizations.status', 1)
                     ->where('event_organization_riders.id_individual', $id)
+                    ->whereDate('events.event_date', '=', now()->toDateString()) // Added condition to check if event date is today
                     ->select(
                         'event_organization_riders.id AS id',
                         DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS events_date"),

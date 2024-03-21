@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClientInformationModel;
+use App\Models\EventAttendanceModel;
 use App\Models\EventOrganizationRidersModel;
 use App\Models\EventOrganizationsModel;
 use App\Models\IndividualInformationModel;
@@ -166,7 +167,21 @@ class TransactionsController extends Controller
         $request = json_decode($content->getContent());
 
         try {
-            return response()->json($request->id_event_organization, $request->id_individual);
+            $checkDuplicates = EventAttendanceModel::where('id_event_organization', $request->id_event_organization)
+                ->where('id_individual', $request->id_individual)
+                ->get()
+                ->count();
+
+            if ($checkDuplicates == 0) {
+                $attendance = EventAttendanceModel::create([
+                    'id_event_organization' => $request->id_event_organization,
+                    'id_individual'         => $request->id_individual
+                ]);
+
+                return response()->json($attendance);
+            } else {
+                return response()->json(['error' => 'Duplicate entry.'], 500);
+            }
         } catch (\Exception $e) {
             return response()->json($e->getMessage());
         }

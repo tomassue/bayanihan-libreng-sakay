@@ -74,7 +74,6 @@ class EventsReport extends Component
 
     public function printPDF($start_date = "", $end_date = "", $query_acc_type = "")
     {
-
         $query = TransactionModel::join('client_information', 'transactions.id_client', '=', 'client_information.id')
             ->join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
             ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')

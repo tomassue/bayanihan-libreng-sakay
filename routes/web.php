@@ -78,6 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/pdf-clients/{start_date?}/{end_date?}', [ClientsReport::class, 'printPDF'])->name('pdf-clients');
     Route::get('/pdf-org/{start_date?}/{end_date?}', [OrgReports::class, 'printPDF'])->name('pdf-org');
     Route::get('/pdf-riders/{start_date?}/{end_date?}/{query_org?}', [RidersReports::class, 'printPDF'])->name('pdf-riders');
+    Route::get('/pdf-attendance/{query?}', [AttendanceReport::class, 'printPDF'])->name('pdf-attendance');
 
     // REPORTS (ORGANIZATION)
     Route::get('/indi-reports', IndiReports::class)->name('indi-reports');
