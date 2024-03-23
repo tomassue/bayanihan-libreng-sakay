@@ -338,7 +338,7 @@ class Events extends Component
                 ->pluck('users.contactNumber');
 
             foreach ($riderContactNumbers as $rider_contactNumber) {
-                $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nYour organization just joined an event. Please check your app for further details. \n\nThank you.";
+                $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nAng iyong orginisasyon ay may sinalihan na panibagong event. Buksan ang inyong LIBRENG SAKAY APP, pumunta sa 'LIST OF EVENTS' at i-click ang DETAILS upang makita ang iba pang detalye. \n\nMaraming Salamat.";
                 SmsSenderModel::create([
                     'trans_id'          => time() . '-' . mt_rand(),
                     'received_id'       => "BAYANIHAN-LIBRENG-SAKAY-RIDER-EVENT-NOTIFICATION",

@@ -417,7 +417,7 @@ class Registration extends Component
             $sms = new SmsSenderModel();
             $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nDear MR/MS. "  . $rider->rider_lastname . ",\n\n" .
                 "Ikinalulugod naming ipaalam sa iyo na ang iyong pagpaparehistro bilang isang rider sa " . $rider->organization_name . "  ay APPROVED na!" . "\n\n" .
-                "Welcome to our team BAYANIHAN LIBRENG SAKAY! We are grateful to have you on board. Your commitment and dedication will play a crucial role in the success of our BAYANIHAN LIBRENG SAKAY program.\n\n" .
+                "Mabuhay! Welcome sa team BAYANIHAN LIBRENG SAKAY! Nagpapasalamat kami sa iyong pagsali. pagsali. Ang iyong pagtanggap sa gawain at dedikasyon ang susi para sa ikatatagumpay ng ating programang BAYANIHAN LIBRENG SAKAY.\n\n" .
                 "Sa libreng sakay, kauban ta UY!";
             $sms->trans_id          = time() . '-' . mt_rand();
             $sms->received_id       = "BAYANIHAN-LIBRENG-SAKAY-CONFIRMATION";
@@ -467,9 +467,9 @@ class Registration extends Component
 
             $sms = new SmsSenderModel();
             $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nDear MR/MS. "  . $rider->rider_lastname . ",\n\n" .
-                "Thank you for your interest in joining the BAYANIHAN LIBRENG SAKAY under " . $rider->organization_name . ". After careful consideration, we regret to inform you that your registration as a rider has been declined." . "\n\n" .
-                "We appreciate your time and effort in applying. If you have any questions or need further clarification, feel free to reach out to our support team.\n\n" .
-                "Wishing you the best in your future endeavors.";
+                "Salamat sa iyong interes na sumali sa BAYANIHAN LIBRENG SAKAY sa ilalim ng " . $rider->organization_name . ". Matapos ang aming masusing pagsasaalang-alang, ikinalulungkot naming ibinabahagi na hindi natanggap ang iyong application bilang isa sa aming mga rider." . "\n\n" .
+                "Nagpapasalamat kami sa iyong oras at dedikasyon na mag-apply. Kung may mga katanungan o nais na malinaw, maaarinh lumapit sa aming support team. Nawa'y pagpalain kayo sa mga darating na panahon.\n\n" .
+                "Maraming salamat po.";
             $sms->trans_id = time() . '-' . mt_rand();
             $sms->received_id = "BAYANIHAN-LIBRENG-SAKAY-CONFIRMATION";
             $sms->recipient = $rider->contactNumber;
