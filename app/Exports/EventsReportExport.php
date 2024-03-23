@@ -14,12 +14,14 @@ class EventsReportExport implements FromView
     public $start_date;
     public $end_date;
     public $query_acc_type;
+    public $query_event;
 
-    public function __construct($start_date, $end_date, $query_acc_type)
+    public function __construct($start_date, $end_date, $query_acc_type, $query_event)
     {
         $this->start_date = $start_date;
         $this->end_date = $end_date;
         $this->query_acc_type = $query_acc_type;
+        $this->query_event = $query_event;
     }
 
 
@@ -46,6 +48,10 @@ class EventsReportExport implements FromView
 
         if (!empty($this->start_date) && !empty($this->end_date)) {
             $query->whereBetween('events.event_date', [$this->start_date, $this->end_date]);
+        }
+
+        if (!empty($this->query_event)) {
+            $query->where('events.id', $this->query_event);
         }
 
         $clients_transact = $query->get();

@@ -18,9 +18,9 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Event</th>
+                                <th scope="col" width="300px;">Event</th>
                                 <th scope="col">Date</th>
-                                <th scope="col">No. of client served</th>
+                                <th scope="col" style="text-align: center;">No. of client served</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,7 +31,7 @@
                                 <th scope="row">{{ $no }}</th>
                                 <td>{{ $item->event }}</td>
                                 <td>{{ $item->date }}</td>
-                                <td>
+                                <td style="text-align: center;">
                                     @php
                                     echo $a = App\Models\TransactionModel::where('id_event_organization_riders', $item->id)->count();
                                     @endphp

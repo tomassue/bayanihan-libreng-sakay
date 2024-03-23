@@ -3,6 +3,7 @@
         <tr>
             <th>Riders' Name</th>
             <th>Organization</th>
+            <th>Total no. of events joined</th>
             <th>Total no. of clients served</th>
         </tr>
     </thead>
@@ -11,6 +12,11 @@
         <tr>
             <td>{{$rider->rider_fullname}}</td>
             <td>{{$rider->organization}}</td>
+            <td>
+                @php
+                echo $c = App\Models\EventOrganizationRidersModel::where('id_individual', $rider['id'])->get()->count();
+                @endphp
+            </td>
             <td>
                 @php
                 $a = App\Models\EventOrganizationRidersModel::where('id_individual', $rider->id)->pluck('id');

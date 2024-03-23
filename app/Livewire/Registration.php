@@ -416,9 +416,8 @@ class Registration extends Component
 
             $sms = new SmsSenderModel();
             $welcome = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nDear MR/MS. "  . $rider->rider_lastname . ",\n\n" .
-                "We are pleased to inform you that your registration as a rider with " . $rider->organization_name . " has been APPROVED!" . "\n\n" .
+                "Ikinalulugod naming ipaalam sa iyo na ang iyong pagpaparehistro bilang isang rider sa " . $rider->organization_name . "  ay APPROVED na!" . "\n\n" .
                 "Welcome to our team BAYANIHAN LIBRENG SAKAY! We are grateful to have you on board. Your commitment and dedication will play a crucial role in the success of our BAYANIHAN LIBRENG SAKAY program.\n\n" .
-                "Feel free to reach out if you have any question or need further assistance. \n\n" .
                 "Sa libreng sakay, kauban ta UY!";
             $sms->trans_id          = time() . '-' . mt_rand();
             $sms->received_id       = "BAYANIHAN-LIBRENG-SAKAY-CONFIRMATION";

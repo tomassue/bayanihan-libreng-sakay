@@ -104,72 +104,40 @@
         </tr>
     </table>
 
-    <div class="margin-top">
+    <!-- <div class="margin-top">
         <table class="w-full">
-            <tr>
-                <td class="w-half">
-                    <div>
-                        <h4>Event: <span style="font-weight: lighter;">{{empty($query_event) ? 'ALL' : ucfirst($query_event)}}</span></h4>
-                    </div>
-                    <!-- <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div> -->
-                </td>
-                <td class="w-half">
-                    <div>
-                        <h4>Account Type: <span style="font-weight: lighter;">{{empty($account_type) ? 'ALL' : ucfirst(str_replace("_"," ", $account_type))}}</span></h4>
-                    </div>
-                    <!-- <div>{{empty($account_type) ? 'ALL' : ucfirst(str_replace("_"," ", $account_type))}}</div> -->
-                </td>
-            </tr>
-            <tr>
-                <td class="w-half">
-                    <div>
-                        <h4>Date: <span style="font-weight: lighter;">{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</span></h4>
-                    </div>
-                    <!-- <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div> -->
-                </td>
-            </tr>
         </table>
-    </div>
+    </div> -->
 
     <div class="margin-top">
         <table class="products">
             <tr>
-                <th>Client</th>
-                <th>Event</th>
-                <th>Date</th>
-                <th>Location</th>
-                <th>Destination</th>
-                <th>Rider</th>
+                <th>Riders Name</th>
+                <th width="100px;" style="text-align: center;">No. of events joined</th>
+                <th width="100px;" style="text-align: center;">No. of clients served</th>
             </tr>
-            @foreach($clients_transact as $item)
+            @foreach($riders as $item)
             <tr class="items">
-
-                <td>
-                    {{ $item['client_fullname'] }}
+                <td>{{ucfirst($item->rider_fullname)}}</td>
+                <td style="text-align: center;">
+                    @php
+                    $a = App\Models\EventOrganizationRidersModel::where('id_individual', $item->id)->pluck('id');
+                    echo $a->count();
+                    @endphp
                 </td>
-                <td>
-                    {{ $item['event_name'] }}
+                <td style="text-align: center;">
+                    @php
+                    $b = App\Models\TransactionModel::whereIn('id_event_organization_riders', $a)->pluck('id');
+                    echo $b->count();
+                    @endphp
                 </td>
-                <td>
-                    {{ $item['event_date'] }}
-                </td>
-                <td>
-                    {{ $item['event_location'] }}
-                </td>
-                <td>
-                    {{ $item['destination'] }}
-                </td>
-                <td>
-                    {{ $item['rider_fullname'] }}
-                </td>
-
             </tr>
             @endforeach
         </table>
     </div>
 
     <div class="total">
-        Total: {{$clients_transact->count()}}
+        Total: {{$riders->count()}}
     </div>
 
     <div class="footer margin-top">

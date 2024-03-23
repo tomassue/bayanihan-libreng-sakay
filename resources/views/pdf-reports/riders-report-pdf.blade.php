@@ -149,7 +149,7 @@
                 <td>
                     {{ $item['organization'] }}
                 </td>
-                <td>
+                <td style="text-align: center;">
                     @php
                     echo $c = App\Models\EventOrganizationRidersModel::where('id_individual', $item['id'])->get()->count();
                     @endphp

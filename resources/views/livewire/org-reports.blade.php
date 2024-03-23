@@ -13,10 +13,10 @@
                             <div class="row g-2">
                                 <label for="inputEmail3" class="col-sm-1 col-md-2 col-lg-2 col-form-label">Date</label>
                                 <div class="col-sm-4 col-md-5 col-lg-5">
-                                    <input type="date" class="form-control" wire:model="start_date" required>
+                                    <input type="date" class="form-control" wire:model="start_date">
                                 </div>
                                 <div class="col-sm-4 col-md-5 col-lg-5">
-                                    <input type="date" class="form-control" wire:model="end_date" required>
+                                    <input type="date" class="form-control" wire:model="end_date">
                                 </div>
                             </div>
                     </div>
@@ -35,16 +35,16 @@
                         @else
                         <div class="row g-2 mb-2 mt-2">
                             <div class="col-sm-2 text-start">
-                                <a href="{{ route('pdf-org', ['start_date' => $start_date, 'end_date' => $end_date]) }}" target="_blank">
-                                    <button type="button" class="btn btn-primary">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                            <path d="M7.25 7h9.5V5c0-2-.75-3-3-3h-3.5c-2.25 0-3 1-3 3v2ZM16 15v4c0 2-1 3-3 3h-2c-2 0-3-1-3-3v-4h8Z" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            <path d="M21 10v5c0 2-1 3-3 3h-2v-3H8v3H6c-2 0-3-1-3-3v-5c0-2 1-3 3-3h12c2 0 3 1 3 3ZM17 15H7M7 11h3" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                </a>
+                                <!-- <a href="{{ route('pdf-org', ['start_date' => $start_date, 'end_date' => $end_date]) }}" target="_blank"> -->
+                                <button type="button" class="btn btn-primary" wire:click="printPDF" wire:loading.attr="disabled">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                        <path d="M7.25 7h9.5V5c0-2-.75-3-3-3h-3.5c-2.25 0-3 1-3 3v2ZM16 15v4c0 2-1 3-3 3h-2c-2 0-3-1-3-3v-4h8Z" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M21 10v5c0 2-1 3-3 3h-2v-3H8v3H6c-2 0-3-1-3-3v-5c0-2 1-3 3-3h12c2 0 3 1 3 3ZM17 15H7M7 11h3" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </button>
+                                <!-- </a> -->
 
-                                <button type="button" class="btn btn-primary" wire:click="export">
+                                <button type="button" class="btn btn-primary" wire:click="export" wire:loading.attr="disabled">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                         <path d="M9 11v6l2-2M9 17l-2-2" stroke="#d9e3f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                         <path d="M22 10v5c0 5-2 7-7 7H9c-5 0-7-2-7-7V9c0-5 2-7 7-7h5" stroke="#d9e3f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>

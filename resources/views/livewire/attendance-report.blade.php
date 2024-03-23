@@ -12,7 +12,7 @@
                         <form wire:submit="search">
                             <div class="row g-2">
                                 <label for="inputEmail3" class="col-sm-1 col-md-2 col-lg-2 col-form-label">Select Event</label>
-                                <div class="col-sm-4 col-md-5 col-lg-5">
+                                <div class="col-sm-4 col-md-5 col-lg-10">
                                     <select class="form-select" aria-label="Select..." wire:model="query">
                                         <option selected="">Select</option>
                                         @foreach($events as $event)
