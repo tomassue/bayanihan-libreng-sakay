@@ -49,6 +49,7 @@ class EventsReport extends Component
             'event_name',
             DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS event_date"),
         )
+            ->orderBy('event_date', 'DESC')
             ->get();
 
         $query = TransactionModel::join('client_information', 'transactions.id_client', '=', 'client_information.id')
@@ -116,6 +117,17 @@ class EventsReport extends Component
             $query->where('client_information.user_type', 'like', '%' . $query_acc_type . '%');
         }
 
+        if (!empty($query_event)) {
+            $query->where('events.id', $query_event);
+
+            $event_detail = EventModel::where('id', $query_event)
+                ->select(
+                    'event_name',
+                    'event_date'
+                )
+                ->first();
+        }
+
         if (!empty($start_date) && !empty($end_date)) {
             $query->whereBetween('events.event_date', [$start_date, $end_date]);
         }
@@ -141,7 +153,8 @@ class EventsReport extends Component
                 'clients_transact'  => $clients_transact,
                 'start_date'        => $start_date,
                 'end_date'          => $end_date,
-                'account_type'      => $query_acc_type
+                'account_type'      => $query_acc_type,
+                'query_event'       => !empty($event_detail) ? $event_detail : ""
             ]
         )
             ->setPaper('a4', 'portrait')

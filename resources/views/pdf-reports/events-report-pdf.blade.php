@@ -109,7 +109,7 @@
             <tr>
                 <td class="w-half">
                     <div>
-                        <h4>Event: <span style="font-weight: lighter;">{{empty($query_event) ? 'ALL' : ucfirst($query_event)}}</span></h4>
+                        <h4>Event: <span style="font-weight: lighter;">{{empty($query_event->event_name) ? 'ALL' : ucfirst($query_event->event_name)}}</span></h4>
                     </div>
                     <!-- <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div> -->
                 </td>
@@ -123,7 +123,7 @@
             <tr>
                 <td class="w-half">
                     <div>
-                        <h4>Date: <span style="font-weight: lighter;">{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</span></h4>
+                        <h4>Date: <span style="font-weight: lighter;">{{empty($start_date) ? (empty($query_event->event_date) ? 'ALL' : date('M-d-Y', strtotime($query_event->event_date))) : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</span></h4>
                     </div>
                     <!-- <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div> -->
                 </td>
