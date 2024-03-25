@@ -13,7 +13,7 @@
                     <span>No records.</span>
                 </div>
                 @else
-                <div class="row mb-3 fw-bolder" style="color: #0A335D;">
+                <div class="row mx-4" style="color: #0A335D;">
                     <table class="table table-borderless">
                         <thead>
                             <tr>
