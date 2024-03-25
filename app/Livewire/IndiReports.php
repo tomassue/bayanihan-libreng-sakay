@@ -71,8 +71,10 @@ class IndiReports extends Component
         $this->indiID = $id;
     }
 
-    public function printPDF()
+    public function printPDF($search_rider = "")
     {
+        $search_rider = $search_rider === 'null' ? '' : $search_rider;
+
         $auth_org_id = Auth::user()->organization_information->id;
 
         $riders = IndividualInformationModel::where('id_organization', $auth_org_id)
@@ -80,10 +82,10 @@ class IndiReports extends Component
                 'id',
                 DB::raw("CONCAT(COALESCE(last_name, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(middle_name, ''), ' ', COALESCE(ext_name, '')) AS rider_fullname"),
             )
-            ->where('first_name', 'like', '%' . $this->search_rider . '%')
-            ->orWhere('middle_name', 'like', '%' . $this->search_rider . '%')
-            ->orWhere('last_name', 'like', '%' . $this->search_rider . '%')
-            ->orWhere('ext_name', 'like', '%' . $this->search_rider . '%')
+            ->where('first_name', 'like', '%' . $search_rider . '%')
+            ->orWhere('middle_name', 'like', '%' . $search_rider . '%')
+            ->orWhere('last_name', 'like', '%' . $search_rider . '%')
+            ->orWhere('ext_name', 'like', '%' . $search_rider . '%')
             ->paginate(10);
 
         // Logos to base64
@@ -109,9 +111,11 @@ class IndiReports extends Component
             ->setOption(['defaultFont' => 'roboto'])
             ->setOption('isRemoteEnabled', true);
 
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
-        }, 'indi-report.pdf');
+        return $pdf->stream();
+
+        // return response()->streamDownload(function () use ($pdf) {
+        //     echo $pdf->stream();
+        // }, 'indi-report.pdf');
     }
 
     public function export()

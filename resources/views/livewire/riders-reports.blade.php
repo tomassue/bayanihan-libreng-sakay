@@ -33,7 +33,7 @@
                             </div>
                     </div>
 
-                    <div class="col-sm-12 col-lg-3 text-end">
+                    <div class="col-sm-12 col-lg-3 text-start">
                         <button type="submit" class="btn btn-primary">Filter</button>
                         <button type="button" class="btn btn-secondary" wire:click="clear">Clear</button>
                         </form>
@@ -47,14 +47,18 @@
                         @else
                         <div class="row g-2 mb-2 mt-2">
                             <div class="col-sm-2 text-start">
-                                <!-- <a href="{{ route('pdf-riders', ['start_date' => $start_date, 'end_date' => $end_date, 'query_org' => $query_org]) }}" target="_blank"> -->
-                                <button type="button" class="btn btn-primary" wire:click="printPDF" wire:loading.wire:loading.attr="disabled">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                        <path d="M7.25 7h9.5V5c0-2-.75-3-3-3h-3.5c-2.25 0-3 1-3 3v2ZM16 15v4c0 2-1 3-3 3h-2c-2 0-3-1-3-3v-4h8Z" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        <path d="M21 10v5c0 2-1 3-3 3h-2v-3H8v3H6c-2 0-3-1-3-3v-5c0-2 1-3 3-3h12c2 0 3 1 3 3ZM17 15H7M7 11h3" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                </button>
-                                <!-- </a> -->
+                                <a href="{{ route('pdf-riders', [
+                                'start_date' => $start_date !== '' ? $start_date : 'null', 
+                                'end_date' => $end_date !== '' ? $end_date : 'null', 
+                                'query_org' => $query_org !== '' ? $query_org : 'null'
+                                ]) }}" target="_blank">
+                                    <button type="button" class="btn btn-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                            <path d="M7.25 7h9.5V5c0-2-.75-3-3-3h-3.5c-2.25 0-3 1-3 3v2ZM16 15v4c0 2-1 3-3 3h-2c-2 0-3-1-3-3v-4h8Z" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M21 10v5c0 2-1 3-3 3h-2v-3H8v3H6c-2 0-3-1-3-3v-5c0-2 1-3 3-3h12c2 0 3 1 3 3ZM17 15H7M7 11h3" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </button>
+                                </a>
 
                                 <button type="button" class="btn btn-primary" wire:click="export" wire:loading.wire:loading.attr="disabled">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">

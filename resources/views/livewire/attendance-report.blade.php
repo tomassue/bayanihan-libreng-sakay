@@ -8,11 +8,11 @@
                         <h1>Attendance Report</h1>
                     </div>
 
-                    <div class="col-sm-12 col-lg-9 mb-4">
+                    <div class="col-sm-12 col-lg-5 mb-4">
                         <form wire:submit="search">
                             <div class="row g-2">
-                                <label for="inputEmail3" class="col-sm-1 col-md-2 col-lg-2 col-form-label">Select Event</label>
-                                <div class="col-sm-4 col-md-5 col-lg-10">
+                                <label for="inputEmail3" class="col-sm-1 col-md-2 col-lg-3 col-form-label">Select Event</label>
+                                <div class="col-sm-4 col-md-5 col-lg-9">
                                     <select class="form-select" aria-label="Select..." wire:model="query">
                                         <option selected="">Select</option>
                                         @foreach($events as $event)
@@ -23,7 +23,7 @@
                             </div>
                     </div>
 
-                    <div class="col-sm-12 col-lg-3 text-end">
+                    <div class="col-sm-12 col-lg-3 text-start">
                         <button type="submit" class="btn btn-primary">Filter</button>
                         <button type="button" class="btn btn-secondary" wire:click="clear">Clear</button>
                         </form>

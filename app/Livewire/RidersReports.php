@@ -86,58 +86,13 @@ class RidersReports extends Component
         ]);
     }
 
-    // public function printPDF($start_date = "", $end_date = "", $query_org = "")
-    // {
-    //     $query = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
-    //         ->join('organization_information', 'individual_information.id_organization', '=', 'organization_information.id')
-    //         ->select(
-    //             'individual_information.id',
-    //             'organization_information.organization_name AS organization',
-    //             DB::raw("CONCAT(COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname"),
-    //         )
-    //         ->where('individual_information.id_organization', 'like', '%' . $query_org . '%');
-
-    //     if (!empty($start_date) && !empty($end_date)) {
-    //         $query->whereBetween('individual_information.created_at', [$start_date, $end_date]);
-    //     }
-
-    //     $riders = $query->get();
-
-    //     // Logos to base64
-    //     $bls_logo = public_path('assets/img/copy2.png');
-    //     $city_logo = public_path('assets/img/cdo-seal.png');
-    //     $rise_logo = public_path('assets/img/rise.png');
-
-    //     $bls_logo64 = base64_encode(file_get_contents($bls_logo));
-    //     $city_logo64 = base64_encode(file_get_contents($city_logo));
-    //     $rise_logo64 = base64_encode(file_get_contents($rise_logo));
-
-    //     // Generate PDF with QR code
-    //     $pdf = PDF::loadView(
-    //         'pdf-reports.riders-report-pdf',
-    //         [
-    //             'bls_logo'          => $bls_logo64,
-    //             'city_logo'         => $city_logo64,
-    //             'rise_logo'         => $rise_logo64,
-    //             'riders'            => $riders,
-    //             'start_date'        => $start_date,
-    //             'end_date'          => $end_date,
-    //             'query_org'         => $query_org
-    //         ]
-    //     )
-    //         ->setPaper('a4', 'portrait')
-    //         ->setOption(['defaultFont' => 'roboto'])
-    //         ->setOption('isRemoteEnabled', true);
-
-    //     return $pdf->stream();
-
-    //     // return response()->streamDownload(function () use ($pdf) {
-    //     //     echo $pdf->stream();
-    //     // }, 'reports.pdf');
-    // }
-
-    public function printPDF()
+    public function printPDF($start_date = "", $end_date = "", $query_org = "")
     {
+        # Replace 'null' values with empty string
+        $start_date = ($start_date === 'null') ? '' : $start_date;
+        $end_date = ($end_date === 'null') ? '' : $end_date;
+        $query_org = ($query_org === 'null') ? '' : $query_org;
+
         $query = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
             ->join('organization_information', 'individual_information.id_organization', '=', 'organization_information.id')
             ->select(
@@ -145,10 +100,10 @@ class RidersReports extends Component
                 'organization_information.organization_name AS organization',
                 DB::raw("CONCAT(COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname"),
             )
-            ->where('individual_information.id_organization', 'like', '%' . $this->query_org . '%');
+            ->where('individual_information.id_organization', 'like', '%' . $query_org . '%');
 
-        if (!empty($this->start_date) && !empty($this->end_date)) {
-            $query->whereBetween('individual_information.created_at', [$this->start_date, $this->end_date]);
+        if (!empty($start_date) && !empty($end_date)) {
+            $query->whereBetween('individual_information.created_at', [$start_date, $end_date]);
         }
 
         $riders = $query->get();
@@ -170,19 +125,69 @@ class RidersReports extends Component
                 'city_logo'         => $city_logo64,
                 'rise_logo'         => $rise_logo64,
                 'riders'            => $riders,
-                'start_date'        => $this->start_date,
-                'end_date'          => $this->end_date,
-                'query_org'         => $this->query_org
+                'start_date'        => $start_date,
+                'end_date'          => $end_date,
+                'query_org'         => $query_org
             ]
         )
             ->setPaper('a4', 'portrait')
             ->setOption(['defaultFont' => 'roboto'])
             ->setOption('isRemoteEnabled', true);
 
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
-        }, 'riders-reports.pdf');
+        return $pdf->stream();
+
+        // return response()->streamDownload(function () use ($pdf) {
+        //     echo $pdf->stream();
+        // }, 'reports.pdf');
     }
+
+    // public function printPDF()
+    // {
+    //     $query = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
+    //         ->join('organization_information', 'individual_information.id_organization', '=', 'organization_information.id')
+    //         ->select(
+    //             'individual_information.id',
+    //             'organization_information.organization_name AS organization',
+    //             DB::raw("CONCAT(COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname"),
+    //         )
+    //         ->where('individual_information.id_organization', 'like', '%' . $this->query_org . '%');
+
+    //     if (!empty($this->start_date) && !empty($this->end_date)) {
+    //         $query->whereBetween('individual_information.created_at', [$this->start_date, $this->end_date]);
+    //     }
+
+    //     $riders = $query->get();
+
+    //     // Logos to base64
+    //     $bls_logo = public_path('assets/img/copy2.png');
+    //     $city_logo = public_path('assets/img/cdo-seal.png');
+    //     $rise_logo = public_path('assets/img/rise.png');
+
+    //     $bls_logo64 = base64_encode(file_get_contents($bls_logo));
+    //     $city_logo64 = base64_encode(file_get_contents($city_logo));
+    //     $rise_logo64 = base64_encode(file_get_contents($rise_logo));
+
+    //     // Generate PDF with QR code
+    //     $pdf = PDF::loadView(
+    //         'pdf-reports.riders-report-pdf',
+    //         [
+    //             'bls_logo'          => $bls_logo64,
+    //             'city_logo'         => $city_logo64,
+    //             'rise_logo'         => $rise_logo64,
+    //             'riders'            => $riders,
+    //             'start_date'        => $this->start_date,
+    //             'end_date'          => $this->end_date,
+    //             'query_org'         => $this->query_org
+    //         ]
+    //     )
+    //         ->setPaper('a4', 'portrait')
+    //         ->setOption(['defaultFont' => 'roboto'])
+    //         ->setOption('isRemoteEnabled', true);
+
+    //     return response()->streamDownload(function () use ($pdf) {
+    //         echo $pdf->stream();
+    //     }, 'riders-reports.pdf');
+    // }
 
     public function export()
     {
