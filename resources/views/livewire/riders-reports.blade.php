@@ -81,11 +81,11 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col" width="400px">Riders' Name</th>
-                                        <th scope="col">Organization</th>
-                                        <th scope="col" style="text-align: center;">Total no. of <br> events joined</th>
-                                        <th scope="col" style="text-align: center;">Total no. of <br> clients served</th>
-                                        <th scope="col">Details</th>
+                                        <th class="item" scope="col" width="400px">Riders' Name</th>
+                                        <th class="item" scope="col">Organization</th>
+                                        <th class="item" scope="col" style="text-align: center;">Total no. of <br> events joined</th>
+                                        <th class="item" scope="col" style="text-align: center;">Total no. of <br> clients served</th>
+                                        <th class="item" scope="col" style="text-align: center;">Details</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -104,7 +104,7 @@
                                             echo $b = App\Models\TransactionModel::whereIn('id_event_organization_riders', $a)->count();
                                             @endphp
                                         </td>
-                                        <td>
+                                        <td style="text-align: center;">
                                             <span data-bs-toggle="modal" data-bs-target="#ridersReportModal" style="cursor: pointer;" wire:click="getriderID('{{ $rider->id }}')">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                                     <path d="M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7ZM15.75 9h-7.5M15.75 15h-7.5" stroke="#0f0f0f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>

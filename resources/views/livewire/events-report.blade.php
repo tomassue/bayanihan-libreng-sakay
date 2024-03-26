@@ -8,33 +8,21 @@
                         <h1>Event Report</h1>
                     </div>
 
-                    <div class="col-sm-12 col-lg-10 mb-4">
+                    <div class="col-sm-12 col-lg-5 mb-4">
                         <form wire:submit="search">
                             <div class="row g-2 mb-2">
                                 <label for="inputEmail3" class="col-sm-4 col-md-2 col-lg-2 col-form-label">Date</label>
-                                <div class="col-sm-4 col-md-5 col-lg-2">
+                                <div class="col-sm-4 col-md-5 col-lg-5">
                                     <input type="date" class="form-control" wire:model="start_date">
                                 </div>
-                                <div class="col-sm-4 col-md-5 col-lg-2">
+                                <div class="col-sm-4 col-md-5 col-lg-5">
                                     <input type="date" class="form-control" wire:model="end_date">
-                                </div>
-
-                                <label for="inputEmail3" class="col-sm-4 col-md-2 col-lg-2 col-form-label">Account type</label>
-                                <div class="col-sm-4 col-md-5 col-lg-4">
-                                    <select class="form-select" aria-label="Default select example" wire:model="query_acc_type">
-                                        <option value="" selected="">All</option>
-                                        <option value="student">Student</option>
-                                        <option value="school_staff">School Staff</option>
-                                        <option value="city_hall_employee">City Hall Employee</option>
-                                        <option value="city_hall_client">City Hall Client</option>
-                                        <option value="other">Other</option>
-                                    </select>
                                 </div>
                             </div>
 
                             <div class="row g-2 mb-2">
                                 <label for="inputEvent" class="col-sm-4 col-md-2 col-lg-2 col-form-label">Event</label>
-                                <div class="col-sm-4 col-md-5 col-lg-4">
+                                <div class="col-sm-4 col-md-5 col-lg-5">
                                     <select class="form-select" aria-label="Default select example" wire:model="query_event">
                                         <option value="" selected="">All</option>
                                         @foreach($event as $item)
@@ -76,15 +64,8 @@
                                 <a href="{{ route('pdf-events', [
                                     'start_date' => $start_date !== '' ? $start_date : 'null',
                                     'end_date' => $end_date !== '' ? $end_date : 'null',
-                                    'acct_type' => $query_acc_type !== '' ? $query_acc_type : 'null',
                                     'query_event' => $query_event !== '' ? $query_event : 'null'
                                 ]) }}" target="_blank">
-                                    <!-- <button type="button" class="btn btn-primary" wire:click="printPDF" wire:loading.attr="disabled">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                            <path d="M7.25 7h9.5V5c0-2-.75-3-3-3h-3.5c-2.25 0-3 1-3 3v2ZM16 15v4c0 2-1 3-3 3h-2c-2 0-3-1-3-3v-4h8Z" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            <path d="M21 10v5c0 2-1 3-3 3h-2v-3H8v3H6c-2 0-3-1-3-3v-5c0-2 1-3 3-3h12c2 0 3 1 3 3ZM17 15H7M7 11h3" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button> -->
                                     <button type="button" class="btn btn-primary">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                             <path d="M7.25 7h9.5V5c0-2-.75-3-3-3h-3.5c-2.25 0-3 1-3 3v2ZM16 15v4c0 2-1 3-3 3h-2c-2 0-3-1-3-3v-4h8Z" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -111,31 +92,35 @@
 
                         <div class="table-responsive">
                             <table class="table">
-                                <thead>
+                                <thead class="items">
                                     <tr>
-                                        <th scope="col">Client</th>
-                                        <th scope="col">Event</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Location</th>
-                                        <th scope="col">Destination</th>
-                                        <th scope="col">Rider</th>
+                                        <th class="item" scope="col">Organziation</th>
+                                        <th class="item" scope="col">Event</th>
+                                        <th class="item" scope="col" style="font-size: small;">Total no. <br>of client served</th>
+                                        <th class="item" scope="col">Date</th>
+                                        <th class="item" scope="col">Location</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($clients_transact as $client_trans)
-                                    <tr>
-                                        <td>{{$client_trans->client_fullname}}</td>
-                                        <td>{{$client_trans->event_name}}</td>
-                                        <td>{{$client_trans->event_date}}</td>
-                                        <td>{{ucfirst($client_trans->event_location)}}</td>
-                                        <td>{{ucfirst($client_trans->destination)}}</td>
-                                        <td>{{ucfirst($client_trans->rider_fullname)}}</td>
+                                    @foreach($event_organization as $item)
+                                    <tr wire:key="{{ $item->id }}">
+                                        <td width="200px;">{{$item->organization_name}}</td>
+                                        <td>{{$item->event_name}}</td>
+                                        <td style="text-align: center;">
+                                            @php
+                                            $a = App\Models\EventOrganizationRidersModel::where('id_event_organization', $item->id)->pluck('id');
+                                            $b = App\Models\TransactionModel::whereIn('id_event_organization_riders', $a)->count();
+                                            echo $b;
+                                            @endphp
+                                        </td>
+                                        <td width="200px;">{{$item->event_date}}</td>
+                                        <td>{{ucfirst($item->event_location)}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        {{$clients_transact->links('vendor.livewire.custom-pagination')}}
+                        {{$event_organization->links('vendor.livewire.custom-pagination')}}
                         @endif
                     </div>
                 </div>

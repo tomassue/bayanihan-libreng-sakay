@@ -60,10 +60,10 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Riders Name</th>
-                                        <th scope="col" style="text-align: center;">No. of events<br> joined</th>
-                                        <th scope="col" style="text-align: center;">No. of clients<br> served</th>
-                                        <th scope="col" style="text-align: center;">Transaction <br>history</th>
+                                        <th class="item" scope="col">Riders Name</th>
+                                        <th class="item" scope="col" style="text-align: center;">No. of events<br> joined</th>
+                                        <th class="item" scope="col" style="text-align: center;">No. of clients<br> served</th>
+                                        <th class="item" scope="col" style="text-align: center;">Transaction <br>history</th>
                                     </tr>
                                 </thead>
                                 <tbody>

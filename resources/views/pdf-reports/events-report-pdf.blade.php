@@ -115,14 +115,6 @@
                 </td>
                 <td class="w-half">
                     <div>
-                        <h4>Account Type: <span style="font-weight: lighter;">{{empty($account_type) ? 'ALL' : ucfirst(str_replace("_"," ", $account_type))}}</span></h4>
-                    </div>
-                    <!-- <div>{{empty($account_type) ? 'ALL' : ucfirst(str_replace("_"," ", $account_type))}}</div> -->
-                </td>
-            </tr>
-            <tr>
-                <td class="w-half">
-                    <div>
                         <h4>Date: <span style="font-weight: lighter;">{{empty($start_date) ? (empty($query_event->event_date) ? 'ALL' : date('M-d-Y', strtotime($query_event->event_date))) : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</span></h4>
                     </div>
                     <!-- <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div> -->
@@ -134,34 +126,26 @@
     <div class="margin-top">
         <table class="products">
             <tr>
-                <th>Client</th>
+                <th>Organziation</th>
                 <th>Event</th>
+                <th style="font-size: 7px;">Total no. <br>of client served</th>
                 <th>Date</th>
                 <th>Location</th>
-                <th>Destination</th>
-                <th>Rider</th>
             </tr>
-            @foreach($clients_transact as $item)
+            @foreach($event_organization as $item)
             <tr class="items">
 
-                <td>
-                    {{ $item['client_fullname'] }}
+                <td>{{$item->organization_name}}</td>
+                <td>{{$item->event_name}}</td>
+                <td style="text-align: center;">
+                    @php
+                    $a = App\Models\EventOrganizationRidersModel::where('id_event_organization', $item->id)->pluck('id');
+                    $b = App\Models\TransactionModel::whereIn('id_event_organization_riders', $a)->count();
+                    echo $b;
+                    @endphp
                 </td>
-                <td>
-                    {{ $item['event_name'] }}
-                </td>
-                <td>
-                    {{ $item['event_date'] }}
-                </td>
-                <td>
-                    {{ $item['event_location'] }}
-                </td>
-                <td>
-                    {{ $item['destination'] }}
-                </td>
-                <td>
-                    {{ $item['rider_fullname'] }}
-                </td>
+                <td>{{$item->event_date}}</td>
+                <td>{{ucfirst($item->event_location)}}</td>
 
             </tr>
             @endforeach
@@ -169,7 +153,7 @@
     </div>
 
     <div class="total">
-        Total: {{$clients_transact->count()}}
+        Total: {{$event_organization->count()}}
     </div>
 
     <div class="footer margin-top">

@@ -1,17 +1,23 @@
 <table>
     <thead>
         <tr>
-            <th>Client Name</th>
-            <th>Contact Number</th>
-            <th>User Type</th>
+            <th>Client</th>
+            <th>Event</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Destination</th>
+            <th>Rider</th>
         </tr>
     </thead>
     <tbody>
         @foreach($clients as $client)
         <tr>
             <td>{{$client->client_fullname}}</td>
-            <td>{{$client->contactNumber}}</td>
-            <td>{{ucfirst(str_replace("_"," ", $client->user_type))}}</td>
+            <td>{{$client->event_name}}</td>
+            <td>{{$client->event_date}}</td>
+            <td>{{ucfirst($client->event_location)}}</td>
+            <td>{{ucfirst($client->destination)}}</td>
+            <td>{{ucfirst($client->rider_fullname)}}</td>
         </tr>
         @endforeach
     </tbody>

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Exports\EventsReportExport;
 use App\Models\ClientInformationModel;
 use App\Models\EventModel;
+use App\Models\EventOrganizationsModel;
 use App\Models\TransactionModel;
 use Livewire\Component;
 
@@ -23,7 +24,7 @@ class EventsReport extends Component
     use WithPagination;
 
     // Searches
-    public $start_date = "", $end_date = "", $query_acc_type = "", $query_event = "";
+    public $start_date = "", $end_date = "", $query_event = "";
 
     // PDF
     public $s_date = "";
@@ -37,7 +38,6 @@ class EventsReport extends Component
     {
         $this->start_date     = "";
         $this->end_date       = "";
-        $this->query_acc_type = "";
         $this->query_event    = "";
     }
 
@@ -52,21 +52,17 @@ class EventsReport extends Component
             ->orderBy('event_date', 'DESC')
             ->get();
 
-        $query = TransactionModel::join('client_information', 'transactions.id_client', '=', 'client_information.id')
-            ->join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
-            ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
-            ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
-            ->join('events', 'event_organizations.id_event', '=', 'events.id')
+        $query = EventOrganizationsModel::join('events', 'event_organizations.id_event', '=', 'events.id')
             ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
             ->select(
-                DB::raw("CONCAT(COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname"),
-                'events.event_name',
+                'event_organizations.id AS id',
+                'events.id AS events_id',
+                'organization_information.id AS organization_information_id',
+                'organization_information.organization_name',
                 DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS event_date"),
+                'events.event_name',
                 'events.event_location AS event_location',
-                'transactions.destination AS destination',
-                DB::raw("CONCAT(COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname")
-            )
-            ->where('client_information.user_type', 'like', '%' . $this->query_acc_type . '%');
+            );
 
         if (!empty($this->start_date) && !empty($this->end_date)) {
             $query->whereBetween('events.event_date', [$this->start_date, $this->end_date]);
@@ -76,46 +72,38 @@ class EventsReport extends Component
             $query->where('events.id', $this->query_event);
         }
 
-        $clients_transact = $query->paginate(10);
+        $event_organization = $query->paginate(10);
 
         return view('livewire.events-report', [
-            'clients_transact'       =>  $clients_transact,
-            'currentPage'            =>  $clients_transact->currentPage(),
-            'totalPages'             =>  $clients_transact->lastPage(),
-            'totalRecords'           =>  $clients_transact->total(),
-            'noRecords'              =>  $clients_transact->isEmpty(),
+            'event_organization'        =>  $event_organization,
+            'currentPage'               =>  $event_organization->currentPage(),
+            'totalPages'                =>  $event_organization->lastPage(),
+            'totalRecords'              =>  $event_organization->total(),
+            'noRecords'                 =>  $event_organization->isEmpty(),
 
-            'event'                  =>  $event
+            'event'                     =>  $event
         ]);
     }
 
     # This old function is where we print PDF on stream() but there's an issue especially holding values.
-    public function printPDF($start_date = "", $end_date = "", $query_acc_type = "", $query_event = "")
+    public function printPDF($start_date = "", $end_date = "", $query_event = "")
     {
         # Replace 'null' values with empty string
         $start_date = ($start_date === 'null') ? '' : $start_date;
         $end_date = ($end_date === 'null') ? '' : $end_date;
-        $query_acc_type = ($query_acc_type === 'null') ? '' : $query_acc_type;
         $query_event = ($query_event === 'null') ? '' : $query_event;
 
-        $query = TransactionModel::join('client_information', 'transactions.id_client', '=', 'client_information.id')
-            ->join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')
-            ->join('individual_information', 'event_organization_riders.id_individual', '=', 'individual_information.id')
-            ->join('event_organizations', 'event_organization_riders.id_event_organization', '=', 'event_organizations.id')
-            ->join('events', 'event_organizations.id_event', '=', 'events.id')
+        $query = EventOrganizationsModel::join('events', 'event_organizations.id_event', '=', 'events.id')
             ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')
             ->select(
-                DB::raw("CONCAT(COALESCE(client_information.first_name, ''), ' ', COALESCE(client_information.middle_name, ''), ' ', COALESCE(client_information.last_name, ''), ' ', COALESCE(client_information.ext_name, '')) AS client_fullname"),
-                'events.event_name',
+                'event_organizations.id AS id',
+                'events.id AS events_id',
+                'organization_information.id AS organization_information_id',
+                'organization_information.organization_name',
                 DB::raw("DATE_FORMAT(events.event_date, '%b %d, %Y') AS event_date"),
+                'events.event_name',
                 'events.event_location AS event_location',
-                'transactions.destination AS destination',
-                DB::raw("CONCAT(COALESCE(individual_information.first_name, ''), ' ', COALESCE(individual_information.middle_name, ''), ' ', COALESCE(individual_information.last_name, ''), ' ', COALESCE(individual_information.ext_name, '')) AS rider_fullname")
             );
-
-        if (!empty($query_acc_type)) {
-            $query->where('client_information.user_type', 'like', '%' . $query_acc_type . '%');
-        }
 
         if (!empty($query_event)) {
             $query->where('events.id', $query_event);
@@ -132,7 +120,7 @@ class EventsReport extends Component
             $query->whereBetween('events.event_date', [$start_date, $end_date]);
         }
 
-        $clients_transact = $query->get();
+        $event_organization = $query->get();
 
         // Logos to base64
         $bls_logo = public_path('assets/img/copy2.png');
@@ -147,14 +135,13 @@ class EventsReport extends Component
         $pdf = PDF::loadView(
             'pdf-reports.events-report-pdf',
             [
-                'bls_logo'          => $bls_logo64,
-                'city_logo'         => $city_logo64,
-                'rise_logo'         => $rise_logo64,
-                'clients_transact'  => $clients_transact,
-                'start_date'        => $start_date,
-                'end_date'          => $end_date,
-                'account_type'      => $query_acc_type,
-                'query_event'       => !empty($event_detail) ? $event_detail : ""
+                'bls_logo'              => $bls_logo64,
+                'city_logo'             => $city_logo64,
+                'rise_logo'             => $rise_logo64,
+                'event_organization'    => $event_organization,
+                'start_date'            => $start_date,
+                'end_date'              => $end_date,
+                'query_event'           => !empty($event_detail) ? $event_detail : ""
             ]
         )
             ->setPaper('a4', 'portrait')
@@ -240,9 +227,8 @@ class EventsReport extends Component
     {
         $start_date     = $this->start_date;
         $end_date       = $this->end_date;
-        $query_acc_type = $this->query_acc_type;
         $query_event    = $this->query_event;
 
-        return Excel::download(new EventsReportExport($start_date, $end_date, $query_acc_type, $query_event), 'eventsreport.xlsx');
+        return Excel::download(new EventsReportExport($start_date, $end_date, $query_event), 'eventsreport.xlsx');
     }
 }

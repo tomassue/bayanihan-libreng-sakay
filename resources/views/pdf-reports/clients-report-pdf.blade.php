@@ -71,8 +71,8 @@
         .total {
             text-align: right;
             margin-top: 1rem;
-            font-size: 0.875rem;
             margin-right: 50px;
+            font-size: 0.875rem;
         }
     </style>
 </head>
@@ -80,8 +80,12 @@
 <body>
     <table class="w-full">
         <tr>
-            <!-- <td style="text-align: center;">
-                <img src="data:image/png;base64,{{ $bls_logo }}" alt="laravel daily" width="300" />
+            <!-- <td>
+                <img src="data:image/png;base64,{{ $city_logo }}" alt="city-logo" width="85" style="margin-right: 100px;" />
+
+                <img src="data:image/png;base64,{{ $bls_logo }}" alt="bls-log" width="300" style="margin-right: 55px;" />
+
+                <img src="data:image/png;base64,{{ $rise_logo }}" alt="rise-logo" width="150" />
             </td> -->
             <!-- <td class="w-half">
                 <h2>Report</h2>
@@ -105,7 +109,21 @@
             <tr>
                 <td class="w-half">
                     <div>
-                        <h4>Date: <span style="font-weight: lighter;">{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</span></h4>
+                        <h4>Event: <span style="font-weight: lighter;">{{empty($query_event->event_name) ? 'ALL' : ucfirst($query_event->event_name)}}</span></h4>
+                    </div>
+                    <!-- <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div> -->
+                </td>
+                <td class="w-half">
+                    <div>
+                        <h4>Account Type: <span style="font-weight: lighter;">{{empty($account_type) ? 'ALL' : ucfirst(str_replace("_"," ", $account_type))}}</span></h4>
+                    </div>
+                    <!-- <div>{{empty($account_type) ? 'ALL' : ucfirst(str_replace("_"," ", $account_type))}}</div> -->
+                </td>
+            </tr>
+            <tr>
+                <td class="w-half">
+                    <div>
+                        <h4>Date: <span style="font-weight: lighter;">{{empty($start_date) ? (empty($query_event->event_date) ? 'ALL' : date('M-d-Y', strtotime($query_event->event_date))) : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</span></h4>
                     </div>
                     <!-- <div>{{empty($start_date) ? 'ALL' : date('M-d-Y', strtotime($start_date))}} {{ empty($end_date) ? ' ' : ' to ' }} {{empty($end_date) ? ' ' : date('M-d-Y', strtotime($end_date))}}</div> -->
                 </td>
@@ -117,8 +135,11 @@
         <table class="products">
             <tr>
                 <th>Client</th>
-                <th>Contact Number</th>
-                <th>User Type</th>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Destination</th>
+                <th>Rider</th>
             </tr>
             @foreach($clients as $item)
             <tr class="items">
@@ -127,10 +148,19 @@
                     {{ $item['client_fullname'] }}
                 </td>
                 <td>
-                    {{ $item['contactNumber'] }}
+                    {{ $item['event_name'] }}
                 </td>
                 <td>
-                    {{ ucfirst(str_replace("_"," ", $item['user_type'])) }}
+                    {{ $item['event_date'] }}
+                </td>
+                <td>
+                    {{ $item['event_location'] }}
+                </td>
+                <td>
+                    {{ $item['destination'] }}
+                </td>
+                <td>
+                    {{ $item['rider_fullname'] }}
                 </td>
 
             </tr>

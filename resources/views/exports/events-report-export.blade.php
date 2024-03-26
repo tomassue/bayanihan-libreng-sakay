@@ -1,23 +1,27 @@
 <table>
     <thead>
         <tr>
-            <th>Client</th>
+            <th>Organziation</th>
             <th>Event</th>
+            <th>Total no. of client served</th>
             <th>Date</th>
             <th>Location</th>
-            <th>Destination</th>
-            <th>Rider</th>
         </tr>
     </thead>
     <tbody>
-        @foreach($clients_transact as $client_trans)
+        @foreach($event_organization as $item)
         <tr>
-            <td>{{$client_trans->client_fullname}}</td>
-            <td>{{$client_trans->event_name}}</td>
-            <td>{{$client_trans->event_date}}</td>
-            <td>{{ucfirst($client_trans->event_location)}}</td>
-            <td>{{ucfirst($client_trans->destination)}}</td>
-            <td>{{ucfirst($client_trans->rider_fullname)}}</td>
+            <td>{{$item->organization_name}}</td>
+            <td>{{$item->event_name}}</td>
+            <td>
+                @php
+                $a = App\Models\EventOrganizationRidersModel::where('id_event_organization', $item->id)->pluck('id');
+                $b = App\Models\TransactionModel::whereIn('id_event_organization_riders', $a)->count();
+                echo $b;
+                @endphp
+            </td>
+            <td>{{$item->event_date}}</td>
+            <td>{{ucfirst($item->event_location)}}</td>
         </tr>
         @endforeach
     </tbody>

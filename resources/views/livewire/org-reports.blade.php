@@ -65,14 +65,14 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Organization Name</th>
-                                        <th scope="col">Date established</th>
-                                        <th scope="col">Address</th>
-                                        <th scope="col">Organizations' phone no.</th>
-                                        <th scope="col">Representatives' name</th>
-                                        <th scope="col">Representatives' position</th>
-                                        <th scope="col">Representatives' phone no.</th>
-                                        <th scope="col">No. of events joined</th>
+                                        <th class="item" scope="col">Organization Name</th>
+                                        <th class="item" scope="col">Date established</th>
+                                        <th class="item" scope="col">Address</th>
+                                        <th class="item" scope="col">Organizations' phone no.</th>
+                                        <th class="item" scope="col">Representatives' name</th>
+                                        <th class="item" scope="col">Representatives' position</th>
+                                        <th class="item" scope="col">Representatives' phone no.</th>
+                                        <th class="item" scope="col">No. of events joined</th>
                                     </tr>
                                 </thead>
                                 <tbody>

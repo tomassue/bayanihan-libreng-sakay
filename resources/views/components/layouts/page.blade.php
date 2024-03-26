@@ -212,6 +212,11 @@
         tbody tr {
             text-align: left;
         }
+
+        tr .item {
+            background-color: #0a345e !important;
+            color: white !important;
+        }
     </style>
 </head>
 
