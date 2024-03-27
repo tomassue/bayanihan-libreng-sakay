@@ -35,7 +35,7 @@ class Reports extends Component
     public $id_client;
 
     // Search and Filter
-    public $search_client, $start_date, $end_date;
+    public $search_client = '', $start_date = '', $end_date = '';
 
     // Function encrypt($text_data)
     private string $encryptMethod = 'AES-256-CBC';
@@ -44,9 +44,12 @@ class Reports extends Component
 
     public function render()
     {
-        $query = ClientInformationModel::search($this->search_client)
-            ->join('users', 'client_information.user_id', '=', 'users.user_id')
+        $query = ClientInformationModel::join('users', 'client_information.user_id', '=', 'users.user_id')
             ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'client_information.*')
+            ->where('first_name', 'like', '%' . $this->search_client . '%')
+            ->orWhere('middle_name', 'like', '%' . $this->search_client . '%')
+            ->orWhere('last_name', 'like', '%' . $this->search_client . '%')
+            ->orWhere('ext_name', 'like', '%' . $this->search_client . '%')
             ->orderBy('created_at', 'DESC');
 
         if (!empty($this->start_date) && !empty($this->end_date)) {
@@ -254,13 +257,16 @@ class Reports extends Component
         $end_date = ($end_date === 'null') ? '' : $end_date;
         $search_client = ($search_client === 'null') ? '' : $search_client;
 
-        $query = ClientInformationModel::search($this->search_client)
-            ->join('users', 'client_information.user_id', '=', 'users.user_id')
+        $query = ClientInformationModel::join('users', 'client_information.user_id', '=', 'users.user_id')
             ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'client_information.*')
+            ->where('first_name', 'like', '%' . $search_client . '%')
+            ->orWhere('middle_name', 'like', '%' . $search_client . '%')
+            ->orWhere('last_name', 'like', '%' . $search_client . '%')
+            ->orWhere('ext_name', 'like', '%' . $search_client . '%')
             ->orderBy('created_at', 'DESC');
 
-        if (!empty($this->start_date) && !empty($this->end_date)) {
-            $query->whereBetween('client_information.created_at', [$this->start_date, $this->end_date]);
+        if (!empty($start_date) && !empty($end_date)) {
+            $query->whereBetween('client_information.created_at', [$start_date, $end_date]);
         }
 
         $clients = $query->get();

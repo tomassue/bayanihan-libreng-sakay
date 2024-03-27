@@ -9,13 +9,13 @@ use Maatwebsite\Excel\Concerns\FromView;
 
 class ReportClientExport implements FromView
 {
-    public $start_date, $end_date, $query_event, $search_client;
+    public $start_date, $end_date, $search_client;
 
-    public function __construct($start_date, $end_date, $query_event)
+    public function __construct($start_date, $end_date, $search_client)
     {
         $this->start_date = $start_date;
         $this->end_date   = $end_date;
-        $this->query_event = $query_event;
+        $this->search_client = $search_client;
     }
     public function view(): View
     {
