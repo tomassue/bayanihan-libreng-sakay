@@ -24,16 +24,37 @@
         @endif
 
         <div class="col-12">
-            <div class="card border border-secondary" wire:loading.class="opacity-50">
+            <div class="card border border-secondary">
                 <div class="row mx-5 mt-4">
-
+                    <div class="text-start" style="color: #0A335D;">
+                        <h1>Clients</h1>
+                    </div>
                 </div>
 
-                <div class="row mx-5 mt-4 mb-4">
+                <div class="row mx-5 mt-4">
+                    <div class="col-sm-12 col-lg-5">
+                        <form wire:submit="search">
+                            <div class="row g-2 mb-2">
+                                <label for="inputEmail3" class="col-sm-4 col-md-2 col-lg-2 col-form-label">Date</label>
+                                <div class="col-sm-4 col-md-5 col-lg-5">
+                                    <input type="date" class="form-control" wire:model="start_date">
+                                </div>
+                                <div class="col-sm-4 col-md-5 col-lg-5">
+                                    <input type="date" class="form-control" wire:model="end_date">
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-2 text-start">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <button type="button" class="btn btn-secondary" wire:click="clear">Clear</button>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="row mx-5 mb-4">
                     <div class="col text-center table-responsive">
-                        <div class="text-start" style="color: #0A335D;">
-                            <h1>Clients</h1>
-                        </div>
                         <div class="input-group mb-4 mt-4">
                             <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
                             <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Clients" wire:model.live.debounce.300ms="search_client">
@@ -43,10 +64,39 @@
                             <p class="text-center">No records found.</p>
                         </div>
                         @else
-                        <div class="pagination-info pb-2 text-start">
-                            Page {{ $currentPageclients }} out of {{ $totalPagesclients }}, Total Records: {{ $totalRecordsclients }}
+
+                        <div class="row g-2 mb-2 mt-2">
+                            <div class="col-sm-4 text-start">
+                                <a href="{{ route('pdf-report-clients', [
+                                    'start_date' => $start_date !== '' ? $start_date : 'null',
+                                    'end_date' => $end_date !== '' ? $end_date : 'null',
+                                    'search_client' => $search_client !== '' ? $search_client : 'null'
+                                ]) }}" target="_blank">
+                                    <button type="button" class="btn btn-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                            <path d="M7.25 7h9.5V5c0-2-.75-3-3-3h-3.5c-2.25 0-3 1-3 3v2ZM16 15v4c0 2-1 3-3 3h-2c-2 0-3-1-3-3v-4h8Z" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M21 10v5c0 2-1 3-3 3h-2v-3H8v3H6c-2 0-3-1-3-3v-5c0-2 1-3 3-3h12c2 0 3 1 3 3ZM17 15H7M7 11h3" stroke="#d9e3f0" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </button>
+                                </a>
+
+                                <button type="button" class="btn btn-primary" wire:click="export" wire:loading.attr="disabled">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 11v6l2-2M9 17l-2-2" stroke="#d9e3f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M22 10v5c0 5-2 7-7 7H9c-5 0-7-2-7-7V9c0-5 2-7 7-7h5" stroke="#d9e3f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M22 10h-4c-3 0-4-1-4-4V2l8 8Z" stroke="#d9e3f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="col-sm-8">
+                                <div class="pagination-info pb-2 text-end">
+                                    Page {{ $currentPageclients }} out of {{ $totalPagesclients }}, Total Records: {{ $totalRecordsclients }}
+                                </div>
+                            </div>
                         </div>
-                        <table class="table table-borderless">
+
+                        <table class="table table-borderless" wire:loading.class="opacity-50">
                             <thead>
                                 <tr>
                                     <th scope="col">CLIENT'S NAME</th>

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\ReportClientExport;
 use App\Models\ClientInformationModel;
 use App\Models\TransactionModel;
 use App\Models\User;
@@ -14,6 +15,7 @@ use Livewire\Attributes\Validate;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.page')]
 #[Title('Registration')]
@@ -32,8 +34,8 @@ class Reports extends Component
     // Transaction History
     public $id_client;
 
-    // Search
-    public $search_client;
+    // Search and Filter
+    public $search_client, $start_date, $end_date;
 
     // Function encrypt($text_data)
     private string $encryptMethod = 'AES-256-CBC';
@@ -42,11 +44,16 @@ class Reports extends Component
 
     public function render()
     {
-        $clients = ClientInformationModel::search($this->search_client)
+        $query = ClientInformationModel::search($this->search_client)
             ->join('users', 'client_information.user_id', '=', 'users.user_id')
             ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'client_information.*')
-            ->orderBy('created_at', 'DESC')
-            ->paginate(10, pageName: 'list-of-clients');
+            ->orderBy('created_at', 'DESC');
+
+        if (!empty($this->start_date) && !empty($this->end_date)) {
+            $query->whereBetween('client_information.created_at', [$this->start_date, $this->end_date]);
+        }
+
+        $clients = $query->paginate(10, pageName: 'list-of-clients');
 
         $client_details = ClientInformationModel::leftJoin('school_information', 'client_information.id_school', '=', 'school_information.id')
             ->where('client_information.id', $this->id_client)
@@ -91,6 +98,18 @@ class Reports extends Component
             'client_transact'           =>      $client_transact,
             'client_details'            =>      $client_details
         ]);
+    }
+
+    public function clear()
+    {
+        $this->search_client = "";
+        $this->start_date = "";
+        $this->end_date = "";
+    }
+
+    public function search()
+    {
+        $this->resetPage();
     }
 
     public function transactHistory($id)
@@ -226,5 +245,60 @@ class Reports extends Component
         //     'title'     => 'myQR' . $clientID,
         //     'full_name' => $client_info->first_name . ' ' . $client_info->middle_name . ' ' . $client_info->last_name,
         // ]);
+    }
+
+    public function printPDF($start_date = '', $end_date = '', $search_client = '')
+    {
+        # Replace 'null' values with empty string
+        $start_date = ($start_date === 'null') ? '' : $start_date;
+        $end_date = ($end_date === 'null') ? '' : $end_date;
+        $search_client = ($search_client === 'null') ? '' : $search_client;
+
+        $query = ClientInformationModel::search($this->search_client)
+            ->join('users', 'client_information.user_id', '=', 'users.user_id')
+            ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'client_information.*')
+            ->orderBy('created_at', 'DESC');
+
+        if (!empty($this->start_date) && !empty($this->end_date)) {
+            $query->whereBetween('client_information.created_at', [$this->start_date, $this->end_date]);
+        }
+
+        $clients = $query->get();
+
+        // Logos to base64
+        $bls_logo = public_path('assets/img/copy2.png');
+        $city_logo = public_path('assets/img/cdo-seal.png');
+        $rise_logo = public_path('assets/img/rise.png');
+
+        $bls_logo64 = base64_encode(file_get_contents($bls_logo));
+        $city_logo64 = base64_encode(file_get_contents($city_logo));
+        $rise_logo64 = base64_encode(file_get_contents($rise_logo));
+
+        $pdf = PDF::loadView(
+            'pdf-reports.report-clients-pdf',
+            [
+                'bls_logo'          => $bls_logo64,
+                'city_logo'         => $city_logo64,
+                'rise_logo'         => $rise_logo64,
+                'start_date'        => $start_date,
+                'end_date'          => $end_date,
+                'clients'           => $clients
+
+            ]
+        )
+            ->setPaper('a4', 'portrait')
+            ->setOption(['defaultFont' => 'roboto'])
+            ->setOption('isRemoteEnabled', true);
+
+        return $pdf->stream();
+    }
+
+    public function export()
+    {
+        $start_date     = $this->start_date;
+        $end_date       = $this->end_date;
+        $search_client  = $this->search_client;
+
+        return Excel::download(new ReportClientExport($start_date, $end_date, $search_client), 'clientreport.xlsx');
     }
 }
