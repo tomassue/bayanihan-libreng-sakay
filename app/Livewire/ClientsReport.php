@@ -13,6 +13,7 @@ use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Crypt;
 use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.page')]
@@ -100,10 +101,10 @@ class ClientsReport extends Component
     public function printPDF($start_date = "", $end_date = "", $query_acc_type = "", $query_event = "")
     {
         # Replace 'null' values with empty string
-        $start_date = ($start_date === 'null') ? '' : $start_date;
-        $end_date = ($end_date === 'null') ? '' : $end_date;
-        $query_acc_type = ($query_acc_type === 'null') ? '' : $query_acc_type;
-        $query_event = ($query_event === 'null') ? '' : $query_event;
+        $start_date = ($start_date === 'null') ? '' : Crypt::decrypt($start_date);
+        $end_date = ($end_date === 'null') ? '' : Crypt::decrypt($end_date);
+        $query_acc_type = ($query_acc_type === 'null') ? '' : Crypt::decrypt($query_acc_type);
+        $query_event = ($query_event === 'null') ? '' : Crypt::decrypt($query_event);
 
         $query = TransactionModel::join('client_information', 'transactions.id_client', '=', 'client_information.id')
             ->join('event_organization_riders', 'transactions.id_event_organization_riders', '=', 'event_organization_riders.id')

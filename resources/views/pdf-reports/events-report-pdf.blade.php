@@ -126,7 +126,7 @@
     <div class="margin-top">
         <table class="products">
             <tr>
-                <th>Organziation</th>
+                <th>Organization</th>
                 <th>Event</th>
                 <th style="font-size: 7px;">Total no. <br>of client served</th>
                 <th>Date</th>

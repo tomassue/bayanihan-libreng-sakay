@@ -13,6 +13,7 @@ use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Crypt;
 use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.page')]
@@ -91,7 +92,7 @@ class RidersReports extends Component
         # Replace 'null' values with empty string
         $start_date = ($start_date === 'null') ? '' : $start_date;
         $end_date = ($end_date === 'null') ? '' : $end_date;
-        $query_org = ($query_org === 'null') ? '' : $query_org;
+        $query_org = ($query_org === 'null') ? '' : Crypt::decrypt($query_org);
 
         $query = IndividualInformationModel::join('users', 'individual_information.user_id', '=', 'users.user_id')
             ->join('organization_information', 'individual_information.id_organization', '=', 'organization_information.id')

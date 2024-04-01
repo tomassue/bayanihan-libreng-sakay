@@ -64,10 +64,10 @@
                         <div class="row g-2 mb-2 mt-2">
                             <div class="col-sm-2 text-start">
                                 <a href="{{ route('pdf-clients', [
-                                    'start_date' => $start_date !== '' ? $start_date : 'null',
-                                    'end_date' => $end_date !== '' ? $end_date : 'null',
-                                    'acct_type' => $query_acc_type !== '' ? $query_acc_type : 'null',
-                                    'query_event' => $query_event !== '' ? $query_event : 'null'
+                                    'start_date' => $start_date !== '' ? Crypt::encrypt($start_date) : 'null',
+                                    'end_date' => $end_date !== '' ? Crypt::encrypt($end_date) : 'null',
+                                    'acct_type' => $query_acc_type !== '' ? Crypt::encrypt($query_acc_type) : 'null',
+                                    'query_event' => $query_event !== '' ? Crypt::encrypt($query_event) : 'null'
                                 ]) }}" target="_blank">
                                     <button type="button" class="btn btn-primary">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">

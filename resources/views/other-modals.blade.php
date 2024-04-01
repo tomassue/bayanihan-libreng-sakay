@@ -142,7 +142,7 @@
                             <tr>
                                 <th>Google Map Link: </th>
                                 <div class="text-truncate">
-                                    <td>@if(empty($eventDetails_org->google_map_link)) {{'N/A'}} @else <a href="{{$eventDetails_org->google_map_link}}" target="_blank">{{$eventDetails_org->google_map_link}}</a> @endif</td>
+                                    <td>@if(empty($eventDetails_org->google_map_link)) {{'N/A'}} @else <span class="d-inline-block text-truncate" style="max-width: 200px;"><a href="{{$eventDetails_org->google_map_link}}" target="_blank">{{$eventDetails_org->google_map_link}}</a></span> @endif</td>
                                 </div>
                             </tr>
                             <tr>
@@ -182,7 +182,7 @@
                             </tr>
                             <tr>
                                 <th scope="row">Google Map Link</th>
-                                <td>@if(empty($eventsDetails->google_map_link)) {{'N/A'}} @else <a href="{{$eventsDetails->google_map_link}}" target="_blank">{{$eventsDetails->google_map_link}}</a> @endif</td>
+                                <td>@if(empty($eventsDetails->google_map_link)) {{'N/A'}} @else <span class="d-inline-block text-truncate" style="max-width: 200px;"><a href="{{$eventsDetails->google_map_link}}" target="_blank">{{$eventsDetails->google_map_link}}</a></span> @endif</td>
                             </tr>
                             <tr>
                                 <th scope="row">Time:</th>

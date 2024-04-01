@@ -1,7 +1,7 @@
 <table>
     <thead>
         <tr>
-            <th>Organziation</th>
+            <th>Organization</th>
             <th>Event</th>
             <th>Total no. of client served</th>
             <th>Date</th>

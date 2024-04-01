@@ -50,7 +50,7 @@
                                 <a href="{{ route('pdf-riders', [
                                 'start_date' => $start_date !== '' ? $start_date : 'null', 
                                 'end_date' => $end_date !== '' ? $end_date : 'null', 
-                                'query_org' => $query_org !== '' ? $query_org : 'null'
+                                'query_org' => $query_org !== '' ? Crypt::encrypt($query_org) : 'null'
                                 ]) }}" target="_blank">
                                     <button type="button" class="btn btn-primary">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">

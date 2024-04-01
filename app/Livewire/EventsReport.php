@@ -14,6 +14,7 @@ use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Crypt;
 use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.page')]
@@ -89,9 +90,11 @@ class EventsReport extends Component
     public function printPDF($start_date = "", $end_date = "", $query_event = "")
     {
         # Replace 'null' values with empty string
-        $start_date = ($start_date === 'null') ? '' : $start_date;
-        $end_date = ($end_date === 'null') ? '' : $end_date;
-        $query_event = ($query_event === 'null') ? '' : $query_event;
+        $start_date = ($start_date === 'null') ? '' : Crypt::decrypt($start_date);
+        $end_date = ($end_date === 'null') ? '' : Crypt::decrypt($end_date);
+        $query_event = ($query_event === 'null') ? '' : Crypt::decrypt($query_event);
+
+        // dd($start_date, $end_date, $query_event);
 
         $query = EventOrganizationsModel::join('events', 'event_organizations.id_event', '=', 'events.id')
             ->join('organization_information', 'event_organizations.id_organization', '=', 'organization_information.id')

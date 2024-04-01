@@ -7,6 +7,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use App\Models\OrganizationInformationModel;
 use App\Models\IndividualInformationModel;
+use Illuminate\Support\Facades\Crypt;
 use Livewire\WithPagination;
 
 #[Layout('components.layouts.page')]
@@ -16,11 +17,13 @@ class OrganizationDetails extends Component
 {
     use WithPagination;
 
-    public OrganizationInformationModel $id_org;
+    // public OrganizationInformationModel $id_org;
+    public $id_org;
+
 
     public function render()
     {
-        $org_details = OrganizationInformationModel::where('id', $this->id_org['id'])
+        $org_details = OrganizationInformationModel::where('id', $this->id_org)
             ->select(
                 'organization_name',
                 'date_established',
@@ -31,7 +34,7 @@ class OrganizationDetails extends Component
             )
             ->first();
 
-        $individual = IndividualInformationModel::where('id_organization', $this->id_org['id'])
+        $individual = IndividualInformationModel::where('id_organization', $this->id_org)
             ->join('users', 'individual_information.user_id', '=', 'users.user_id')
             // ->where('users.status', 1)
             ->orderBy('status', 'DESC')
@@ -49,8 +52,9 @@ class OrganizationDetails extends Component
         ]);
     }
 
-    public function mount(OrganizationInformationModel $id_organization) // It's like, OrganizationInformationModel::findOrFail($id_organization);
+    public function mount($id_organization) // It's like, OrganizationInformationModel::findOrFail($id_organization);
     {
-        $this->id_org = $id_organization;
+        // dd(Crypt::decrypt($id_organization));
+        $this->id_org = Crypt::decrypt($id_organization);
     }
 }
