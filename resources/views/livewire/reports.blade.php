@@ -449,7 +449,13 @@
                                     <div class="mb-3 row">
                                         <label for="exampleFormControlInput1" class="col-12">Emergency contact no.</label>
                                         <div class="col-12">
-                                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('emergency_contact_no') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="emergency_contact_no">
+                                            <!-- <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('emergency_contact_no') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="emergency_contact_no"> -->
+                                            <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
+                                                <option value="AL">Alabama</option>
+                                                ...
+                                                <option value="WY">Wyoming</option>
+                                            </select>
+
                                             @error('emergency_contact_no')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -475,6 +481,10 @@
 <script>
     $wire.on('close-addClientModal-Modal', () => {
         $('#addClientModal').modal('hide');
+    });
+
+    $(livewire).ready(function() {
+        $('.js-example-basic-multiple').select2();
     });
 </script>
 @endscript

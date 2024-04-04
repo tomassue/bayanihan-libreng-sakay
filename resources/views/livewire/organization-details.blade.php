@@ -105,7 +105,32 @@
 
             </div>
 
-            <div class="row mx-5 mt-4 mb-4">
+            <div class="row mx-5 mt-5 mb-4 fs-5">
+                <div class="row col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12">
+                        <span class="fw-bold">Organization Name:</span> <span>{{$org_details->organization_name}}</span>
+                    </div>
+                    <div class="col-12">
+                        <span class="fw-bold">Date Established:</span> <span>{{$org_details->date_established}}</span>
+                    </div>
+                    <div class="col-12">
+                        <span class="fw-bold">Address:</span> <span>{{$org_details->address}}</span>
+                    </div>
+                </div>
+                <div class="row col-sm-12 col-md-12 col-lg-6">
+                    <div class="col-12">
+                        <span class="fw-bold">Representative: </span> <span>{{$org_details->representative_name}}</span>
+                    </div>
+                    <div class="col-12">
+                        <span class="fw-bold">Representative's Position: </span> <span>{{$org_details->representative_position}}</span>
+                    </div>
+                    <div class="col-12">
+                        <span class="fw-bold">Representative's contact no.: </span> <span>{{$org_details->representative_contact_number}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="row mx-5 mt-4 mb-4">
                 <div class="col-12 row">
                     <div class="col-4 fw-bold fs-5">Organization Name: </div>
                     <div class="col-8 fs-5">{{$org_details->organization_name}}</div>
@@ -130,8 +155,7 @@
                     <div class="col-4 fw-bold fs-5">Representative's contact no.: </div>
                     <div class="col-8 fs-5">{{$org_details->representative_contact_number}}</div>
                 </div>
-
-            </div>
+            </div> -->
 
             <div class="row mx-5 mt-3">
                 <hr>

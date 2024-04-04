@@ -20,6 +20,8 @@ use Livewire\Attributes\Validate;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
+use function Laravel\Prompts\select;
+
 #[Layout('components.layouts.page')]
 #[Title('Registration')]
 
@@ -30,7 +32,7 @@ class Registration extends Component
     public $filter, $pageone, $pagetwo, $pagethree; // FILTERS
 
     #[Locked] // Locked properties cannot be updated. This is only good for accessing data or passing data.
-    public $userID, $approve, $eventID, $individualID; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
+    public $userID, $approve, $eventID, $individualID, $orgID; // This will store the user_id and will be returned to the variable and will be accessible to the blade. $approve is used to determine if the action is to approve the user or not.
 
     // Filters
     public $remarks, $remarks_event, $remarks_individuals;
@@ -55,7 +57,7 @@ class Registration extends Component
     {
         $organization_one = OrganizationInformationModel::orderBy('organization_information.created_at', 'DESC')
             ->join('users', 'organization_information.user_id', '=', 'users.user_id')
-            ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'organization_information.*') // In my case, I have two different tables and their primary key's name are the same. I put an alias to the id of the other table so that it will distinguish from the other one. his renames the 'name' column from the 'tags' table to 'tag_name' in the result set. This is often done when you have multiple columns with the same name from different tables to avoid naming conflicts. 'products.*': This selects all columns from the 'products' table.
+            ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'organization_information.*', 'users.email') // In my case, I have two different tables and their primary key's name are the same. I put an alias to the id of the other table so that it will distinguish from the other one. his renames the 'name' column from the 'tags' table to 'tag_name' in the result set. This is often done when you have multiple columns with the same name from different tables to avoid naming conflicts. 'products.*': This selects all columns from the 'products' table.
             ->where('status', 1)
             ->search($this->search_one)
             ->paginate(10, pageName: 'registered-organizations'); // I'm using multiple paginator in a single blade file. Specifying page name won't affect the other pagination.
@@ -552,6 +554,27 @@ class Registration extends Component
 
         $this->dispatch('close-registerOrgModal-Modal');
         session()->flash('status', 'Organization added successfully.');
+        return redirect()->to('registration');
+    }
+
+    public function confirmResetPassword($id)
+    {
+        $this->orgID = $id;
+    }
+
+    public function resetPassword($id)
+    {
+        $org = OrganizationInformationModel::where('id', $id)
+            ->pluck('user_id');
+
+        $user = User::where('user_id', $org);
+        $user->update([
+            'password' => Hash::make('P@ssw0rd')
+        ]);
+
+        session()->flash('status', 'Password reset successful.');
+        $this->reset('orgID');
+        $this->dispatch('close-confirm-reset-password-Modal');
         return redirect()->to('registration');
     }
 }

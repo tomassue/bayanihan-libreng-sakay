@@ -211,10 +211,12 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col" style="width: 30%;">ORGANIZATION</th>
+                                <th scope="col" style="width: 25%;">ORGANIZATION</th>
                                 <th scope="col">CONTACT NUMBER</th>
+                                <th scope="col">EMAIL</th>
                                 <th scope="col">ADDRESS</th>
-                                <th scope="col">DETAILS</th>
+                                <th scope="col" class="text-center">DETAILS</th>
+                                <th scope="col" class="text-center">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -222,9 +224,13 @@
                             <tr wire:key="{{ $orgone['id'] }}">
                                 <th scope="row">{{ $orgone['organization_name'] }}</th>
                                 <td>{{ $orgone['contact_number'] }}</td>
+                                <td>{{ $orgone['email'] }}</td>
                                 <td>{{ $orgone['address'] }}</td>
-                                <td>
+                                <td class="text-center">
                                     <a href="{{ route('organization.details', Crypt::encrypt($orgone['id'])) }}"><img src="assets/img/document.png" alt="details" style="height: 20px; width: 20px; cursor: pointer;"></a>
+                                </td>
+                                <td class="text-center">
+                                    <span class="btn btn-danger btn-sm" style="background-color: #BF0000; border-color:#BF0000;" data-bs-toggle="modal" data-bs-target="#resetPassword" wire:click="confirmResetPassword('{{$orgone['id']}}')">RESET PASSWORD</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -797,6 +803,26 @@
         </div>
     </div>
 
+    <!-- RESET PASSWORD CONFIRMATION MODAL -->
+    <div wire:ignore.self class="modal fade" id="resetPassword" tabindex="-1" aria-labelledby="resetPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
+                    <h1 class="modal-title fs-5 fw-bolder" id="resetPasswordLabel">Confirmation</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
+                </div>
+                <div class="modal-body" wire:loading.remove>
+                    <div class="row mb-3 fw-bolder" style="color: #0A335D;">
+                        <h4>Are you sure you want to proceed?</h4>
+                    </div>
+                    <div class="row fw-bolder justify-content-center">
+                        <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 100px;" wire:click="resetPassword('{{ $orgID }}')">Proceed</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 @script
@@ -820,6 +846,10 @@
 
     $wire.on('close-registerOrgModal-Modal', () => {
         $('#registerOrgModal').modal('hide');
+    });
+
+    $wire.on('close-confirm-reset-password-Modal', () => {
+        $('#resetPassword').modal('hide');
     });
 </script>
 @endscript
