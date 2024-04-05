@@ -96,7 +96,7 @@
                             </div>
                         </div>
 
-                        <table class="table table-borderless" wire:loading.class="opacity-50">
+                        <table class="table table-borderless" wire:target="search_client, export, search" wire:loading.class="opacity-50">
                             <thead>
                                 <tr>
                                     <th scope="col">CLIENT'S NAME</th>
@@ -449,13 +449,7 @@
                                     <div class="mb-3 row">
                                         <label for="exampleFormControlInput1" class="col-12">Emergency contact no.</label>
                                         <div class="col-12">
-                                            <!-- <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('emergency_contact_no') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="emergency_contact_no"> -->
-                                            <select class="js-example-basic-multiple" name="states[]" multiple="multiple">
-                                                <option value="AL">Alabama</option>
-                                                ...
-                                                <option value="WY">Wyoming</option>
-                                            </select>
-
+                                            <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" class="form-control @error('emergency_contact_no') is-invalid @enderror" id="exampleFormControlInput1" placeholder="" wire:model.live="emergency_contact_no">
                                             @error('emergency_contact_no')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -468,7 +462,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;" wire:loading.class="opacity-50">SAVE</button>
+                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;" wire:target="saveClient" wire:loading.class="opacity-50">SAVE</button>
                 </div>
                 </form>
             </div>

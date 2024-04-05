@@ -26,10 +26,15 @@ class Reports extends Component
 
     // Add Client Modal
     public $middle_name, $ext_name, $school;
+
     #[Validate('required')]
     public $user_type, $last_name, $first_name, $birthday, $sex, $address, $emergency_name;
-    #[Validate('required|size:11|unique:users,contactNumber|unique:client_information,guardian_contact_number')]
-    public $contact_number, $emergency_contact_no;
+
+    #[Validate('required|size:11|unique:users,contactNumber')]
+    public $contact_number;
+
+    #[Validate('required|size:11')]
+    public $emergency_contact_no = '';
 
     // Transaction History
     public $id_client;
@@ -136,7 +141,7 @@ class Reports extends Component
     {
         $this->validate();
 
-        // Generate random letters and numbers for user_id
+        # Generate random letters and numbers for user_id
         $timestamp = now()->timestamp;
         $randomString = Str::random(10);
         $user_id = strtoupper($timestamp . $randomString);

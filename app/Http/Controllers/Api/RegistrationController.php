@@ -47,7 +47,7 @@ class RegistrationController extends Controller
                 'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
                 'address'               => ['required'],
                 'guardianName'          => ['required'],
-                'guardianNumber'        => ['required', 'numeric', 'digits:11', 'unique:users'],
+                'guardianNumber'        => ['required', 'numeric', 'digits:11'],
 
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password'              => [
@@ -70,7 +70,7 @@ class RegistrationController extends Controller
                 'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
                 'address'               => ['required'],
                 'guardianName'          => ['required'],
-                'guardianNumber'        => ['required', 'numeric', 'digits:11', 'unique:users'],
+                'guardianNumber'        => ['required', 'numeric', 'digits:11'],
 
                 'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password'              => [
