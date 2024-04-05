@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\RegistrationAccountTypeController;
-use App\Http\Controllers\LandingPageController;
+use App\Http\Middleware\Admin;
+use App\Http\Middleware\AdminAndOrg;
 use App\Livewire\ChangePassword;
 use App\Livewire\ClientsReport;
 use App\Livewire\Dashboard;
@@ -55,7 +56,8 @@ Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => 'auth'], function () {
+# Both the Admin and Organization can access these routes
+Route::group(['middleware' => ['auth', AdminAndOrg::class]], function () {
     // Your authenticated routes go here
     Route::get('/change-password', ChangePassword::class)->name('change-password');
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
@@ -90,7 +92,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/client-list', Reports::class)->name('client-list');
     Route::get('/generate-qr/{clientID}', [Reports::class, 'generateQr'])->name('generate.qr');
+});
 
+# Only Admin can access these routes
+Route::group(['middleware' => ['auth', Admin::class]], function () {
     // REFERENCE
     Route::get('/references', References::class)->name('references');
 });

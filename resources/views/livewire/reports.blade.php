@@ -164,7 +164,7 @@
                                         Name: {{$client_details->client_fullname}}
                                     </div>
                                     <div class="col">
-                                        Sex: {{strtoupper($client_details->sex)}}
+                                        Sex: {{$client_details->sex == 'm' ? 'Male' : 'Female'}}
                                     </div>
                                     <div class="col">
                                         Birthday: {{$client_details->birthday}}
