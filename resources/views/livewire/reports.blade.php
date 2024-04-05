@@ -476,9 +476,5 @@
     $wire.on('close-addClientModal-Modal', () => {
         $('#addClientModal').modal('hide');
     });
-
-    $(livewire).ready(function() {
-        $('.js-example-basic-multiple').select2();
-    });
 </script>
 @endscript
