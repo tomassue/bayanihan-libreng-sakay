@@ -51,10 +51,12 @@ class Reports extends Component
     {
         $query = ClientInformationModel::join('users', 'client_information.user_id', '=', 'users.user_id')
             ->select('users.id AS user_id', 'users.contactNumber AS contact_number', 'client_information.*')
-            ->where('first_name', 'like', '%' . $this->search_client . '%')
-            ->orWhere('middle_name', 'like', '%' . $this->search_client . '%')
-            ->orWhere('last_name', 'like', '%' . $this->search_client . '%')
-            ->orWhere('ext_name', 'like', '%' . $this->search_client . '%')
+            ->where(function ($query) {
+                $query->where('first_name', 'like', '%' . $this->search_client . '%')
+                    ->orWhere('middle_name', 'like', '%' . $this->search_client . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->search_client . '%')
+                    ->orWhere('ext_name', 'like', '%' . $this->search_client . '%');
+            })
             ->orderBy('created_at', 'DESC');
 
         if (!empty($this->start_date) && !empty($this->end_date)) {
@@ -113,6 +115,7 @@ class Reports extends Component
         $this->search_client = "";
         $this->start_date = "";
         $this->end_date = "";
+        $this->resetValidation();
     }
 
     public function search()
@@ -169,10 +172,10 @@ class Reports extends Component
             'password'                  => 'null',
             'status'                    =>  '1',
         ]);
-
-        $this->dispatch('close-addClientModal-Modal');
         session()->flash('status', 'Client added successfully.');
-        return redirect()->to('client-list');
+        $this->dispatch('close-addClientModal-Modal');
+        $this->reset('user_type', 'last_name', 'first_name', 'middle_name', 'ext_name', 'sex', 'birthday', 'address', 'school', 'emergency_name', 'emergency_contact_no', 'contact_number');
+        return $this->redirect('/client-list', navigate: true);
     }
 
     private function encrypt($text_data): string

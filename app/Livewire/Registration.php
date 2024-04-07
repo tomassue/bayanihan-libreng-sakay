@@ -200,6 +200,11 @@ class Registration extends Component
         $this->resetPage('declined-members');
     }
 
+    public function clear()
+    {
+        $this->resetValidation();
+    }
+
     // FILTER PAGES
     public function mount()
     {
@@ -552,9 +557,10 @@ class Registration extends Component
             'status'                    => 1,
         ]);
 
-        $this->dispatch('close-registerOrgModal-Modal');
         session()->flash('status', 'Organization added successfully.');
-        return redirect()->to('registration');
+        $this->dispatch('close-registerOrgModal-Modal');
+        $this->reset('organization_name', 'date_established', 'address', 'representative_name', 'representative_position', 'representative_contact_number', 'email', 'contact_number');
+        return $this->redirect('/registration', navigate: true);
     }
 
     public function confirmResetPassword($id)
@@ -573,8 +579,8 @@ class Registration extends Component
         ]);
 
         session()->flash('status', 'Password reset successful.');
-        $this->reset('orgID');
         $this->dispatch('close-confirm-reset-password-Modal');
-        return redirect()->to('registration');
+        $this->reset('orgID');
+        return $this->redirect('/registration', navigate: true);
     }
 }

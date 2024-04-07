@@ -242,7 +242,7 @@
                 <div class="text-end mt-2 mb-3">
                     @if(Auth::user()->user_id == 'ADMIN')
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 220px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#registerOrgModal">ADD ORGANIZATION</button>
+                    <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 220px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#registerOrgModal" wire:click="clear">ADD ORGANIZATION</button>
                     @endif
                 </div>
             </div>
@@ -697,7 +697,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body" wire:target="saveOrg, clear" wire:loading.remove>
                     <form wire:submit="saveOrg">
                         <div class="mb-3 row">
                             <label for="exampleFormControlInput1" class="col-12">Organization Name</label>
@@ -794,11 +794,16 @@
                                 @enderror
                             </div>
                         </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;" wire:loading.class="opacity-50">SAVE</button>
+                <div class="my-5 mx-auto" wire:loading wire:target="saveOrg, clear">
+                    <div class="spinner-grow text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </div>
-                </form>
+                <div class="modal-footer" wire:loading.remove>
+                    <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 65px;" wire:click="saveOrg">SAVE</button>
+                </div>
             </div>
         </div>
     </div>
@@ -817,6 +822,11 @@
                     </div>
                     <div class="row fw-bolder justify-content-center">
                         <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 100px;" wire:click="resetPassword('{{ $orgID }}')">Proceed</button>
+                    </div>
+                </div>
+                <div class="my-5 mx-auto" wire:loading wire:target="resetPassword, confirmResetPassword">
+                    <div class="spinner-grow text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
             </div>

@@ -35,18 +35,18 @@
                     <div class="col-sm-12 col-lg-5">
                         <form wire:submit="search">
                             <div class="row g-2 mb-2">
-                                <label for="inputEmail3" class="col-sm-4 col-md-2 col-lg-2 col-form-label">Date</label>
-                                <div class="col-sm-4 col-md-5 col-lg-5">
+                                <label for="inputEmail3" class="col-sm-12 col-md-12 col-lg-2 col-form-label">Date</label>
+                                <div class="col-sm-12 col-md-12 col-lg-5">
                                     <input type="date" class="form-control" wire:model="start_date">
                                 </div>
-                                <div class="col-sm-4 col-md-5 col-lg-5">
+                                <div class="col-sm-12 col-md-12 col-lg-5">
                                     <input type="date" class="form-control" wire:model="end_date">
                                 </div>
                             </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-12 col-lg-2 text-start">
-                        <button type="submit" class="btn btn-primary">Filter</button>
+                    <div class="col-sm-12 col-md-12 col-lg-4 text-start">
+                        <button type="button" class="btn btn-primary" wire:click="search">Filter</button>
                         <button type="button" class="btn btn-secondary" wire:click="clear">Clear</button>
                         </form>
                     </div>
@@ -96,7 +96,7 @@
                             </div>
                         </div>
 
-                        <table class="table table-borderless" wire:target="search_client, export, search" wire:loading.class="opacity-50">
+                        <table class="table table-borderless" wire:target="search_client, export, search, clear" wire:loading.class="opacity-50">
                             <thead>
                                 <tr>
                                     <th scope="col">CLIENT'S NAME</th>
@@ -136,7 +136,7 @@
                         <div class="text-end mt-2 mb-3">
                             @if(Auth::user()->user_id == 'ADMIN')
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#addClientModal">ADD CLIENT</button>
+                            <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" data-bs-toggle="modal" data-bs-target="#addClientModal" wire:click="clear">ADD CLIENT</button>
                             @endif
                         </div>
                     </div>
@@ -258,7 +258,7 @@
                     <h1 class="modal-title fs-5 fw-bolder" id="addClientModalLabel">Add Client</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" wire:target="saveClient, clear" wire:loading.remove>
                     <div class="row">
                         <form wire:submit="saveClient">
                             <div class="container row">
@@ -461,8 +461,13 @@
                             </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: 65px;" wire:target="saveClient" wire:loading.class="opacity-50">SAVE</button>
+                <div class="my-5 mx-auto" wire:loading wire:target="saveClient, clear">
+                    <div class="spinner-grow text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <div class="modal-footer" wire:target="saveClient" wire:loading.remove>
+                    <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 65px;" wire:click="saveClient">SAVE</button>
                 </div>
                 </form>
             </div>

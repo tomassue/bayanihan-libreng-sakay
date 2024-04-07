@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="col-sm-12 col-lg-3 text-start">
-                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <button type="button" class="btn btn-primary" wire:click="search">Filter</button>
                         <button type="button" class="btn btn-secondary" wire:click="clear">Clear</button>
                         </form>
                     </div>
@@ -61,7 +61,7 @@
                         </div>
 
 
-                        <div class="table-responsive">
+                        <div class="table-responsive" wire:loading.class="opacity-50">
                             <table class="table">
                                 <thead>
                                     <tr>

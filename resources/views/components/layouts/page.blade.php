@@ -231,7 +231,7 @@
         <!-- End Logo -->
 
         <div class="d-flex align-items-center justify-content-between">
-            <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center">
+            <a href="{{ route('dashboard') }}" class="logo d-flex align-items-center" wire:navigate>
                 @php
                 $cdo_seal = base64_encode(file_get_contents('assets/img/cdo-seal.png'));
                 $bls_logo = base64_encode(file_get_contents('assets/img/bls-logo-bg2.png'));

@@ -95,14 +95,14 @@
     <!-- SchoolModal -->
     <div wire:ignore.self class="modal fade" id="schoolModal" tabindex="-1" aria-labelledby="schoolModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content" wire:loading.remove>
+            <div class="modal-content">
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                    <h1 class="modal-title fs-5 fw-bolder" id="schoolModalLabel">{{ $add_school ? 'Add' : 'Edit' }} School</h1>
+                    <h1 class="modal-title fs-5 fw-bolder" id="schoolModalLabel" wire:loading.remove>{{ $add_school ? 'Add' : 'Edit' }} School</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
                 </div>
-                <form wire:submit="{{ $add_school ? 'saveSchool' : 'updateSchool' }}">
-                    <div class="modal-body">
 
+                <div class="modal-body" wire:loading.remove>
+                    <form wire:submit="{{ $add_school ? 'saveSchool' : 'updateSchool' }}">
                         <div class="mb-3 row">
                             <label for="exampleFormControlInput1" class="col-12">School Name</label>
                             <div class="col-12">
@@ -130,12 +130,16 @@
                                 @enderror
                             </div>
                         </div>
-
+                    </form>
+                </div>
+                <div class="my-5 mx-auto" wire:loading>
+                    <div class="spinner-grow text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: auto;">{{$add_school ? 'SAVE' : 'UPDATE'}}</button>
-                    </div>
-                </form>
+                </div>
+                <div class="modal-footer" wire:loading.remove>
+                    <button type="button" class="btn btn-success fw-bolder mt-2" style="width: auto;" wire:click="{{ $add_school ? 'saveSchool' : 'updateSchool' }}">{{$add_school ? 'SAVE' : 'UPDATE'}}</button>
+                </div>
             </div>
         </div>
     </div>
