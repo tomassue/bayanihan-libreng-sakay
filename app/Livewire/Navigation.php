@@ -33,7 +33,7 @@ class Navigation extends Component
                             </li>
                             @endif
 
-                            @if(Auth::user()->user_id !== 'ADMIN')
+                            @if(Auth::user()->user_id !== 'ADMIN' && !session('default_password'))
                             <li class="nav-item">
                                 <a class="align-items-center" href="{{ route('update.profile') }}" style="color: white; color: white;padding-top: 2px; padding-bottom: 4px;" wire:navigate>
                                     <span style="font-size: medium;">> &nbsp; Update Profile</span>
@@ -56,6 +56,7 @@ class Navigation extends Component
 
                     <hr style="color: #FFFFFF; margin-right: 20px;">
 
+                    @if(!session('default_password'))
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('dashboard') ? '' : 'collapsed' }}" href="{{ route('dashboard') }}" style="border-radius: unset;" wire:navigate>
                             <span class="fs-5 fw-bold">Dashboard</span>
@@ -162,6 +163,7 @@ class Navigation extends Component
                             @endif
                         </ul>
                     </li>
+                    @endif
 
                     @endif
                 </ul>

@@ -55,7 +55,7 @@
 
                         <div class="tab-content pt-2">
                             @if($page_one)
-                            <div class="tab-pane fade show active profile-overview" id="profile-overview" role="tabpanel">
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview" role="tabpanel" wire:loading.class="opacity-50">
                                 <!-- <h5 class="card-title">About</h5>
                                 <p class="small fst-italic">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p> -->
 
@@ -99,7 +99,7 @@
                             @endif
 
                             @if($page_two)
-                            <div class="tab-pane fade show active pt-3" id="profile-edit" role="tabpanel">
+                            <div class="tab-pane fade show active pt-3" id="profile-edit" role="tabpanel" wire:loading.class="opacity-50" wire:target="update">
 
                                 <!-- Profile Edit Form -->
                                 <form wire:submit="update">
@@ -224,7 +224,7 @@
                                     </div>
 
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        <button type="button" class="btn btn-primary" wire:click="update" wire:loading.attr="disabled">Save Changes</button>
                                     </div>
                                 </form><!-- End Profile Edit Form -->
 
@@ -232,7 +232,7 @@
                             @endif
 
                             @if($page_three)
-                            <div class="tab-pane fade active show pt-3" id="profile-change-password" role="tabpanel">
+                            <div class="tab-pane fade active show pt-3" id="profile-change-password" role="tabpanel" wire:loading.class="opacity-50" wire:target="changePassword">
 
                                 <!-- Change Password Form -->
                                 <form wire:submit="changePassword">
@@ -274,7 +274,7 @@
                                     </div>
 
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Change Password</button>
+                                        <button type="button" class="btn btn-primary" wire:click="changePassword" wire:loading.attr="disabled">Change Password</button>
                                     </div>
                                 </form>
                                 <!-- End Change Password Form -->

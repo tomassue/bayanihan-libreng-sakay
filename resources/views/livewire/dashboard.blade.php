@@ -1,7 +1,7 @@
 <div>
     <div class="col-12">
         <div class="card border border-secondary">
-
+            {{session('default_password')}}
             <div class="row mx-5 mt-4">
                 <div class="col">
                     <div class="card h-100 border border-secondary">

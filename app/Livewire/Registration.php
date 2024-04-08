@@ -553,7 +553,7 @@ class Registration extends Component
             'email'                     => $this->email,
             'contactNumber'             => $this->contact_number,
             'id_account_type'           => 1,
-            'password'                  => Hash::make('P@ssw0rd'),
+            'password'                  => Hash::make('password'),
             'status'                    => 1,
         ]);
 
@@ -575,7 +575,7 @@ class Registration extends Component
 
         $user = User::where('user_id', $org);
         $user->update([
-            'password' => Hash::make('P@ssw0rd')
+            'password' => Hash::make('password')
         ]);
 
         session()->flash('status', 'Password reset successful.');

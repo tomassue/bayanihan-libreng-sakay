@@ -47,6 +47,7 @@ class LoginController extends Controller
             'password' => $request->input('password'),
             'status' => 1, // Only allow login if the user's status is 1
             'id_account_type' => ['admin', '1'], // Allow login when the column has values admin or 1.
+            'default_password' => ($request->input('password') == 'password' ? session(['default_password' => 'default_password']) : NULL)
         ];
     }
 

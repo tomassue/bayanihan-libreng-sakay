@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\DefaultPassword;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -69,5 +70,6 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'AdminAndOrg'   =>  \App\Http\Middleware\AdminAndOrg::class,
         'Admin'         =>  \App\Http\Middleware\Admin::class,
+        'DefaultPassword' => \App\Http\Middleware\DefaultPassword::class,
     ];
 }
