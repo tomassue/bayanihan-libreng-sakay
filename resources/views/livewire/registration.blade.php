@@ -801,7 +801,7 @@
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-                <div class="modal-footer" wire:loading.remove>
+                <div class="modal-footer" wire:loading.remove wire:target="saveOrg, clear">
                     <button type="button" class="btn btn-success fw-bolder mt-2" style="width: 65px;" wire:click="saveOrg">SAVE</button>
                 </div>
             </div>

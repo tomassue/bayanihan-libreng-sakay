@@ -560,7 +560,7 @@ class Registration extends Component
         session()->flash('status', 'Organization added successfully.');
         $this->dispatch('close-registerOrgModal-Modal');
         $this->reset('organization_name', 'date_established', 'address', 'representative_name', 'representative_position', 'representative_contact_number', 'email', 'contact_number');
-        return $this->redirect('/registration', navigate: true);
+        return redirect()->route('registration');
     }
 
     public function confirmResetPassword($id)
@@ -581,6 +581,6 @@ class Registration extends Component
         session()->flash('status', 'Password reset successful.');
         $this->dispatch('close-confirm-reset-password-Modal');
         $this->reset('orgID');
-        return $this->redirect('/registration', navigate: true);
+        return redirect()->route('registration');
     }
 }

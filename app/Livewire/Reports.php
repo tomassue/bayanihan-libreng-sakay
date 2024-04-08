@@ -175,7 +175,8 @@ class Reports extends Component
         session()->flash('status', 'Client added successfully.');
         $this->dispatch('close-addClientModal-Modal');
         $this->reset('user_type', 'last_name', 'first_name', 'middle_name', 'ext_name', 'sex', 'birthday', 'address', 'school', 'emergency_name', 'emergency_contact_no', 'contact_number');
-        return $this->redirect('/client-list', navigate: true);
+        // return $this->redirect('/client-list', navigate: true);
+        return redirect()->route('client-list');
     }
 
     private function encrypt($text_data): string
