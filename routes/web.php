@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GenerateClientQRController;
 use App\Http\Controllers\HomeController;
+use App\Http\Middleware\UpdatedPassword;
 use App\Livewire\AttendanceReport;
 use App\Livewire\EventsReport;
 use App\Livewire\OrganizationDetails;
@@ -57,12 +58,12 @@ Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth', DefaultPassword::class], function () {
     Route::get('/change-password', ChangePassword::class)->name('change-password');
 });
 
 # Both the Admin and Organization can access these routes
-Route::group(['middleware' => ['auth', AdminAndOrg::class, DefaultPassword::class]], function () {
+Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::class]], function () {
     // Your authenticated routes go here
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/registration', Registration::class)->name('registration');
@@ -99,7 +100,7 @@ Route::group(['middleware' => ['auth', AdminAndOrg::class, DefaultPassword::clas
 });
 
 # Only Admin can access these routes
-Route::group(['middleware' => ['auth', Admin::class, DefaultPassword::class]], function () {
+Route::group(['middleware' => ['auth', Admin::class, UpdatedPassword::class]], function () {
     // REFERENCE
     Route::get('/references', References::class)->name('references');
 });

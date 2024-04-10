@@ -19,6 +19,7 @@ class AdminAndOrg
         if (Auth::check() && (Auth::user()->id_account_type == '1' || Auth::user()->id_account_type == 'admin')) {
             return $next($request);
         }
-        abort(403);
+        return redirect()->route('dashboard');
+        // abort(403);
     }
 }

@@ -62,6 +62,8 @@ class LoginController extends Controller
     // Override the default logout method
     public function logout(Request $request)
     {
+        $request->session()->forget('default_password'); # Forget the session that will be made if the user's password used to log in is the default password.
+
         $this->guard()->logout();
 
         $request->session()->invalidate();

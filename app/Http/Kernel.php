@@ -68,8 +68,9 @@ class Kernel extends HttpKernel
     ];
 
     protected $routeMiddleware = [
-        'AdminAndOrg'   =>  \App\Http\Middleware\AdminAndOrg::class,
-        'Admin'         =>  \App\Http\Middleware\Admin::class,
-        'DefaultPassword' => \App\Http\Middleware\DefaultPassword::class,
+        'AdminAndOrg'       =>  \App\Http\Middleware\AdminAndOrg::class,
+        'Admin'             =>  \App\Http\Middleware\Admin::class,
+        'DefaultPassword'   =>  \App\Http\Middleware\DefaultPassword::class,
+        'UpdatedPassword'   =>  \App\Http\Middleware\UpdatedPassword::class
     ];
 }

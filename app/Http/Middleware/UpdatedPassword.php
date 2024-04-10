@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultPassword
+class UpdatedPassword
 {
     /**
      * Handle an incoming request.
@@ -15,9 +15,10 @@ class DefaultPassword
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (session('default_password')) {
-            return redirect()->route('change-password');
+        if (!session('default_password')) {
+            return $next($request);
         }
-        return $next($request);
+        return redirect()->route('change-password');
+        // abort(403);
     }
 }
