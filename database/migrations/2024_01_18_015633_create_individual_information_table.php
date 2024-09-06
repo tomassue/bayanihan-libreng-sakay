@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('ext_name')->nullable();
             $table->string('sex');
             $table->string('contact_number');
+            $table->string('id_barangay'); // reference key from tbl_ref_barangay
             $table->string('address');
             $table->integer('id_organization'); // id from organization
             $table->timestamps();

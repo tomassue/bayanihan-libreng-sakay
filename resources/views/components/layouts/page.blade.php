@@ -9,6 +9,9 @@
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
     <!-- Favicons -->
     <link href="{{ asset('assets/img/cdo-seal.png') }}" rel="icon" />
     <link href="{{ asset('assets/img/cdo-seal.png') }}" rel="apple-touch-icon" />
@@ -24,6 +27,10 @@
     <link href="{{ asset('assets/vendor/quill/quill.bubble.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/vendor/simple-datatables/style.css') }}" rel="stylesheet" />
+
+    <!-- SweetAlert2 -->
+    <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
@@ -484,6 +491,16 @@
                 dots.style.display = "block";
             }
         }
+
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('something-went-wrong', (event) => {
+                Swal.fire({
+                    title: "Something went wrong!",
+                    text: "Please try again.",
+                    icon: "error"
+                });
+            });
+        });
     </script>
 
 </body>

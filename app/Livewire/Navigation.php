@@ -57,24 +57,23 @@ class Navigation extends Component
                     <hr style="color: #FFFFFF; margin-right: 20px;">
 
                     @if(!session('default_password'))
-                    <li class="nav-item">
+                    <li class="nav-item" style="display: none;">
                         <a class="nav-link {{ request()->is('dashboard') ? '' : 'collapsed' }}" href="{{ route('dashboard') }}" style="border-radius: unset;" wire:navigate>
                             <span class="fs-5 fw-bold">Dashboard</span>
                         </a>
                     </li>
 
                     @if(Auth::user()->user_id !== 'ADMIN')
-                    <li class="nav-item">
+                    <li class="nav-item" style="display: none;">
                         <a class="nav-link {{ request()->is('registration') ? '' : 'collapsed' }}" href="{{ route('registration') }}" style="border-radius: unset;" wire:navigate>
                             <span class="fs-5 fw-bold">Registration</span>
-
                             <span class="ms-auto">
                                 @livewire('SidebarNotificationIndicators.registrationnotificationindicator')
                             </span>
                         </a>
                     </li>
                     @else
-                    <li class="nav-item">
+                    <li class="nav-item" style="display: none;">
                         <a class="nav-link {{ request()->is('registration', 'client-list') ? '' : 'collapsed' }}" data-bs-target="#registration-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
                             <span class="fs-5 fw-bold">Registration</span>
                         </a>
@@ -91,6 +90,22 @@ class Navigation extends Component
                             </li>
                         </ul>
                     </li>
+
+                    <!-- /* -------------------------------------------------------------------------- */
+                    /*                                 NEW PROCESS                                */
+                    /* -------------------------------------------------------------------------- */ -->
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('np/registration') ? '' : 'collapsed' }}" href="{{ route('np_registration') }}" style="border-radius: unset;" wire:navigate>
+                            <span class="fs-5 fw-bold">Registration</span>
+                            
+                            <span class="ms-auto">
+                                @livewire('SidebarNotificationIndicators.registrationnotificationindicator')
+                            </span>
+                        </a>
+                    </li>
+                    <!-- /* -------------------------------------------------------------------------- */
+                    /*                                 NEW PROCESS                                */
+                    /* -------------------------------------------------------------------------- */ -->
                     @endif
 
                     <li class="nav-item">
@@ -104,7 +119,7 @@ class Navigation extends Component
                     </li>
 
                     @if(Auth::user()->user_id == 'ADMIN')
-                    <li class="nav-item">
+                    <li class="nav-item" style="display: none;">
                         <a class="nav-link {{ request()->is('client-reports', 'org-reports', 'rider-reports', 'event-reports') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
                             <span class="fs-5 fw-bold">Reports</span>
                         </a>
