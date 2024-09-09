@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('sex');
             $table->date('birthday');
             $table->string('contact_number');
+            $table->string('id_barangay');
             $table->string('address');
             $table->string('id_school')->nullable(); // id from school
             $table->string('guardian_name');

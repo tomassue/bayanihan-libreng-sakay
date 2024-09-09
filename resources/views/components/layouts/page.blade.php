@@ -493,7 +493,15 @@
         }
 
         document.addEventListener('livewire:init', () => {
-            Livewire.on('something-went-wrong', (event) => {
+            Livewire.on('success_save', (event) => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "A record have been saved successfully.",
+                    icon: "success"
+                });
+            });
+
+            Livewire.on('something_went_wrong', (event) => {
                 Swal.fire({
                     title: "Something went wrong!",
                     text: "Please try again.",
