@@ -2,6 +2,7 @@
 
 namespace App\Livewire\NewProcess;
 
+use App\Models\AccountTypeModel;
 use App\Models\ClientInformationModel;
 use App\Models\IndividualInformationModel;
 use App\Models\OrganizationInformationModel;
@@ -15,6 +16,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str; //THIS IS FOR THE str::random()
+use Livewire\Attributes\On;
 
 #[Layout('components.layouts.page')]
 #[Title('Registration')]
@@ -22,8 +24,15 @@ class Registration extends Component
 {
     use WithPagination;
 
-    /* ------------------------------ USER'S TABLE ------------------------------ */
+    public $editMode = false;
     public $user_id;
+
+
+    /* --------------------------------- FILTER --------------------------------- */
+    public $search;
+    public $filter_accountType;
+
+    /* ------------------------------ USER'S TABLE ------------------------------ */
     public $email;
 
     public $account_type;
@@ -59,7 +68,8 @@ class Registration extends Component
             'organization' => $this->loadOrganization(),
             'school' => $this->loadSchool(),
             'barangay' => $this->loadBarangay(),
-            'combined' => $this->loadUsers()
+            'combined' => $this->loadUsers(),
+            'accountType' => $this->loadAccountType()
         ];
 
         return view('livewire.new-process.registration', $data);
@@ -78,11 +88,11 @@ class Registration extends Component
         }
     }
 
-    public function add()
+    public function rules()
     {
         $rules = [
             'account_type' => 'required',
-            'contactNumber' => 'required',
+            'contactNumber' => 'required|unique:users,contactNumber',
             'address' => 'required'
         ];
 
@@ -113,26 +123,36 @@ class Registration extends Component
         }
 
         if ($this->account_type == 'organization') {
-            $rules['organization_name'] = 'required';
+            $rules['organization_name'] = 'required|unique:organization_information,organization_name';
             $rules['date_established'] = 'required';
             $rules['representative_name'] = 'required';
             $rules['representative_position'] = 'required';
             $rules['representative_contact_number'] = 'required';
         }
 
-        $attributes = [
+        return $rules;
+    }
+    public function attributes()
+    {
+        return [
             'id_barangay' => 'barangay',
             'id_organization' => 'organization',
             'id_school' => 'school'
         ];
+    }
 
+    public function add()
+    {
         // Generate random letters and numbers for doctype_code
         $timestamp = now()->timestamp;
         $randomString = Str::random(10);
         $user_id = strtoupper($timestamp . $randomString);
 
         if ($this->account_type == 'rider') {
-            $this->validate($rules, [], $attributes);
+            $this->validate($this->rules(), [], $this->attributes());
+
+            // Check for duplicates
+            // $it_exist = User::join()
 
             DB::beginTransaction();
 
@@ -171,7 +191,7 @@ class Registration extends Component
                 $this->dispatch('something_went_wrong');
             }
         } elseif ($this->account_type == 'client') {
-            $this->validate($rules, [], $attributes);
+            $this->validate($this->rules(), [], $this->attributes());
 
             DB::beginTransaction();
 
@@ -214,16 +234,16 @@ class Registration extends Component
                 dd($e->getMessage());
             }
         } elseif ($this->account_type == 'organization') {
-            $this->validate($rules, [], $attributes);
+            $this->validate($this->rules(), [], $this->attributes());
 
             DB::beginTransaction();
 
             try {
                 User::create([
                     'user_id' => $user_id,
-                    'email' => 'null',
+                    'email' => $this->email,
                     'contactNumber' => $this->contactNumber,
-                    'id_account_type' => '3',
+                    'id_account_type' => '1',
                     'password' => Hash::make('password'),
                     'status' => '1'
                 ]);
@@ -252,19 +272,120 @@ class Registration extends Component
         }
     }
 
+    public function edit($id)
+    {
+        $this->editMode = true;
+        $this->user_id = $id;
+
+        // Check what account type
+        $check_user_account = User::select('id_account_type')->where('user_id', $id)->first();
+
+        if ($check_user_account->id_account_type == '1') {
+            // ORGANIZATION
+            $this->account_type = 'organization';
+
+            $organization = OrganizationInformationModel::join('users', 'users.user_id', '=', 'organization_information.user_id')->where('organization_information.user_id', $id)->first();
+            $this->organization_name = $organization->organization_name;
+            $this->date_established = $organization->date_established;
+            $this->contactNumber = $organization->contactNumber;
+            $this->address = $organization->address;
+            $this->representative_name = $organization->representative_name;
+            $this->representative_position = $organization->representative_position;
+            $this->representative_contact_number = $organization->representative_contact_number;
+            $this->email = $organization->email;
+
+            $this->dispatch('show_addModal');
+        } elseif ($check_user_account->id_account_type == '2') {
+            // RIDER
+            $this->account_type = 'rider';
+
+            $rider = IndividualInformationModel::join('users', 'users.user_id', '=', 'individual_information.user_id')->where('individual_information.user_id', $id)->first();
+            $this->first_name = $rider->first_name;
+            $this->middle_name = $rider->middle_name;
+            $this->last_name = $rider->last_name;
+            $this->ext_name = $rider->ext_name;
+            $this->sex = $rider->sex;
+            $this->contactNumber = $rider->contactNumber;
+            $this->id_barangay = $rider->id_barangay;
+            $this->address = $rider->address;
+            $this->id_organization = $rider->id_organization;
+            $this->email = $rider->email;
+
+            $this->dispatch('show_addModal');
+        } elseif ($check_user_account->id_account_type == '3') {
+            // CLIENT
+            $this->account_type = 'client';
+
+            $client = ClientInformationModel::join('users', 'users.user_id', '=', 'client_information.user_id')->where('client_information.user_id', $id)->first();
+            $this->user_type = $client->user_type;
+            $this->first_name = $client->first_name;
+            $this->middle_name = $client->middle_name;
+            $this->last_name = $client->last_name;
+            $this->ext_name = $client->ext_name;
+            $this->sex = $client->sex;
+            $this->contactNumber = $client->contactNumber;
+            $this->id_barangay = $client->id_barangay;
+            $this->address = $client->address;
+            $this->birthday = $client->birthday;
+            $this->id_school = $client->id_school;
+            $this->guardian_name = $client->guardian_name;
+            $this->guardian_contact_number = $client->guardian_contact_number;
+
+            $this->dispatch('show_addModal');
+        }
+    }
+
+    public function update()
+    {
+        // Check what account type
+        $check_user_account = User::select('id_account_type')->where('user_id', $this->user_id)->first();
+
+        if ($check_user_account->id_account_type == '1') {
+            // ORGANIZATION
+            $this->account_type = 'organization';
+
+            $this->validate($this->rules(), [], $this->attributes());
+
+            //FIXME - We added unique in our rules(), however when we update the record, it triggers the validation. WORK SOMETHING OUT ABOUT THIS.
+
+            $this->dispatch('hide_addModal');
+        } elseif ($check_user_account->id_account_type == '2') {
+            // RIDER
+            $this->account_type = 'rider';
+
+            $this->validate($this->rules(), [], $this->attributes());
+
+            $this->dispatch('hide_addModal');
+        } elseif ($check_user_account->id_account_type == '3') {
+            // CLIENT
+            $this->account_type = 'client';
+
+            $this->validate($this->rules(), [], $this->attributes());
+
+            $this->dispatch('hide_addModal');
+        }
+    }
+
+    public function clear()
+    {
+        $this->reset();
+        $this->resetValidation();
+    }
+
     //REVIEW - https://chatgpt.com/share/0b8db142-caa7-4d70-b842-13127b3f1067
     public function loadUsers()
     {
         $clients = ClientInformationModel::join('users', 'users.user_id', '=', 'client_information.user_id')
             // ->join('tbl_ref_barangay', 'tbl_ref_barangay.id_barangay', '=', 'client_information.id_barangay')
             ->select(
-                DB::raw("CONCAT(client_information.first_name, COALESCE(client_information.middle_name, ''), ' ', client_information.last_name, IF(TRIM(IFNULL(client_information.ext_name, '')) != '', CONCAT(', ', client_information.ext_name), '')) as name"),
+                'client_information.user_id',
+                DB::raw("CONCAT(client_information.first_name, ' ',COALESCE(client_information.middle_name, ''), ' ', client_information.last_name, IF(TRIM(IFNULL(client_information.ext_name, '')) != '', CONCAT(', ', client_information.ext_name), '')) as name"),
                 // 'tbl_ref_barangay.barangay AS address',
                 DB::raw("
                 CASE
-                    WHEN users.status = '1' THEN 'Rider'
-                    WHEN users.status = '2' THEN 'Organization'
-                    WHEN users.status = '3' THEN 'Client'
+                    WHEN users.id_account_type = '1' THEN 'Organization'
+                    WHEN users.id_account_type = '2' THEN 'Rider'
+                    WHEN users.id_account_type = '3' THEN 'Client'
                     ELSE ''
                 END AS account_type
                 "),
@@ -276,13 +397,14 @@ class Registration extends Component
         $riders = IndividualInformationModel::join('users', 'users.user_id', '=', 'individual_information.user_id')
             // ->join('tbl_ref_barangay', 'tbl_ref_barangay.id_barangay', '=', 'individual_information.id_barangay')
             ->select(
-                DB::raw("CONCAT(individual_information.first_name, COALESCE(individual_information.middle_name, ''), ' ', individual_information.last_name, IF(TRIM(IFNULL(individual_information.ext_name, '')) != '', CONCAT(', ', individual_information.ext_name), '')) as name"),
+                'individual_information.user_id',
+                DB::raw("CONCAT(individual_information.first_name, ' ', COALESCE(individual_information.middle_name, ''), ' ', individual_information.last_name, IF(TRIM(IFNULL(individual_information.ext_name, '')) != '', CONCAT(', ', individual_information.ext_name), '')) as name"),
                 // 'tbl_ref_barangay.barangay AS address',
                 DB::raw("
                 CASE
-                    WHEN users.status = '1' THEN 'Rider'
-                    WHEN users.status = '2' THEN 'Organization'
-                    WHEN users.status = '3' THEN 'Client'
+                    WHEN users.id_account_type = '1' THEN 'Organization'
+                    WHEN users.id_account_type = '2' THEN 'Rider'
+                    WHEN users.id_account_type = '3' THEN 'Client'
                     ELSE ''
                 END AS account_type
                 "),
@@ -293,13 +415,14 @@ class Registration extends Component
 
         $organizations = OrganizationInformationModel::join('users', 'users.user_id', '=', 'organization_information.user_id')
             ->select(
+                'organization_information.user_id',
                 'organization_information.organization_name AS name',
                 // 'organization.address AS address',
                 DB::raw("
                 CASE
-                    WHEN users.status = '1' THEN 'Rider'
-                    WHEN users.status = '2' THEN 'Organization'
-                    WHEN users.status = '3' THEN 'Client'
+                    WHEN users.id_account_type = '1' THEN 'Organization'
+                    WHEN users.id_account_type = '2' THEN 'Rider'
+                    WHEN users.id_account_type = '3' THEN 'Client'
                     ELSE ''
                 END AS account_type
                 "),
@@ -308,12 +431,36 @@ class Registration extends Component
                 DB::raw("'Organization' AS type")
             );
 
+        // Filters
+        if ($this->search) {
+            $clients->where(function ($query) {
+                $query->where('client_information.last_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('client_information.first_name', 'like', '%' . $this->search . '%');
+            });
+
+            $riders->where(function ($query) {
+                $query->where('individual_information.last_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('individual_information.first_name', 'like', '%' . $this->search . '%');
+            });
+
+            $organizations->where(function ($query) {
+                $query->where('organization_information.organization_name', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        if ($this->filter_accountType) {
+            $clients->where('users.id_account_type', 'like', '%' . $this->filter_accountType . '%');
+            $riders->where('users.id_account_type', 'like' . $this->filter_accountType . '%');
+            $organizations->where('users.id_account_type', 'like' . $this->filter_accountType . '%');
+        }
+
         // Combine the queries using UNION
         $combined = $clients
             ->union($riders)
             ->union($organizations)
+            ->where('id_account_type', '!=', 'admin')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         return $combined;
     }
@@ -334,5 +481,11 @@ class Registration extends Component
     {
         $barangay = RefBarangayModel::select('id', 'barangay')->get();
         return $barangay;
+    }
+
+    public function loadAccountType()
+    {
+        $accountType = AccountTypeModel::all();
+        return $accountType;
     }
 }

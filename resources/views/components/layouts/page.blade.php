@@ -224,6 +224,11 @@
             background-color: #0a345e !important;
             color: white !important;
         }
+
+        /* PAGINATION */
+        .page-item {
+            cursor: pointer;
+        }
     </style>
 </head>
 

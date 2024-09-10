@@ -48,9 +48,26 @@
                     <div class="text-start" style="color: #0A335D;">
                         <h1>Registration</h1>
                     </div>
+
                     <div class="input-group mb-4 mt-4">
                         <span class="input-group-text fw-bolder fs-4" id="basic-addon1"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Search" wire:model.live.debounce.300ms="">
+                        <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Search" wire:model.live="search">
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-1 col-form-label text-start">Filter</label>
+                        <div class="col-sm-3">
+                            <select class="form-select" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model.live="filter_accountType">
+                                <option selected="">Account type</option>
+                                @foreach ($accountType as $item)
+                                <option value="{{ $item->id }}">{{ $item->account_type_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pagination-info pb-2 text-end">
+                        Page {{ $combined->currentPage() }} out of {{ $combined->lastPage() }}, Total Records: {{ $combined->total() }}
                     </div>
 
                     <table class="table">
@@ -58,21 +75,20 @@
                             <tr>
                                 <th scope="col">NO.</th>
                                 <th scope="col">NAME</th>
-                                <th scope="col">ADDRESS</th>
                                 <th scope="col">ACCOUNT TYPE</th>
                                 <th scope="col">PHONE NUMBER</th>
                                 <th scope="col">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>sadsad</td>
-                                <td>sadsad</td>
-                                <td>sadsad</td>
-                                <td>sadsad</td>
-                                <td>sadsad</td>
+                            @forelse($combined as $key=>$item)
+                            <tr wire:key="{{ $item->user_id }}">
+                                <td>{{ $key+1 }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>{{ $item->account_type }}</td>
+                                <td>{{ $item->contactNumber }}</td>
                                 <td>
-                                    <span style="cursor: pointer;" wire:click="">
+                                    <span style="cursor: pointer;" wire:click="edit('{{ $item->user_id }}')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                             <path d="M11 2H9C4 2 2 4 2 9v6c0 5 2 7 7 7h6c5 0 7-2 7-7v-2" stroke="#0f0f0f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                             <path d="M16.04 3.02 8.16 10.9c-.3.3-.6.89-.66 1.32l-.43 3.01c-.16 1.09.61 1.85 1.7 1.7l3.01-.43c.42-.06 1.01-.36 1.32-.66l7.88-7.88c1.36-1.36 2-2.94 0-4.94-2-2-3.58-1.36-4.94 0Z" stroke="#0f0f0f" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -81,9 +97,14 @@
                                     </span>
                                 </td>
                             </tr>
+                            @empty
+                            <tr>
+                                <td colspan="6">No data</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
-                    <!-- pagination here -->
+                    {{ $combined->links('vendor.livewire.custom-pagination') }}
                     <div class="text-end mt-2 mb-3">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" wire:click="$dispatch('show_addModal')">ADD RECORD</button>
@@ -95,16 +116,16 @@
     </div>
 
     <!-- addModal -->
-    <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModal" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="addModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="addModal" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                    <h1 class="modal-title fs-5 fw-bolder" id="addModalLabel">Add {{ $account_type }}</h1>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;"></button>
+                    <h1 class="modal-title fs-5 fw-bolder" id="addModalLabel">{{ $editMode ? 'Edit' : 'Add' }} {{ $account_type }}</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;" wire:click="clear"></button>
                 </div>
 
                 <div class="modal-body" wire:loading.remove>
-                    <form class="row g-3" data-bitwarden-watching="1" novalidate wire:submit="add">
+                    <form class="row g-3" data-bitwarden-watching="1" novalidate wire:submit="{{ $editMode ? 'update' : 'add' }}">
                         <div class="col-md-12">
                             <label for="inputAccountType" class="form-label">Account Type</label>
                             <select class="form-select @error('account_type') is-invalid @enderror" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model.live="account_type">
@@ -236,7 +257,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="inputContactNumber" class="form-label">Contact Number</label>
-                            <input type="text" class="form-control @error('contactNumber') is-invalid @enderror" id="inputContactNumber" data-ddg-inputtype="identities.contactNumber" wire:model="contactNumber">
+                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2);" placeholder="09XXXXXXXXX" class="form-control @error('contactNumber') is-invalid @enderror" id="inputContactNumber" data-ddg-inputtype="identities.contactNumber" wire:model="contactNumber">
                             @error('contactNumber')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -280,7 +301,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="inputOrganizationContactNumber" class="form-label">Organization's Contact Number</label>
-                            <input type="text" class="form-control @error('contactNumber') is-invalid @enderror" id="inputOrganizationContactNumber" data-ddg-inputtype="identities.organization_contact_number" wire:model="contactNumber">
+                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2);" placeholder="09XXXXXXXXX" class="form-control @error('contactNumber') is-invalid @enderror" id="inputOrganizationContactNumber" data-ddg-inputtype="identities.organization_contact_number" wire:model="contactNumber">
                             @error('contactNumber')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -320,7 +341,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="inputRepresentativeContactNumber" class="form-label">Representative's Contact Number</label>
-                            <input type="text" class="form-control @error('representative_contact_number') is-invalid @enderror" id="inputRepresentativeContactNumber" data-ddg-inputtype="identities.representative_contact_number" wire:model="representative_contact_number">
+                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2);" placeholder="09XXXXXXXXX" class="form-control @error('representative_contact_number') is-invalid @enderror" id="inputRepresentativeContactNumber" data-ddg-inputtype="identities.representative_contact_number" wire:model="representative_contact_number">
                             @error('representative_contact_number')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -379,7 +400,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmergencyContactNumber" class="form-label">Emergency contact Number</label>
-                            <input type="text" class="form-control @error('guardian_contact_number') is-invalid @enderror" id="inputEmergencyContactNumber" data-ddg-inputtype="identities.contactNumber" wire:model="guardian_contact_number">
+                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2);" placeholder="09XXXXXXXXX" class="form-control @error('guardian_contact_number') is-invalid @enderror" id="inputEmergencyContactNumber" data-ddg-inputtype="identities.contactNumber" wire:model="guardian_contact_number">
                             @error('guardian_contact_number')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -411,7 +432,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" wire:loading.remove>
-                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: auto;" wire:click="">SAVE</button>
+                    <button type="submit" class="btn btn-success fw-bolder mt-2" style="width: auto;">{{ $editMode ? 'SAVE CHANGES' : 'SAVE' }}</button>
                 </div>
                 </form>
             </div>
