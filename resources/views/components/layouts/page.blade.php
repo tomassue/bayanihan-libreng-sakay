@@ -229,6 +229,14 @@
         .page-item {
             cursor: pointer;
         }
+
+        /* CUSTOM ERROR MESSAGE */
+        .custom-error-message {
+            width: 100%;
+            margin-top: .25rem;
+            font-size: .875em;
+            color: var(--bs-form-invalid-color);
+        }
     </style>
 </head>
 
@@ -502,6 +510,14 @@
                 Swal.fire({
                     title: "Success!",
                     text: "A record have been saved successfully.",
+                    icon: "success"
+                });
+            });
+
+            Livewire.on('success_update', (event) => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "A record have been updated successfully.",
                     icon: "success"
                 });
             });

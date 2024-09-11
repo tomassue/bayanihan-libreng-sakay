@@ -58,7 +58,7 @@
                         <label class="col-sm-1 col-form-label text-start">Filter</label>
                         <div class="col-sm-3">
                             <select class="form-select" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model.live="filter_accountType">
-                                <option selected="">Account type</option>
+                                <option selected="" value="">Account type</option>
                                 @foreach ($accountType as $item)
                                 <option value="{{ $item->id }}">{{ $item->account_type_name }}</option>
                                 @endforeach
@@ -88,18 +88,25 @@
                                 <td>{{ $item->account_type }}</td>
                                 <td>{{ $item->contactNumber }}</td>
                                 <td>
-                                    <span style="cursor: pointer;" wire:click="edit('{{ $item->user_id }}')">
+                                    <span style="cursor: pointer;" title="Edit" wire:click="edit('{{ $item->user_id }}')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
                                             <path d="M11 2H9C4 2 2 4 2 9v6c0 5 2 7 7 7h6c5 0 7-2 7-7v-2" stroke="#0f0f0f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                                             <path d="M16.04 3.02 8.16 10.9c-.3.3-.6.89-.66 1.32l-.43 3.01c-.16 1.09.61 1.85 1.7 1.7l3.01-.43c.42-.06 1.01-.36 1.32-.66l7.88-7.88c1.36-1.36 2-2.94 0-4.94-2-2-3.58-1.36-4.94 0Z" stroke="#0f0f0f" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
                                             <path d="M14.91 4.15a7.144 7.144 0 0 0 4.94 4.94" stroke="#0f0f0f" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
                                         </svg>
                                     </span>
+                                    <span style="cursor: pointer;" title="Status history" wire:click="statusHistory('{{ $item->user_id }}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                                            <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z" />
+                                            <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z" />
+                                            <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5" />
+                                        </svg>
+                                    </span>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6">No data</td>
+                                <td colspan="6" class="text-center">No data</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -128,7 +135,7 @@
                     <form class="row g-3" data-bitwarden-watching="1" novalidate wire:submit="{{ $editMode ? 'update' : 'add' }}">
                         <div class="col-md-12">
                             <label for="inputAccountType" class="form-label">Account Type</label>
-                            <select class="form-select @error('account_type') is-invalid @enderror" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model.live="account_type">
+                            <select class="form-select @error('account_type') is-invalid @enderror" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model.live="account_type" {{ $editMode ? 'disabled' : '' }}>
                                 <option selected="" value="">Select</option>
                                 <option value="rider">Rider</option>
                                 <option value="client">Client</option>
@@ -353,12 +360,15 @@
                         @if ($account_type == 'rider')
                         <div class="col-md-12">
                             <label for="inputEmail4" class="form-label">Organization</label>
-                            <select class="form-select @error('id_organization') is-invalid @enderror" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model="id_organization">
+                            <select class="form-select @error('id_organization') is-invalid @enderror" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model="id_organization" {{ $organization_count == 0 ? 'disabled' : '' }}>
                                 <option selected="">Select</option>
                                 @foreach ($organization as $item)
                                 <option value="{{ $item->id }}">{{ $item->organization_name }}</option>
                                 @endforeach
                             </select>
+                            <div class="custom-error-message" style="display: {{ $organization_count == 0 ? 'block' : 'none' }}">
+                                No organization has been registered. Please register an organization first.
+                            </div>
                             @error('id_organization')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -439,16 +449,55 @@
         </div>
     </div>
 
-</div>
+    <!-- statusHistoryModal -->
+    <div wire:ignore.self class="modal fade" id="statusHistoryModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="statusHistoryModal" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
+                    <h1 class="modal-title fs-5 fw-bolder" id="statusHistoryModalLabel">Status History</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;" wire:click="clear"></button>
+                </div>
 
-@script
-<script>
-    $wire.on('show_addModal', () => {
-        $('#addModal').modal('show');
-    });
+                <div class="modal-body" wire:loading.remove>
+                    <div class="activity">
+                        <div class="activity-item d-flex">
+                            <div class="activite-label">32 min</div>
+                            <i class="bi bi-circle-fill activity-badge text-success align-self-start"></i>
+                            <div class="activity-content">
+                                Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae
+                            </div>
+                        </div>
+                    </div>
 
-    $wire.on('hide_addModal', () => {
-        $('#addModal').modal('hide');
-    });
-</script>
-@endscript
+                    <div class="my-5 mx-auto" wire:loading>
+                        <div class="spinner-grow text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" wire:loading.remove>
+                    <button type="button" class="btn btn-secondary fw-bolder mt-2" style="width: auto;" data-bs-dismiss="modal" wire:click="clear">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @script
+    <script>
+        $wire.on('show_addModal', () => {
+            $('#addModal').modal('show');
+        });
+
+        $wire.on('hide_addModal', () => {
+            $('#addModal').modal('hide');
+        });
+
+        $wire.on('show_statusHistoryModal', () => {
+            $('#statusHistoryModal').modal('show');
+        });
+
+        $wire.on('hide_statusHistoryModal', () => {
+            $('#statusHistoryModal').modal('hide');
+        });
+    </script>
+    @endscript

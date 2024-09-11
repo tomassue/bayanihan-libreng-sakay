@@ -3,12 +3,14 @@
 namespace App\Livewire\NewProcess;
 
 use App\Models\AccountTypeModel;
+use App\Models\ActionLogModel;
 use App\Models\ClientInformationModel;
 use App\Models\IndividualInformationModel;
 use App\Models\OrganizationInformationModel;
 use App\Models\RefBarangayModel;
 use App\Models\SchoolInformationModel;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
@@ -16,6 +18,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str; //THIS IS FOR THE str::random()
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 
 #[Layout('components.layouts.page')]
@@ -26,7 +29,6 @@ class Registration extends Component
 
     public $editMode = false;
     public $user_id;
-
 
     /* --------------------------------- FILTER --------------------------------- */
     public $search;
@@ -64,8 +66,11 @@ class Registration extends Component
 
     public function render()
     {
+        $organization = $this->loadOrganization();
+
         $data = [
-            'organization' => $this->loadOrganization(),
+            'organization' => $organization['organization'],
+            'organization_count' => $organization['organization_count'],
             'school' => $this->loadSchool(),
             'barangay' => $this->loadBarangay(),
             'combined' => $this->loadUsers(),
@@ -92,7 +97,7 @@ class Registration extends Component
     {
         $rules = [
             'account_type' => 'required',
-            'contactNumber' => 'required|unique:users,contactNumber',
+            'contactNumber' => ['required', Rule::unique('users', 'contactNumber')->ignore($this->user_id, 'user_id')], // prevent the unique validation rule from being triggered when updating a record.
             'address' => 'required'
         ];
 
@@ -104,7 +109,7 @@ class Registration extends Component
         }
 
         if ($this->account_type == 'rider' || $this->account_type == 'organization') {
-            $rules['email'] = 'required|email:rfc,dns';
+            $rules['email'] = ['required', 'email:rfc,dns', Rule::unique('users', 'email')->ignore($this->user_id, 'user_id')]; // prevent the unique validation rule from being triggered when updating a record
         }
 
         if ($this->account_type == 'rider') {
@@ -123,7 +128,7 @@ class Registration extends Component
         }
 
         if ($this->account_type == 'organization') {
-            $rules['organization_name'] = 'required|unique:organization_information,organization_name';
+            $rules['organization_name'] = ['required', Rule::unique('organization_information', 'organization_name')->ignore($this->user_id, 'user_id')]; // prevent the unique validation rule from being triggered when updating a record
             $rules['date_established'] = 'required';
             $rules['representative_name'] = 'required';
             $rules['representative_position'] = 'required';
@@ -132,6 +137,7 @@ class Registration extends Component
 
         return $rules;
     }
+
     public function attributes()
     {
         return [
@@ -151,9 +157,6 @@ class Registration extends Component
         if ($this->account_type == 'rider') {
             $this->validate($this->rules(), [], $this->attributes());
 
-            // Check for duplicates
-            // $it_exist = User::join()
-
             DB::beginTransaction();
 
             try {
@@ -166,7 +169,7 @@ class Registration extends Component
                     'status' => '1'
                 ]);
 
-                IndividualInformationModel::create([
+                $model = IndividualInformationModel::create([
                     'user_id' => $user_id,
                     'last_name' => $this->last_name,
                     'first_name' => $this->first_name,
@@ -178,6 +181,8 @@ class Registration extends Component
                     'id_organization' => $this->id_organization
                 ]);
 
+                $this->logUserAction('registered a rider', $model);
+
                 DB::commit();
 
                 $this->dispatch('success_save');
@@ -187,7 +192,7 @@ class Registration extends Component
             } catch (\Exception $e) {
                 // Rollback the transaction on failure
                 DB::rollBack();
-
+                // dd($e->getMessage());
                 $this->dispatch('something_went_wrong');
             }
         } elseif ($this->account_type == 'client') {
@@ -205,7 +210,7 @@ class Registration extends Component
                     'status' => '1'
                 ]);
 
-                ClientInformationModel::create([
+                $model = ClientInformationModel::create([
                     'user_id' => $user_id,
                     'user_type' => $this->user_type,
                     'last_name' => $this->last_name,
@@ -220,6 +225,8 @@ class Registration extends Component
                     'guardian_name' => $this->guardian_name,
                     'guardian_contact_number' => $this->guardian_contact_number
                 ]);
+
+                $this->logUserAction('registered a client', $model);
 
                 DB::commit();
 
@@ -248,7 +255,7 @@ class Registration extends Component
                     'status' => '1'
                 ]);
 
-                OrganizationInformationModel::create([
+                $model = OrganizationInformationModel::create([
                     'user_id' => $user_id,
                     'organization_name' => $this->organization_name,
                     'date_established' => $this->date_established,
@@ -257,6 +264,8 @@ class Registration extends Component
                     'representative_position' => $this->representative_position,
                     'representative_contact_number' => $this->representative_contact_number
                 ]);
+
+                $this->logUserAction('registered an organization', $model);
 
                 DB::commit();
 
@@ -346,23 +355,151 @@ class Registration extends Component
 
             $this->validate($this->rules(), [], $this->attributes());
 
-            //FIXME - We added unique in our rules(), however when we update the record, it triggers the validation. WORK SOMETHING OUT ABOUT THIS.
+            $check_organization = OrganizationInformationModel::where('user_id', $this->user_id)->exists();
 
-            $this->dispatch('hide_addModal');
+            if ($check_organization) {
+                try {
+                    // Capture original state
+                    $originalOrg = OrganizationInformationModel::where('user_id', $this->user_id)->first()->getAttributes();
+                    $originalUser = User::where('user_id', $this->user_id)->first()->getAttributes();
+
+                    DB::beginTransaction();
+
+                    OrganizationInformationModel::where('user_id', $this->user_id)
+                        ->update([
+                            'organization_name' => $this->organization_name,
+                            'date_established' => $this->date_established,
+                            'address' => $this->address,
+                            'representative_name' => $this->representative_name,
+                            'representative_position' => $this->representative_position,
+                            'representative_contact_number' => $this->representative_contact_number
+                        ]);
+
+                    User::where('user_id', $this->user_id)
+                        ->update([
+                            'email' => $this->email,
+                            'contactNumber' => $this->contactNumber
+                        ]);
+
+                    // Re-fetch the updated models
+                    $updatedOrg = OrganizationInformationModel::where('user_id', $this->user_id)->first();
+                    $updatedUser = User::where('user_id', $this->user_id)->first();
+
+                    // Manually determine changes
+                    $orgChanges = array_diff_assoc($updatedOrg->getAttributes(), $originalOrg);
+                    $userChanges = array_diff_assoc($updatedUser->getAttributes(), $originalUser);
+
+                    // Create a custom log entry
+                    $this->logUserAction('updated an organization', $updatedOrg, $orgChanges);
+                    $this->logUserAction('updated a user', $updatedUser, $userChanges);
+
+                    DB::commit();
+
+                    $this->reset();
+                    $this->dispatch('hide_addModal');
+                    $this->dispatch('success_update');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    // dd($e->getMessage());
+                    $this->dispatch('something_went_wrong');
+                }
+            } else {
+                $this->dispatch('something_went_wrong');
+            }
         } elseif ($check_user_account->id_account_type == '2') {
             // RIDER
             $this->account_type = 'rider';
 
             $this->validate($this->rules(), [], $this->attributes());
 
-            $this->dispatch('hide_addModal');
+            $check_rider = IndividualInformationModel::where('user_id', $this->user_id)->exists();
+
+            if ($check_rider) {
+                try {
+                    DB::beginTransaction();
+
+                    IndividualInformationModel::where('user_id', $this->user_id)
+                        ->update([
+                            'last_name' => $this->last_name,
+                            'first_name' => $this->first_name,
+                            'middle_name' => $this->middle_name,
+                            'ext_name' => $this->ext_name,
+                            'sex' => $this->sex,
+                            'id_barangay' => $this->id_barangay,
+                            'address' => $this->address,
+                            'id_organization' => $this->id_organization
+                        ]);
+
+                    User::where('user_id', $this->user_id)
+                        ->update([
+                            'email' => $this->email
+                        ]);
+
+                    DB::commit();
+
+                    $this->reset();
+                    $this->dispatch('hide_addModal');
+                    $this->dispatch('success_update');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $this->dispatch('something_went_wrong');
+                }
+            } else {
+                $this->dispatch('something_went_wrong');
+            }
         } elseif ($check_user_account->id_account_type == '3') {
             // CLIENT
             $this->account_type = 'client';
 
             $this->validate($this->rules(), [], $this->attributes());
 
-            $this->dispatch('hide_addModal');
+            $check_client = ClientInformationModel::where('user_id', $this->user_id)->exists();
+
+            if ($check_client) {
+                try {
+                    DB::beginTransaction();
+
+                    ClientInformationModel::where('user_id', $this->user_id)
+                        ->update([
+                            'user_type' => $this->user_type,
+                            'first_name' => $this->first_name,
+                            'middle_name' => $this->middle_name,
+                            'last_name' => $this->last_name,
+                            'ext_name' => $this->ext_name,
+                            'sex' => $this->sex,
+                            'birthday' => $this->birthday,
+                            'id_barangay' => $this->address,
+                            'address' => $this->address,
+                            'id_school' => $this->id_school,
+                            'guardian_name' => $this->guardian_name,
+                            'guardian_contact_number' => $this->guardian_contact_number
+                        ]);
+
+                    User::where('user_id', $this->user_id)
+                        ->update([
+                            'contactNumber' => $this->contactNumber
+                        ]);
+
+                    DB::commit();
+
+                    $this->reset();
+                    $this->dispatch('hide_addModal');
+                    $this->dispatch('success_update');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $this->dispatch('something_went_wrong');
+                }
+            }
+        }
+    }
+
+    public function statusHistory($id)
+    {
+        try {
+
+            $this->dispatch('show_statusHistoryModal');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
         }
     }
 
@@ -449,9 +586,9 @@ class Registration extends Component
         }
 
         if ($this->filter_accountType) {
-            $clients->where('users.id_account_type', 'like', '%' . $this->filter_accountType . '%');
-            $riders->where('users.id_account_type', 'like' . $this->filter_accountType . '%');
-            $organizations->where('users.id_account_type', 'like' . $this->filter_accountType . '%');
+            $clients->where('users.id_account_type', $this->filter_accountType);
+            $riders->where('users.id_account_type', $this->filter_accountType);
+            $organizations->where('users.id_account_type', $this->filter_accountType);
         }
 
         // Combine the queries using UNION
@@ -465,10 +602,47 @@ class Registration extends Component
         return $combined;
     }
 
+    // This function will be called on CRUD processes.
+    // public function logUserAction($action, $model)
+    // {
+    //     $changes = $model->getChanges();
+
+    //     ActionLogModel::create([
+    //         'user_id' => Auth::user()->user_id,
+    //         'action' => $action,
+    //         'model_type' => get_class($model),
+    //         'model_id' => $model->id,
+    //         'changes' => json_encode($changes), // Log only the changed attributes and save it in json format
+    //         'ip_address' => request()->ip(),
+    //         'user_agent' => request()->userAgent()
+    //     ]);
+    // }
+    public function logUserAction($action, $model, $changes = [])
+    {
+        // Ensure $model is an Eloquent model instance
+        $modelType = get_class($model);
+        $modelId = $model->id;
+
+        ActionLogModel::create([
+            'user_id' => Auth::user()->user_id,
+            'action' => $action,
+            'model_type' => $modelType,
+            'model_id' => $modelId,
+            'changes' => json_encode($changes), // Log only the changed attributes and save it in json format
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent()
+        ]);
+    }
+
     public function loadOrganization()
     {
         $organization = OrganizationInformationModel::select('id', 'organization_name')->get();
-        return $organization;
+        $organization_count = $organization->count();
+
+        return [
+            'organization' => $organization,
+            'organization_count' => $organization_count
+        ];
     }
 
     public function loadSchool()
