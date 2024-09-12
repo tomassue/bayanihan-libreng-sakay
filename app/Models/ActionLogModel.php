@@ -16,6 +16,7 @@ class ActionLogModel extends Model
         'action',
         'model_type',
         'model_id',
+        'model_user_id',
         'changes',
         'ip_address',
         'user_agent'

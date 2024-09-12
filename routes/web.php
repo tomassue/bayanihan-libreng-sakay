@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Middleware\UpdatedPassword;
 use App\Livewire\AttendanceReport;
 use App\Livewire\EventsReport;
+use App\Livewire\NewProcess\UserManagement;
 use App\Livewire\OrganizationDetails;
 use App\Livewire\OrgReports;
 use Illuminate\Support\Facades\Route;
@@ -111,4 +112,7 @@ Route::group(['middleware' => ['auth', Admin::class, UpdatedPassword::class]], f
 /*                                 NEW PROCESS                                */
 /* -------------------------------------------------------------------------- */
 
-Route::get('/np/registration', NewProcessRegistration::class)->name('np_registration');
+Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::class]], function () {
+    Route::get('/np/registration', NewProcessRegistration::class)->name('np_registration');
+    Route::get('np/user-management', UserManagement::class)->name('np_user_management');
+});

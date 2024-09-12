@@ -103,6 +103,7 @@ class Navigation extends Component
                             </span>
                         </a>
                     </li>
+                    
                     <!-- /* -------------------------------------------------------------------------- */
                     /*                                 NEW PROCESS                                */
                     /* -------------------------------------------------------------------------- */ -->
@@ -153,6 +154,26 @@ class Navigation extends Component
                             <span class="fs-5 fw-bold">Reference</span>
                         </a>
                     </li>
+
+                    <!-- /* -------------------------------------------------------------------------- */
+                    /*                                 NEW PROCESS                                */
+                    /* -------------------------------------------------------------------------- */ -->
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('np/user-management') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
+                            <span class="fs-5 fw-bold">Settings</span>
+                        </a>
+                        <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                            <li class="nav-item">
+                                <a class="align-items-center" href="{{ route('np_user_management') }}" style="color: white; padding-bottom: 2px;" wire:navigate>
+                                    <span style="font-size: medium;">> &nbsp; User Management</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- /* -------------------------------------------------------------------------- */
+                    /*                                 NEW PROCESS                                */
+                    /* -------------------------------------------------------------------------- */ -->
+
                     @else
                     <!-- <li class="nav-item">
                         <a class="nav-link {{ request()->is('indi-reports') ? '' : 'collapsed' }}" href="{{ route('indi-reports') }}" data-bs-target="#reports-nav-org" data-bs-toggle="collapse" style="border-radius: unset;">

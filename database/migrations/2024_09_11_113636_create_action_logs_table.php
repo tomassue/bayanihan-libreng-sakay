@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('action', 255); // E.g., created, updated, deleted
             $table->string('model_type', 255); // E.g., Post, Order, User
             $table->unsignedBigInteger('model_id'); // Reference to the model/entity
+            $table->string('model_user_id'); // Connection to the record being updated since we can't use the model_id because we are using user_id as connection.
             $table->json('changes')->nullable(); // Stores changes in JSON format
             $table->string('ip_address', 45)->nullable(); // IPv4 or IPv6 address
             $table->text('user_agent')->nullable(); // Details about the browser/device

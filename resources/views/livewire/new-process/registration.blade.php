@@ -451,7 +451,7 @@
 
     <!-- statusHistoryModal -->
     <div wire:ignore.self class="modal fade" id="statusHistoryModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="statusHistoryModal" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
                     <h1 class="modal-title fs-5 fw-bolder" id="statusHistoryModalLabel">Status History</h1>
@@ -460,13 +460,31 @@
 
                 <div class="modal-body" wire:loading.remove>
                     <div class="activity">
+                        @forelse($status_history as $item)
                         <div class="activity-item d-flex">
-                            <div class="activite-label">32 min</div>
+                            <div class="activite-label">{{ $item->formatted_created_at }}</div>
                             <i class="bi bi-circle-fill activity-badge text-success align-self-start"></i>
                             <div class="activity-content">
-                                Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae
+                                <p>{{ $item->user_id }} {{ $item->action }}:</p>
+                                <ul>
+                                    @php
+                                    $changes = json_decode($item->changes, true);
+                                    @endphp
+                                    @if ($changes)
+                                    @foreach ($changes as $value)
+                                    <li>{{ $value }}</li>
+                                    @endforeach
+                                    @else
+                                    <li>No changes available.</li>
+                                    @endif
+                                </ul>
                             </div>
                         </div>
+                        @empty
+                        <div class="text-center">
+                            <span>No history</span>
+                        </div>
+                        @endforelse
                     </div>
 
                     <div class="my-5 mx-auto" wire:loading>

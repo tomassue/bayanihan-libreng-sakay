@@ -30,6 +30,9 @@ class Registration extends Component
     public $editMode = false;
     public $user_id;
 
+    /* ----------------------------- STATUS HISTORY ----------------------------- */
+    public $status_history = [];
+
     /* --------------------------------- FILTER --------------------------------- */
     public $search;
     public $filter_accountType;
@@ -181,7 +184,7 @@ class Registration extends Component
                     'id_organization' => $this->id_organization
                 ]);
 
-                $this->logUserAction('registered a rider', $model);
+                $this->logUserAction('register', $model, $user_id);
 
                 DB::commit();
 
@@ -226,7 +229,7 @@ class Registration extends Component
                     'guardian_contact_number' => $this->guardian_contact_number
                 ]);
 
-                $this->logUserAction('registered a client', $model);
+                $this->logUserAction('register', $model, $user_id);
 
                 DB::commit();
 
@@ -265,7 +268,7 @@ class Registration extends Component
                     'representative_contact_number' => $this->representative_contact_number
                 ]);
 
-                $this->logUserAction('registered an organization', $model);
+                $this->logUserAction('register', $model, $user_id);
 
                 DB::commit();
 
@@ -389,9 +392,9 @@ class Registration extends Component
                     $orgChanges = array_diff_assoc($updatedOrg->getAttributes(), $originalOrg);
                     $userChanges = array_diff_assoc($updatedUser->getAttributes(), $originalUser);
 
-                    // Create a custom log entry
-                    $this->logUserAction('updated an organization', $updatedOrg, $orgChanges);
-                    $this->logUserAction('updated a user', $updatedUser, $userChanges);
+                    // Create a custom log entry (BOTH MODELS)
+                    $this->logUserAction('update', $updatedOrg, $this->user_id, $orgChanges);
+                    $this->logUserAction('update', $updatedUser, $this->user_id, $userChanges);
 
                     DB::commit();
 
@@ -416,6 +419,10 @@ class Registration extends Component
 
             if ($check_rider) {
                 try {
+                    // Capture original state
+                    $originalIndividual = IndividualInformationModel::where('user_id', $this->user_id)->first()->getAttributes();
+                    $originalUser = User::where('user_id', $this->user_id)->first()->getAttributes();
+
                     DB::beginTransaction();
 
                     IndividualInformationModel::where('user_id', $this->user_id)
@@ -434,6 +441,18 @@ class Registration extends Component
                         ->update([
                             'email' => $this->email
                         ]);
+
+                    // Re-fetch the updated models
+                    $updatedIndividual = IndividualInformationModel::where('user_id', $this->user_id)->first();
+                    $updatedUser = User::where('user_id', $this->user_id)->first();
+
+                    // Manually determine changes
+                    $individualChanges = array_diff_assoc($updatedIndividual->getAttributes(), $originalIndividual);
+                    $userChanges = array_diff_assoc($updatedUser->getAttributes(), $originalUser);
+
+                    // Create a custom log entry (BOTH MODELS)
+                    $this->logUserAction('update', $updatedIndividual, $this->user_id, $individualChanges);
+                    $this->logUserAction('update', $updatedUser, $this->user_id, $userChanges);
 
                     DB::commit();
 
@@ -457,6 +476,10 @@ class Registration extends Component
 
             if ($check_client) {
                 try {
+                    // Capture original state
+                    $originalClient = ClientInformationModel::where('user_id', $this->user_id)->first()->getAttributes();
+                    $originalUser = User::where('user_id', $this->user_id)->first()->getAttributes();
+
                     DB::beginTransaction();
 
                     ClientInformationModel::where('user_id', $this->user_id)
@@ -468,7 +491,7 @@ class Registration extends Component
                             'ext_name' => $this->ext_name,
                             'sex' => $this->sex,
                             'birthday' => $this->birthday,
-                            'id_barangay' => $this->address,
+                            'id_barangay' => $this->id_barangay,
                             'address' => $this->address,
                             'id_school' => $this->id_school,
                             'guardian_name' => $this->guardian_name,
@@ -479,6 +502,18 @@ class Registration extends Component
                         ->update([
                             'contactNumber' => $this->contactNumber
                         ]);
+
+                    // Re-fetch the updated models
+                    $updatedClient = ClientInformationModel::where('user_id', $this->user_id)->first();
+                    $updatedUser = User::where('user_id', $this->user_id)->first();
+
+                    // Manually determine changes
+                    $clientChanges = array_diff_assoc($updatedClient->getAttributes(), $originalClient);
+                    $userChanges = array_diff_assoc($updatedUser->getAttributes(), $originalUser);
+
+                    // Create a custom log entry (BOTH MODELS)
+                    $this->logUserAction('update', $updatedClient, $this->user_id, $clientChanges);
+                    $this->logUserAction('update', $updatedUser, $this->user_id, $userChanges);
 
                     DB::commit();
 
@@ -493,11 +528,48 @@ class Registration extends Component
         }
     }
 
-    public function statusHistory($id)
+    public function statusHistory($user_id)
     {
         try {
+            $check_account_type = User::select('id_account_type')->where('user_id', $user_id)->first();
+            if ($check_account_type->id_account_type == '1') {
+                // Organization
 
-            $this->dispatch('show_statusHistoryModal');
+                $organization = OrganizationInformationModel::join('users', 'users.user_id', '=', 'organization_information.user_id')
+                    ->join('action_logs', 'action_logs.model_user_id', '=', 'organization_information.user_id')
+                    ->select(
+                        'action_logs.user_id',
+                        'organization_information.organization_name AS name',
+                        DB::raw("
+                            CASE
+                                WHEN action_logs.action = 'register' THEN 'registered'
+                                WHEN action_logs.action = 'update' THEN 'updated'
+                                ELSE ''
+                            END
+                            AS 'action'
+                        "),
+                        'action_logs.changes',
+                        DB::raw("
+                            CASE
+                                WHEN TIMESTAMPDIFF(HOUR, action_logs.created_at, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, action_logs.created_at, NOW()), ' hours ago')
+                                WHEN TIMESTAMPDIFF(DAY, action_logs.created_at, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, action_logs.created_at, NOW()), ' days ago')
+                                ELSE DATE_FORMAT(action_logs.created_at, '%b %d, %Y')
+                            END as formatted_created_at
+                        ")
+                    )
+                    ->orderBy('action_logs.created_at', 'desc')
+                    ->get();
+
+                $this->status_history = $organization;
+
+                $this->dispatch('show_statusHistoryModal');
+            } elseif ($check_account_type->id_account_type == '2') {
+                // Rider
+                $this->dispatch('show_statusHistoryModal');
+            } elseif ($check_account_type->id_account_type == '3') {
+                // Client
+                $this->dispatch('show_statusHistoryModal');
+            }
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
@@ -603,35 +675,26 @@ class Registration extends Component
     }
 
     // This function will be called on CRUD processes.
-    // public function logUserAction($action, $model)
-    // {
-    //     $changes = $model->getChanges();
-
-    //     ActionLogModel::create([
-    //         'user_id' => Auth::user()->user_id,
-    //         'action' => $action,
-    //         'model_type' => get_class($model),
-    //         'model_id' => $model->id,
-    //         'changes' => json_encode($changes), // Log only the changed attributes and save it in json format
-    //         'ip_address' => request()->ip(),
-    //         'user_agent' => request()->userAgent()
-    //     ]);
-    // }
-    public function logUserAction($action, $model, $changes = [])
+    public function logUserAction($action, $model, $user_id, $changes = [])
     {
-        // Ensure $model is an Eloquent model instance
-        $modelType = get_class($model);
-        $modelId = $model->id;
+        try {
+            // Ensure $model is an Eloquent model instance
+            $modelType = get_class($model);
+            $modelId = $model->id;
 
-        ActionLogModel::create([
-            'user_id' => Auth::user()->user_id,
-            'action' => $action,
-            'model_type' => $modelType,
-            'model_id' => $modelId,
-            'changes' => json_encode($changes), // Log only the changed attributes and save it in json format
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent()
-        ]);
+            ActionLogModel::create([
+                'user_id' => Auth::user()->user_id,
+                'action' => $action,
+                'model_type' => $modelType,
+                'model_id' => $modelId,
+                'model_user_id' => $user_id, // Log shared user_id like the user_id of the updated record.
+                'changes' => json_encode($changes), // Log only the changed attributes and save it in json format
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent()
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
     }
 
     public function loadOrganization()
