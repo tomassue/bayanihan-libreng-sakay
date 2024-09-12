@@ -20,7 +20,11 @@ class Navigation extends Component
                             @endphp
                             <img src="data:image/png;base64,{{ $user_img }}" alt="Profile" class="rounded-circle me-2" style="height: 50px; width: 50px;" />
                             <span class="text-truncate col-9">
-                                {{ Auth::user()->user_id == 'ADMIN' ? 'Administrator' : Auth::user()->organization_information->organization_name }}
+                                @if (Auth::user()->user_id == 'ADMIN')
+                                {{ Auth::user()->admin_information->name }}
+                                @else
+                                {{ Auth::user()->organization_information->organization_name }}
+                                @endif
                             </span>
                         </a>
                         <ul id="icons-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">

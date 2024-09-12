@@ -532,13 +532,16 @@ class Registration extends Component
     {
         try {
             $check_account_type = User::select('id_account_type')->where('user_id', $user_id)->first();
+
             if ($check_account_type->id_account_type == '1') {
                 // Organization
 
                 $organization = OrganizationInformationModel::join('users', 'users.user_id', '=', 'organization_information.user_id')
                     ->join('action_logs', 'action_logs.model_user_id', '=', 'organization_information.user_id')
+                    ->join('admin_information', 'admin_information.user_id', '=', 'action_logs.user_id')
                     ->select(
                         'action_logs.user_id',
+                        'admin_information.name AS admin',
                         'organization_information.organization_name AS name',
                         DB::raw("
                             CASE
@@ -565,9 +568,65 @@ class Registration extends Component
                 $this->dispatch('show_statusHistoryModal');
             } elseif ($check_account_type->id_account_type == '2') {
                 // Rider
+                $rider = IndividualInformationModel::join('users', 'users.user_id', '=', 'individual_information.user_id')
+                    ->join('action_logs', 'action_logs.model_user_id', '=', 'individual_information.user_id')
+                    ->join('admin_information', 'admin_information.user_id', '=', 'action_logs.user_id')
+                    ->select(
+                        'action_logs.user_id',
+                        'admin_information.name AS admin',
+                        DB::raw("
+                            CASE
+                                WHEN action_logs.action = 'register' THEN 'registered'
+                                WHEN action_logs.action = 'update' THEN 'updated'
+                                ELSE ''
+                            END
+                            AS 'action'
+                        "),
+                        'action_logs.changes',
+                        DB::raw("
+                            CASE
+                                WHEN TIMESTAMPDIFF(HOUR, action_logs.created_at, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, action_logs.created_at, NOW()), ' hours ago')
+                                WHEN TIMESTAMPDIFF(DAY, action_logs.created_at, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, action_logs.created_at, NOW()), ' days ago')
+                                ELSE DATE_FORMAT(action_logs.created_at, '%b %d, %Y')
+                            END as formatted_created_at
+                        ")
+                    )
+                    ->orderBy('action_logs.created_at', 'desc')
+                    ->get();
+
+                $this->status_history = $rider;
+
                 $this->dispatch('show_statusHistoryModal');
             } elseif ($check_account_type->id_account_type == '3') {
                 // Client
+                $client = ClientInformationModel::join('users', 'users.user_id', '=', 'client_information.user_id')
+                    ->join('action_logs', 'action_logs.model_user_id', '=', 'client_information.user_id')
+                    ->join('admin_information', 'admin_information.user_id', '=', 'action_logs.user_id')
+                    ->select(
+                        'action_logs.user_id',
+                        'admin_information.name AS admin',
+                        DB::raw("
+                        CASE
+                            WHEN action_logs.action = 'register' THEN 'registered'
+                            WHEN action_logs.action = 'update' THEN 'updated'
+                            ELSE ''
+                        END
+                        AS 'action'
+                    "),
+                        'action_logs.changes',
+                        DB::raw("
+                        CASE
+                            WHEN TIMESTAMPDIFF(HOUR, action_logs.created_at, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, action_logs.created_at, NOW()), ' hours ago')
+                            WHEN TIMESTAMPDIFF(DAY, action_logs.created_at, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, action_logs.created_at, NOW()), ' days ago')
+                            ELSE DATE_FORMAT(action_logs.created_at, '%b %d, %Y')
+                        END as formatted_created_at
+                    ")
+                    )
+                    ->orderBy('action_logs.created_at', 'desc')
+                    ->get();
+
+                $this->status_history = $client;
+
                 $this->dispatch('show_statusHistoryModal');
             }
         } catch (\Exception $e) {
@@ -683,7 +742,7 @@ class Registration extends Component
             $modelId = $model->id;
 
             ActionLogModel::create([
-                'user_id' => Auth::user()->user_id,
+                'user_id' => Auth::user()->id,
                 'action' => $action,
                 'model_type' => $modelType,
                 'model_id' => $modelId,

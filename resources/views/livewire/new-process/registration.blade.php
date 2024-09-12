@@ -264,7 +264,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="inputContactNumber" class="form-label">Contact Number</label>
-                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2);" placeholder="09XXXXXXXXX" class="form-control @error('contactNumber') is-invalid @enderror" id="inputContactNumber" data-ddg-inputtype="identities.contactNumber" wire:model="contactNumber">
+                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2).replace(/\D/g, '');" placeholder="09XXXXXXXXX" class="form-control @error('contactNumber') is-invalid @enderror" id="inputContactNumber" data-ddg-inputtype="identities.contactNumber" wire:model="contactNumber">
                             @error('contactNumber')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -308,7 +308,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="inputOrganizationContactNumber" class="form-label">Organization's Contact Number</label>
-                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2);" placeholder="09XXXXXXXXX" class="form-control @error('contactNumber') is-invalid @enderror" id="inputOrganizationContactNumber" data-ddg-inputtype="identities.organization_contact_number" wire:model="contactNumber">
+                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2).replace(/\D/g, '');" placeholder="09XXXXXXXXX" class="form-control @error('contactNumber') is-invalid @enderror" id="inputOrganizationContactNumber" data-ddg-inputtype="identities.organization_contact_number" wire:model="contactNumber">
                             @error('contactNumber')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -348,7 +348,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="inputRepresentativeContactNumber" class="form-label">Representative's Contact Number</label>
-                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2);" placeholder="09XXXXXXXXX" class="form-control @error('representative_contact_number') is-invalid @enderror" id="inputRepresentativeContactNumber" data-ddg-inputtype="identities.representative_contact_number" wire:model="representative_contact_number">
+                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2).replace(/\D/g, '');" placeholder="09XXXXXXXXX" class="form-control @error('representative_contact_number') is-invalid @enderror" id="inputRepresentativeContactNumber" data-ddg-inputtype="identities.representative_contact_number" wire:model="representative_contact_number">
                             @error('representative_contact_number')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -410,7 +410,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="inputEmergencyContactNumber" class="form-label">Emergency contact Number</label>
-                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2);" placeholder="09XXXXXXXXX" class="form-control @error('guardian_contact_number') is-invalid @enderror" id="inputEmergencyContactNumber" data-ddg-inputtype="identities.contactNumber" wire:model="guardian_contact_number">
+                            <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2).replace(/\D/g, '');" placeholder="09XXXXXXXXX" class="form-control @error('guardian_contact_number') is-invalid @enderror" id="inputEmergencyContactNumber" data-ddg-inputtype="identities.contactNumber" wire:model="guardian_contact_number">
                             @error('guardian_contact_number')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -465,7 +465,7 @@
                             <div class="activite-label">{{ $item->formatted_created_at }}</div>
                             <i class="bi bi-circle-fill activity-badge text-success align-self-start"></i>
                             <div class="activity-content">
-                                <p>{{ $item->user_id }} {{ $item->action }}:</p>
+                                <p>{{ $item->admin }} {{ $item->action }}:</p>
                                 <ul>
                                     @php
                                     $changes = json_decode($item->changes, true);

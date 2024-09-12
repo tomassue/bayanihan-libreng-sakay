@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -62,5 +63,10 @@ class User extends Authenticatable
     public function organization_information()
     {
         return $this->belongsTo(OrganizationInformationModel::class, 'user_id', 'user_id');
+    }
+
+    public function admin_information()
+    {
+        return $this->belongsTo(AdminInformationModel::class, 'id', 'user_id');
     }
 }
