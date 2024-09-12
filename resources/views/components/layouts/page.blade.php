@@ -420,7 +420,7 @@
                                         </p>
                                         <p>
                                             <br />
-                                            <strong>Developed by:</strong> CMISID Team /
+                                            <strong>Developed by:</strong> CMISID Team / Rustom C. Abella
                                             </span>
                                         </p>
                                         {{-- <p class="fw-bold pb-3">The City Planning and Development Office (CPDO)</p>

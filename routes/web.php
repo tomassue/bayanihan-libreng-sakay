@@ -116,3 +116,13 @@ Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::clas
     Route::get('/np/registration', NewProcessRegistration::class)->name('np_registration');
     Route::get('np/user-management', UserManagement::class)->name('np_user_management');
 });
+
+
+/* ------------------------------- FOR SERVER ------------------------------- */
+
+// Livewire::setScriptRoute(function ($handle) {
+//     return Route::get('/libreng-sakay/livewire/livewire.js', $handle);
+// });
+// Livewire::setUpdateRoute(function ($handle) {
+//     return Route::post('/libreng-sakay/livewire/update', $handle);
+// });

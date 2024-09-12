@@ -109,7 +109,7 @@ class Navigation extends Component
                     /* -------------------------------------------------------------------------- */ -->
                     @endif
 
-                    <li class="nav-item">
+                    <li class="nav-item" style="display: none">
                         <a class="nav-link {{ request()->is('events') ? '' : 'collapsed' }}" href="{{ route('events') }}" style="border-radius: unset;" wire:navigate>
                             <span class="fs-5 fw-bold">Events</span>
 
