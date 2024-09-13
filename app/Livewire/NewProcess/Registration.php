@@ -560,6 +560,7 @@ class Registration extends Component
                             END as formatted_created_at
                         ")
                     )
+                    ->where('organization_information.user_id', $user_id)
                     ->orderBy('action_logs.created_at', 'desc')
                     ->get();
 
@@ -591,6 +592,7 @@ class Registration extends Component
                             END as formatted_created_at
                         ")
                     )
+                    ->where('individual_information.user_id', $user_id)
                     ->orderBy('action_logs.created_at', 'desc')
                     ->get();
 
@@ -646,6 +648,7 @@ class Registration extends Component
                         END as formatted_created_at
                     ")
                     )
+                    ->where('client_information.user_id', $user_id)
                     ->orderBy('action_logs.created_at', 'desc')
                     ->get();
 
