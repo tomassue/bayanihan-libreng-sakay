@@ -73,7 +73,13 @@ class UserManagement extends Component
 
     public function edit($id)
     {
-        dd($id);
+        $this->editMode = true;
+
+        $user = User::join('admin_information', 'admin_information.user_id', '=', 'users.id')
+            ->where('users.id', $id)
+            ->get();
+
+        dd($user);
     }
 
     public function clear()

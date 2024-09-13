@@ -594,6 +594,30 @@ class Registration extends Component
                     ->orderBy('action_logs.created_at', 'desc')
                     ->get();
 
+                // Modify the changes to replace reference key with their names.
+                foreach ($rider as $log) {
+                    $changes = json_decode($log->changes, true);
+
+                    // Replace id_organization
+                    if (isset($changes['id_organization'])) {
+                        $organization = OrganizationInformationModel::where('id', $changes['id_organization'])->first();
+                        if ($organization) {
+                            $changes['organization_name'] = $organization->organization_name;
+                            unset($changes['id_organization']);
+                        }
+                    }
+
+                    if (isset($changes['id_barangay'])) {
+                        $barangay = RefBarangayModel::where('id', $changes['id_barangay'])->first();
+                        if ($barangay) {
+                            $changes['barangay'] = $barangay->barangay;
+                            unset($changes['id_barangay']);
+                        }
+                    }
+
+                    $log->changes = json_encode($changes);  // Encode changes back to JSON
+                }
+
                 $this->status_history = $rider;
 
                 $this->dispatch('show_statusHistoryModal');
@@ -624,6 +648,31 @@ class Registration extends Component
                     )
                     ->orderBy('action_logs.created_at', 'desc')
                     ->get();
+
+                // Modify the changes to replace reference key with their names.
+                foreach ($client as $log) {
+                    $changes = json_decode($log->changes, true);
+
+                    // Replace id_school
+                    if (isset($changes['id_school'])) {
+                        $school = SchoolInformationModel::where('id', $changes['id_school'])->first();
+                        if ($school) {
+                            $changes['school_name'] = $school->school_name;  // Add school_name
+                            unset($changes['id_school']); // Remove id_school
+                        }
+                    }
+
+                    // Replace id_barangay
+                    if (isset($changes['id_barangay'])) {
+                        $barangay = RefBarangayModel::where('id', $changes['id_barangay'])->first();
+                        if ($barangay) {
+                            $changes['barangay'] = $barangay->barangay;
+                            unset($changes['id_barangay']);
+                        }
+                    }
+
+                    $log->changes = json_encode($changes);  // Encode changes back to JSON
+                }
 
                 $this->status_history = $client;
 
