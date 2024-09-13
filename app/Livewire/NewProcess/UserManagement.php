@@ -51,7 +51,7 @@ class UserManagement extends Component
                 'email' => $this->email,
                 'contactNumber' => '123456',
                 'id_account_type' => 'admin',
-                'password' => Hash::make('P@ssw0rd'),
+                'password' => Hash::make('password'),
                 'status' => '1'
             ]);
 
@@ -77,9 +77,12 @@ class UserManagement extends Component
 
         $user = User::join('admin_information', 'admin_information.user_id', '=', 'users.id')
             ->where('users.id', $id)
-            ->get();
+            ->first();
 
-        dd($user);
+        $this->name = $user->name;
+        $this->email = $user->email;
+
+        $this->dispatch('show_addUserModal');
     }
 
     public function clear()
