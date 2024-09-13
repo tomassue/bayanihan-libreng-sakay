@@ -72,6 +72,7 @@ class Kernel extends HttpKernel
         'Admin'             =>  \App\Http\Middleware\Admin::class,
         'DefaultPassword'   =>  \App\Http\Middleware\DefaultPassword::class,
         'UpdatedPassword'   =>  \App\Http\Middleware\UpdatedPassword::class,
-        'NPSuperAdminAndAdminOnly' => \App\Http\Middleware\NPSuperAdminAndAdminOnly::class
+        'NPSuperAdminAndAdminOnly' => \App\Http\Middleware\NPSuperAdminAndAdminOnly::class,
+        'BlockAccess' => \App\Http\Middleware\BlockAccess::class
     ];
 }

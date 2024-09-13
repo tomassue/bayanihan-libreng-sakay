@@ -52,11 +52,12 @@ Route::get('/', function () {
 // Route::get('/registration/org', [RegistrationAccountTypeController::class, 'registerOrg'])->name('register.org');
 // Route::get('/registration/client', [RegistrationAccountTypeController::class, 'registerClient'])->name('register.client');
 
+Route::group(['middleware' => ['auth', 'BlockAccess']], function () {
+    Route::get('/registration/ind', [RegistrationAccountTypeController::class, 'registerInd'])->name('register.ind');
 
-Route::get('/registration/ind', [RegistrationAccountTypeController::class, 'registerInd'])->name('register.ind');
-
-Route::get('/qr/{ClientUserID}', [GenerateClientQRController::class, 'generateQRPage'])->name('qr'); // QR PAGE
-Route::get('/get-my-qr/client/{ClientUserID}', [GenerateClientQRController::class, 'index'])->name('get-my-qr'); // GENERATE QR
+    Route::get('/qr/{ClientUserID}', [GenerateClientQRController::class, 'generateQRPage'])->name('qr'); // QR PAGE
+    Route::get('/get-my-qr/client/{ClientUserID}', [GenerateClientQRController::class, 'index'])->name('get-my-qr'); // GENERATE QR
+});
 
 Auth::routes();
 
@@ -65,7 +66,7 @@ Route::group(['middleware' => 'auth', DefaultPassword::class], function () {
 });
 
 # Both the Admin and Organization can access these routes
-Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::class]], function () {
+Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::class, 'BlockAccess']], function () {
     // Your authenticated routes go here
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/registration', Registration::class)->name('registration');
@@ -106,7 +107,6 @@ Route::group(['middleware' => ['auth', Admin::class, UpdatedPassword::class]], f
     // REFERENCE
     Route::get('/references', References::class)->name('references');
 });
-
 
 
 /* -------------------------------------------------------------------------- */

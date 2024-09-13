@@ -107,6 +107,16 @@ class Navigation extends Component
                             </span>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->is('events') ? '' : 'collapsed' }}" href="{{ route('events') }}" style="border-radius: unset;" wire:navigate>
+                            <span class="fs-5 fw-bold">Events (NP)</span>
+
+                            <span class="ms-auto">
+                                @livewire('SidebarNotificationIndicators.eventsnotificationindicator')
+                            </span>
+                        </a>
+                    </li>
                     
                     <!-- /* -------------------------------------------------------------------------- */
                     /*                                 NEW PROCESS                                */
