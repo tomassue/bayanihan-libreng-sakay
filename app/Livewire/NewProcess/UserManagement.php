@@ -16,11 +16,14 @@ use Illuminate\Support\Str; //THIS IS FOR THE str::random()
 class UserManagement extends Component
 {
     public $editMode = false;
+    public $id_user;
+    public $search;
 
     /* -------------------------------------------------------------------------- */
 
     public $name;
     public $email;
+    public $status;
 
     public function render()
     {
@@ -68,12 +71,14 @@ class UserManagement extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             // dd($e->getMessage());
+            $this->dispatch('something_went_wrong');
         }
     }
 
     public function edit($id)
     {
         $this->editMode = true;
+        $this->id_user = $id;
 
         $user = User::join('admin_information', 'admin_information.user_id', '=', 'users.id')
             ->where('users.id', $id)
@@ -81,8 +86,37 @@ class UserManagement extends Component
 
         $this->name = $user->name;
         $this->email = $user->email;
+        $this->status = $user->status;
 
         $this->dispatch('show_addUserModal');
+    }
+
+    public function update()
+    {
+        try {
+            DB::beginTransaction();
+
+            AdminInformationModel::where('user_id', $this->id_user)
+                ->update([
+                    'name' => $this->name
+                ]);
+
+            User::where('id', $this->id_user)
+                ->update([
+                    'email' => $this->email,
+                    'status' => $this->status
+                ]);
+
+            DB::commit();
+
+            $this->reset();
+            $this->dispatch('hide_addUserModal');
+            $this->dispatch('success_update');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            dd($e->getMessage());
+        }
     }
 
     public function clear()
@@ -111,7 +145,9 @@ class UserManagement extends Component
                 "),
                 'admin_information.name'
             )
-            ->whereNot('admin_information.name', 'Super Admin')
+            ->whereNot('users.id', '1')
+            ->whereNot('users.id', '2')
+            ->where('admin_information.name', 'like', '%' . $this->search . '%')
             ->get();
 
         return $admin;

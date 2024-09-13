@@ -162,8 +162,8 @@ class Navigation extends Component
                     <!-- /* -------------------------------------------------------------------------- */
                     /*                                 NEW PROCESS                                */
                     /* -------------------------------------------------------------------------- */ -->
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('np/user-management') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
+                    <li class="nav-item" style="display: {{ Auth::user()->admin_information->id == '1' || Auth::user()->admin_information->id == '2' ? 'block' : 'none' }}">
+                        <a class="nav-link {{ request()->is('np/user-management', 'np/settings/user-management') ? '' : 'collapsed' }}" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#" style="border-radius: unset;">
                             <span class="fs-5 fw-bold">Settings</span>
                         </a>
                         <ul id="reports-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">

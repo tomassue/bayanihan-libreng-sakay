@@ -94,6 +94,14 @@
                             </div>
                             @enderror
                         </div>
+                        <div class="col-12" style="display: {{ $editMode ? 'block' : 'none' }}">
+                            <label for="inputEmail4" class="form-label">Status</label>
+                            <select class="form-select" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model="status">
+                                <option selected="" value="">Select...</option>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
                 </div>
                 <div class="my-5 mx-auto" wire:loading>
                     <div class="spinner-grow text-primary" role="status">

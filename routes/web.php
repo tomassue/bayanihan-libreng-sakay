@@ -15,6 +15,7 @@ use App\Http\Controllers\RegistrationAccountTypeController;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\AdminAndOrg;
 use App\Http\Middleware\DefaultPassword;
+use App\Http\Middleware\NPSuperAdminAndAdminOnly;
 use App\Livewire\ChangePassword;
 use App\Livewire\ClientsReport;
 use App\Livewire\Dashboard;
@@ -114,7 +115,10 @@ Route::group(['middleware' => ['auth', Admin::class, UpdatedPassword::class]], f
 
 Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::class]], function () {
     Route::get('/np/registration', NewProcessRegistration::class)->name('np_registration');
-    Route::get('np/user-management', UserManagement::class)->name('np_user_management');
+});
+
+Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::class, NPSuperAdminAndAdminOnly::class]], function () {
+    Route::get('np/settings/user-management', UserManagement::class)->name('np_user_management');
 });
 
 
