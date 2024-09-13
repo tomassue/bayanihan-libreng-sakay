@@ -23,6 +23,7 @@ use App\Livewire\EventDetails;
 use App\Livewire\Registration;
 use App\Livewire\Events;
 use App\Livewire\IndiReports;
+use App\Livewire\NewProcess\Events as NewProcessEvents;
 use App\Livewire\NewProcess\Registration as NewProcessRegistration;
 use App\Livewire\References;
 use App\Livewire\Reports;
@@ -115,6 +116,7 @@ Route::group(['middleware' => ['auth', Admin::class, UpdatedPassword::class]], f
 
 Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::class]], function () {
     Route::get('/np/registration', NewProcessRegistration::class)->name('np_registration');
+    Route::get('/np/events', NewProcessEvents::class)->name('np_events');
 });
 
 Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::class, NPSuperAdminAndAdminOnly::class]], function () {
