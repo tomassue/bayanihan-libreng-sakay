@@ -100,7 +100,7 @@ class Registration extends Component
     {
         $rules = [
             'account_type' => 'required',
-            'contactNumber' => ['required', Rule::unique('users', 'contactNumber')->ignore($this->user_id, 'user_id')], // prevent the unique validation rule from being triggered when updating a record.
+            'contactNumber' => 'required',
             'address' => 'required'
         ];
 
@@ -160,9 +160,9 @@ class Registration extends Component
         if ($this->account_type == 'rider') {
             $this->validate($this->rules(), [], $this->attributes());
 
-            DB::beginTransaction();
-
             try {
+                DB::beginTransaction();
+
                 User::create([
                     'user_id' => $user_id,
                     'email' => $this->email,
@@ -201,9 +201,9 @@ class Registration extends Component
         } elseif ($this->account_type == 'client') {
             $this->validate($this->rules(), [], $this->attributes());
 
-            DB::beginTransaction();
-
             try {
+                DB::beginTransaction();
+
                 User::create([
                     'user_id' => $user_id,
                     'email' => 'null',
@@ -246,9 +246,9 @@ class Registration extends Component
         } elseif ($this->account_type == 'organization') {
             $this->validate($this->rules(), [], $this->attributes());
 
-            DB::beginTransaction();
-
             try {
+                DB::beginTransaction();
+
                 User::create([
                     'user_id' => $user_id,
                     'email' => $this->email,
@@ -695,6 +695,11 @@ class Registration extends Component
     //REVIEW - https://chatgpt.com/share/0b8db142-caa7-4d70-b842-13127b3f1067
     public function loadUsers()
     {
+        /**
+         * NOTE 
+         * SQLSTATE[21000]: Cardinality violation: 1222, is caused by the SELECT statements in the union() having a different number of columns. When using union(), all queries involved must return the same number of columns and in the same order.
+         */
+
         $clients = ClientInformationModel::join('users', 'users.user_id', '=', 'client_information.user_id')
             // ->join('tbl_ref_barangay', 'tbl_ref_barangay.id_barangay', '=', 'client_information.id_barangay')
             ->select(
@@ -708,6 +713,16 @@ class Registration extends Component
                     WHEN users.id_account_type = '3' THEN 'Client'
                     ELSE ''
                 END AS account_type
+                "),
+                DB::raw("
+                CASE
+                    WHEN client_information.user_type = 'student' THEN '(Student)'
+                    WHEN client_information.user_type = 'school_staff' THEN '(School Staff)'
+                    WHEN client_information.user_type = 'city_hall_employee' THEN '(City Hall Employee)'
+                    WHEN client_information.user_type = 'city_hall_client' THEN '(City Hall Client)'
+                    WHEN client_information.user_type = 'other' THEN '(Other)'
+                    ELSE ''
+                END AS user_type
                 "),
                 'users.contactNumber',
                 'users.created_at',
@@ -728,6 +743,7 @@ class Registration extends Component
                     ELSE ''
                 END AS account_type
                 "),
+                DB::raw("'' AS user_type"), // Placeholder user_type for consistency
                 'users.contactNumber',
                 'users.created_at',
                 DB::raw("'Rider' AS type")
@@ -746,6 +762,7 @@ class Registration extends Component
                     ELSE ''
                 END AS account_type
                 "),
+                DB::raw("'' AS user_type"), // Placeholder user_type for consistency
                 'users.contactNumber',
                 'users.created_at',
                 DB::raw("'Organization' AS type")

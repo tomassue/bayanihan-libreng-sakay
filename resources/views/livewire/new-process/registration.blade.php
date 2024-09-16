@@ -85,7 +85,7 @@
                             <tr wire:key="{{ $item->user_id }}">
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $item->name }}</td>
-                                <td>{{ $item->account_type }}</td>
+                                <td>{{ $item->account_type }} {{ $item->user_type }}</td>
                                 <td>{{ $item->contactNumber }}</td>
                                 <td>
                                     <span style="cursor: pointer;" title="Edit" wire:click="edit('{{ $item->user_id }}')">
@@ -273,11 +273,12 @@
                         </div>
                         <div class="col-md-4">
                             <label for="inputAddress" class="form-label">Barangay</label>
-                            <select class="form-select @error('id_barangay') is-invalid @enderror" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model="id_barangay">
+                            <select class="form-select @error('id_barangay') is-invalid @enderror" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model.live="id_barangay">
                                 <option selected="">Select</option>
                                 @foreach ($barangay as $item)
                                 <option value="{{ $item->id }}">{{ $item->barangay }}</option>
                                 @endforeach
+                                <option value="other_city">OTHER CITY</option>
                             </select>
                             @error('id_barangay')
                             <div class="invalid-feedback">
@@ -325,6 +326,9 @@
                                 {{ $message }}
                             </div>
                             @enderror
+                            <div class="custom-error-message" style="display: {{ $id_barangay == 'other_city' ? 'block' : 'none' }}">
+                                Since you've selected "Other City", please input the full address here, including the barangay.
+                            </div>
                         </div>
 
                         @if ($account_type == 'organization')

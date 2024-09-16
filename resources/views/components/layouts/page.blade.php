@@ -529,6 +529,14 @@
                     icon: "error"
                 });
             });
+
+            Livewire.on('duplicate_entry', (event) => {
+                Swal.fire({
+                    title: "Entry Already Exists!",
+                    text: "Oops! This entry seems to be a duplicate. Kindly double-check your data and submit again.",
+                    icon: "error"
+                });
+            });
         });
     </script>
 
