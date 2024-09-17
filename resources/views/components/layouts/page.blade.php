@@ -32,6 +32,11 @@
     <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
 
+    <!-- Virtual Select -->
+    <link rel="stylesheet" href="{{ asset('virtual-select/virtual-select.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('virtual-select/tooltip.min.css') }}">
+
+
     <!-- Template Main CSS File -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
 
@@ -487,6 +492,10 @@
             </div>
         </div>
     </footer>
+
+    <!-- Virtual Select -->
+    <script src="{{ asset('virtual-select/virtual-select.min.js') }}"></script>
+    <script src="{{ asset('virtual-select/tooltip.min.js') }}"></script>
 
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_LA/sdk.js#xfbml=1&version=v14.0" nonce="wcxFHnry"></script>
     <script>
