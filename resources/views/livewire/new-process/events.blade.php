@@ -15,13 +15,13 @@
                                             </div>
                                             <div class="card-body">
                                                 <h6 class="text-center fs-1">
-                                                    sdasds
+                                                    {{ $total_no_of_events }}
                                                 </h6>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-3 mb-1" style="padding-right: 0px; padding-left: 0px;">
+                                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-3 mb-1" style="padding-right: 0px; padding-left: 0px; display: none;">
                                         <div class="card m-3 border border-secondary" style="cursor: pointer; height:86%;">
                                             <div class="card-header h-100" style="border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">LIST OF EVENTS</h1>
@@ -37,11 +37,11 @@
                                     <div class="col-sm-12 col-md-12 col-lg-4 col-xl-3 mb-1" style="padding-right: 0px; padding-left: 0px;">
                                         <div class="card m-3 border border-secondary" style="cursor: pointer; height:86%;">
                                             <div class="card-header h-100" style="border: unset;">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">UPCOMING</h1>
+                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">ONGOING</h1>
                                             </div>
                                             <div class="card-body">
                                                 <h6 class="text-center fs-1">
-                                                    sadsd
+                                                    {{ $ongoing }}
                                                 </h6>
                                             </div>
                                         </div>
@@ -53,7 +53,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <h6 class="text-center fs-1">
-                                                    dsfsd
+                                                    {{ $done }}
                                                 </h6>
                                             </div>
                                         </div>
@@ -217,148 +217,93 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;" wire:click="clear"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="col-lg-3">
-                            <div class="card mb-3">
-                                <div class="row g-0 py-5">
-                                    <div class="col-md-4">
-                                        <div class="d-flex justify-content-center align-items-center p-2" style="height: 100%;">
-                                            <h1 style="margin-bottom: 0px;">1</h1>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body d-flex justify-content-center align-items-center">
-                                            <h5 class="card-title" style="margin-bottom: 0px;">Card with an image on left</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="card mb-3">
-                                <div class="row g-0 py-5">
-                                    <div class="col-md-4">
-                                        <div class="d-flex justify-content-center align-items-center p-2" style="height: 100%;">
-                                            <h1 style="margin-bottom: 0px;">1</h1>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body d-flex justify-content-center align-items-center">
-                                            <h5 class="card-title" style="margin-bottom: 0px;">Card with an image on left</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="card mb-3">
-                                <div class="row g-0 py-5">
-                                    <div class="col-md-4">
-                                        <div class="d-flex justify-content-center align-items-center p-2" style="height: 100%;">
-                                            <h1 style="margin-bottom: 0px;">1</h1>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body d-flex justify-content-center align-items-center">
-                                            <h5 class="card-title" style="margin-bottom: 0px;">Card with an image on left</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="row">
-                        <div class="px-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Client-Rider Tagging</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Client-Rider Tagging</h5>
 
-                                    <div class="mb-4">
-                                        <form data-bitwarden-watching="1">
-                                            <div class="row">
-                                                <div class="col-md-4">
-                                                    <label for="inputEmail3" class="col-lg-2 col-form-label">Client</label>
-                                                    <div class="col-lg-10">
-                                                        <div id="client-select" wire:ignore></div>
-                                                        @error('id_client')
-                                                        <div class="custom-error-message">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
+                                <div class="mb-4">
+                                    <form data-bitwarden-watching="1">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="inputEmail3" class="col-lg-2 col-form-label">Client</label>
+                                                <div class="col-lg-10">
+                                                    <div id="client-select" wire:ignore></div>
+                                                    @error('id_client')
+                                                    <div class="custom-error-message">
+                                                        {{ $message }}
                                                     </div>
+                                                    @enderror
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <label for="inputEmail3" class="col-lg-2 col-form-label">Rider</label>
-                                                    <div class="col-lg-10">
-                                                        <div id="rider-select" wire:ignore></div>
-                                                        @error('id_individual')
-                                                        <div class="custom-error-message">
-                                                            {{ $message }}
-                                                        </div>
-                                                        @enderror
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="inputEmail3" class="col-lg-2 col-form-label">Rider</label>
+                                                <div class="col-lg-10">
+                                                    <div id="rider-select" wire:ignore></div>
+                                                    @error('id_individual')
+                                                    <div class="custom-error-message">
+                                                        {{ $message }}
                                                     </div>
+                                                    @enderror
                                                 </div>
-                                                <div class="col-md-4 d-flex justify-content-start align-items-end g-3">
-                                                    <button type="button" class="btn btn-success" wire:click="$dispatch('confirm_tagging')" wire:loading.attr="disabled" wire:target="selected_tag, select_all, tag">Tag</button> &nbsp;
-                                                    <button type="reset" class="btn btn-secondary ml-2" wire:loading.attr="disabled">Reset</button>
-                                                </div>
-
                                             </div>
-                                        </form>
-                                    </div>
-
-                                    <div class="table-responsive" wire:loading.class="opacity-50">
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <button type="button" class="btn btn-primary">Send Message ({{ count($selected_tags) }})</button>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="pagination-info pb-2 text-end">
-                                                    Page {{ $tags->currentPage() }} out of {{ $tags->lastPage() }}, Total Records: {{ $tags->total() }}
-                                                </div>
+                                            <div class="col-md-4 d-flex justify-content-start align-items-end g-3">
+                                                <button type="button" class="btn btn-success" wire:click="$dispatch('confirm_tagging')" wire:loading.attr="disabled" wire:target="selected_tag, select_all, tag">Tag</button> &nbsp;
+                                                <button type="reset" class="btn btn-secondary ml-2" wire:loading.attr="disabled">Reset</button>
                                             </div>
 
                                         </div>
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" width="3%">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" wire:model.live="select_all" wire:loading.attr="disabled"> ({{ count($selected_tags) }})
-                                                        </div>
-                                                    </th>
-                                                    <th scope="col">Client</th>
-                                                    <th scope="col">Rider</th>
-                                                    <th scope="col">Time</th>
-                                                    <th scope="col">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse($tags as $item)
-                                                <tr wire:key="{{ $item->id }}">
-                                                    <th scope="row" class="align-middle">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" wire:model.live="selected_tags" value="{{ $item->id }}" @if(in_array($item->id, $selected_tags)) checked @endif wire:loading.attr="disabled">
-                                                        </div>
-                                                    </th>
-                                                    <td class="align-middle">{{ $item->client_full_name }}</td>
-                                                    <td class="align-middle">{{ $item->individual_full_name }}</td>
-                                                    <td class="align-middle">{{ $item->time }}</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-success" title="Send a message" wire:loading.attr="disabled"><i class="ri-mail-line"></i></button>
-                                                        <button type="button" class="btn btn-secondary" title="Already sent a message" disabled><i class="ri-mail-check-line"></i></button>
-                                                    </td>
-                                                </tr>
-                                                @empty
-                                                <tr>
-                                                    <td colspan="5" class="text-center">No data</td>
-                                                </tr>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
-                                        {{ $tags->links('vendor.livewire.custom-pagination') }}
+                                    </form>
+                                </div>
+                                <div class="row mb-2 gy-3">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-primary">Send Message ({{ count($selected_tags) }})</button>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="pagination-info pb-2 text-end">
+                                            Page {{ $tags->currentPage() }} out of {{ $tags->lastPage() }}, Total Records: {{ $tags->total() }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive" wire:loading.class="opacity-50">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" width="3%">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" wire:model.live="select_all" wire:loading.attr="disabled"> ({{ count($selected_tags) }})
+                                                    </div>
+                                                </th>
+                                                <th scope="col" width="24.25%">Client</th>
+                                                <th scope="col" width="24.25%">Rider</th>
+                                                <th scope="col" width="24.25%">Time</th>
+                                                <th scope="col" width="24.25%">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($tags as $item)
+                                            <tr wire:key="{{ $item->id }}">
+                                                <th scope="row" class="align-middle">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" wire:model.live="selected_tags" value="{{ $item->id }}" @if(in_array($item->id, $selected_tags)) checked @endif wire:loading.attr="disabled">
+                                                    </div>
+                                                </th>
+                                                <td class="align-middle">{{ $item->client_full_name }}</td>
+                                                <td class="align-middle">{{ $item->individual_full_name }}</td>
+                                                <td class="align-middle">{{ $item->time }}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-success" title="Send a message" wire:loading.attr="disabled" wire:click="sendMessage({{ $item->id }})"><i class="ri-mail-line"></i></button>
+                                                    <button type="button" class="btn btn-secondary" title="Already sent a message" disabled><i class="ri-mail-check-line"></i></button>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center">No data</td>
+                                            </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                    {{ $tags->links('vendor.livewire.custom-pagination') }}
                                 </div>
                             </div>
                         </div>

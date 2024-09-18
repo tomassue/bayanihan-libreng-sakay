@@ -6,6 +6,7 @@ use App\Models\ClientInformationModel;
 use App\Models\ClientRiderTaggingModel;
 use App\Models\EventModel;
 use App\Models\IndividualInformationModel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -38,8 +39,13 @@ class Events extends Component
 
     public function render()
     {
+        $loadEvents = $this->loadEvents();
+
         $data = [
-            'events' => $this->loadEvents(),
+            'events' => $loadEvents['events'],
+            'total_no_of_events' => $loadEvents['total_no_of_events'],
+            'ongoing' => $loadEvents['ongoing'],
+            'done' => $loadEvents['done'],
             'tags' => $this->loadTags(),
             'clients' => $this->loadClients(), // Client-select
             'riders' => $this->loadRiders() // Rider-select
@@ -51,8 +57,6 @@ class Events extends Component
     // I have this condition that when the events are past due, we need to update the event and set it as done.
     public function boot()
     {
-        // $this->dispatch('show_eventDetailsModal'); //NOTE - SHowing the modal upon boot. FOR DEVELOPMENT PURPOSES!
-
         /**
          *  whereDate('event_date', '<', now()->toDateString()): This condition filters the records where the event_date is less than today's date (now()->toDateString() returns today's date in the format YYYY-MM-DD). 
          *  This will exclude events that are scheduled for today. This query will fetch all records where the event_date is in the past, excluding today's date.
@@ -163,6 +167,11 @@ class Events extends Component
         }
     }
 
+    public function sendMessage($id)
+    {
+        dd($id);
+    }
+
     public function updated($property)
     {
         if ($property === 'select_all') {
@@ -213,7 +222,16 @@ class Events extends Component
             ->orderBy('event_date', 'desc')
             ->paginate(10);
 
-        return $events;
+        $total_no_of_events = EventModel::all()->count();
+        $ongoing = EventModel::whereDate('event_date', Carbon::today())->count();
+        $done = EventModel::where('tag', 1)->count();
+
+        return [
+            'events' => $events,
+            'total_no_of_events' => $total_no_of_events,
+            'ongoing' => $ongoing,
+            'done' => $done
+        ];
     }
 
     public function loadTags()
