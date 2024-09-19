@@ -80,8 +80,7 @@
                             <tr>
                                 <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
-                                <th scope="col">NO. OF CLIENTS</th>
-                                <th scope="col">NO. OF RIDERS</th>
+                                <th scope="col">NO. OF CLIENTS SERVED</th>
                                 <th scope="col">ACTION</th>
                             </tr>
                         </thead>
@@ -90,8 +89,7 @@
                             <tr wire:key="{{ $item->id }}">
                                 <td>{{ $item->event_name }}</td>
                                 <td>{{ $item->event_date }}</td>
-                                <td>-</td>
-                                <td>-</td>
+                                <td>{{ $item->client_served_count }}</td>
                                 <td>
                                     <div style="cursor: pointer">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" wire:click="details({{ $item->id }})">
@@ -257,7 +255,7 @@
                                 </div>
                                 <div class="row mb-2 gy-3">
                                     <div class="col-md-6">
-                                        <button type="button" class="btn btn-primary">Send Message ({{ count($selected_tags) }})</button>
+                                        <button type="button" class="btn btn-primary" wire:click="sendMessageToMany" {{ empty($selected_tags) ? 'disabled' : '' }}>Send Message ({{ count($selected_tags) }})</button>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="pagination-info pb-2 text-end">
@@ -292,8 +290,8 @@
                                                 <td class="align-middle">{{ $item->individual_full_name }}</td>
                                                 <td class="align-middle">{{ $item->time }}</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-success" title="Send a message" wire:loading.attr="disabled" wire:click="sendMessage({{ $item->id }})"><i class="ri-mail-line"></i></button>
-                                                    <button type="button" class="btn btn-secondary" title="Already sent a message" disabled><i class="ri-mail-check-line"></i></button>
+                                                    <button type="button" class="btn btn-success" style="display: {{ $item->message_status == 'pending' ? 'block' : 'none' }};" title="Send a message" wire:loading.attr="disabled" wire:click="sendMessage({{ $item->id }})"><i class="ri-mail-line"></i></button>
+                                                    <button type="button" class="btn btn-secondary" style="display: {{ $item->message_status !== 'pending' ? 'block' : 'none' }};" title="Already sent a message" disabled><i class="ri-mail-check-line"></i></button>
                                                 </td>
                                             </tr>
                                             @empty

@@ -6,6 +6,8 @@ use App\Models\ClientInformationModel;
 use App\Models\ClientRiderTaggingModel;
 use App\Models\EventModel;
 use App\Models\IndividualInformationModel;
+use App\Models\NumberMessageModel;
+use App\Models\SmsSenderModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
@@ -13,6 +15,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Number;
 
 #[Layout('components.layouts.page')]
 #[Title('Events')]
@@ -80,6 +83,19 @@ class Events extends Component
         ];
     }
 
+    public function updated($property)
+    {
+        if ($property === 'select_all') {
+            if ($this->select_all) {
+                // If select_all is true (checkbox is checked), select all tags
+                $this->selected_tags = $this->loadTags()->pluck('id')->toArray(); // Assuming tags are Eloquent models
+            } else {
+                // If select_all is false (checkbox is unchecked), deselect all tags
+                $this->selected_tags = [];
+            }
+        }
+    }
+
     public function clear()
     {
         $this->reset();
@@ -112,6 +128,7 @@ class Events extends Component
 
                 DB::commit();
 
+                $this->dispatch('hide_eventSaveModal');
                 $this->reset();
                 $this->dispatch('success_save');
             } catch (\Exception $e) {
@@ -167,21 +184,144 @@ class Events extends Component
         }
     }
 
+    // When sending a Message for only one record
     public function sendMessage($id)
     {
-        dd($id);
+        try {
+            // Start transaction before the loop
+            DB::beginTransaction();
+
+            $info = ClientRiderTaggingModel::join('client_information', 'client_information.user_id', '=', 'client_rider_tagging.id_client')
+                ->join('individual_information', 'individual_information.user_id', '=', 'client_rider_tagging.id_individual')
+                ->where('client_rider_tagging.id', $id)
+                ->select(
+                    'client_information.guardian_contact_number',
+                    DB::raw("
+                    CONCAT(
+                        client_information.first_name, ' ',
+                        COALESCE(client_information.middle_name, ''), '. ',
+                        client_information.last_name, 
+                        IF(TRIM(IFNULL(client_information.ext_name, '')) != '', CONCAT(', ', client_information.ext_name), '')
+                    ) AS client_full_name
+                "),
+                    DB::raw("
+                    CONCAT(
+                        individual_information.first_name, ' ',
+                        COALESCE(individual_information.middle_name, ''), '. ',
+                        individual_information.last_name, 
+                        IF(TRIM(IFNULL(individual_information.ext_name, '')) != '', CONCAT(', ', individual_information.ext_name), '')
+                    ) AS rider_full_name
+                ")
+                )
+                ->get();
+
+            foreach ($info as $item) {
+                // Define common variables outside of the object creation to use later
+                $message = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nSi " . $item->client_full_name . " ay nag-avail ng Libreng Sakay. Ang kaniyang rider ay si " . $item->rider_full_name . ".";
+                $trans_id = time() . '-' . mt_rand();
+
+                // Save SMS data
+                $sms = new SmsSenderModel();
+                $sms->trans_id = $trans_id;
+                $sms->received_id = "BAYANIHAN-LIBRENG-SAKAY-NOTIFICATION";
+                $sms->recipient = $item->guardian_contact_number;
+                $sms->recipient_message = $message . ' ' . "\n\n**This is a system-generated message. Please DO NOT REPLY.**";
+                $sms->save(); // If this fails, it will throw an exception and rollback
+
+                // Save Blaster data
+                $blaster = new NumberMessageModel();
+                $blaster->user_id = $id;
+                $blaster->phone_number = $item->guardian_contact_number;
+                $blaster->sms_trans_id = $trans_id;
+                $blaster->otp_type = "BAYANIHAN-LIBRENG-SAKAY-NOTIFICATION";
+                $blaster->sms_status = "STATUS";
+                $blaster->save(); // If this fails, it will also rollback
+
+                // Update the tagging model to mark the message as sent
+                ClientRiderTaggingModel::where('id', $id)
+                    ->update(['is_message_sent' => 1]); // If this fails, it will rollback
+            }
+
+            // Commit the transaction after the loop
+            DB::commit();
+
+            $this->dispatch('success_save');
+        } catch (\Exception $e) {
+            // Rollback the transaction if any error occurs
+            DB::rollBack();
+
+            // Debug the error and notify
+            dd($e->getMessage());
+            $this->dispatch('something_went_wrong');
+        }
     }
 
-    public function updated($property)
+    public function sendMessageToMany()
     {
-        if ($property === 'select_all') {
-            if ($this->select_all) {
-                // If select_all is true (checkbox is checked), select all tags
-                $this->selected_tags = $this->loadTags()->pluck('id')->toArray(); // Assuming tags are Eloquent models
-            } else {
-                // If select_all is false (checkbox is unchecked), deselect all tags
-                $this->selected_tags = [];
+        try {
+            DB::beginTransaction();
+
+            foreach ($this->selected_tags as $tag) {
+                $info = ClientRiderTaggingModel::join('client_information', 'client_information.user_id', '=', 'client_rider_tagging.id_client')
+                    ->join('individual_information', 'individual_information.user_id', '=', 'client_rider_tagging.id_individual')
+                    ->where('client_rider_tagging.id', $tag)
+                    ->select(
+                        'client_information.guardian_contact_number',
+                        DB::raw("
+                    CONCAT(
+                        client_information.first_name, ' ',
+                        COALESCE(client_information.middle_name, ''), '. ',
+                        client_information.last_name, 
+                        IF(TRIM(IFNULL(client_information.ext_name, '')) != '', CONCAT(', ', client_information.ext_name), '')
+                    ) AS client_full_name
+                "),
+                        DB::raw("
+                    CONCAT(
+                        individual_information.first_name, ' ',
+                        COALESCE(individual_information.middle_name, ''), '. ',
+                        individual_information.last_name, 
+                        IF(TRIM(IFNULL(individual_information.ext_name, '')) != '', CONCAT(', ', individual_information.ext_name), '')
+                    ) AS rider_full_name
+                ")
+                    )
+                    ->get();
+
+                foreach ($info as $item) {
+                    // Define common variables outside of the object creation to use later
+                    $message = "BAYANIHAN LIBRENG SAKAY INFO: " . "\n\nSi " . $item->client_full_name . " ay nag-avail ng Libreng Sakay. Ang kaniyang rider ay si " . $item->rider_full_name . ".";
+                    $trans_id = time() . '-' . mt_rand();
+
+                    // Save SMS data
+                    $sms = new SmsSenderModel();
+                    $sms->trans_id = $trans_id;
+                    $sms->received_id = "BAYANIHAN-LIBRENG-SAKAY-NOTIFICATION";
+                    $sms->recipient = $item->guardian_contact_number;
+                    $sms->recipient_message = $message . ' ' . "\n\n**This is a system-generated message. Please DO NOT REPLY.**";
+                    $sms->save(); // If this fails, it will throw an exception and rollback
+
+                    // Save Blaster data
+                    $blaster = new NumberMessageModel();
+                    $blaster->user_id = $tag;
+                    $blaster->phone_number = $item->guardian_contact_number;
+                    $blaster->sms_trans_id = $trans_id;
+                    $blaster->otp_type = "BAYANIHAN-LIBRENG-SAKAY-NOTIFICATION";
+                    $blaster->sms_status = "STATUS";
+                    $blaster->save(); // If this fails, it will also rollback
+
+                    // Update the tagging model to mark the message as sent
+                    ClientRiderTaggingModel::where('id', $tag)
+                        ->update(['is_message_sent' => 1]); // If this fails, it will rollback
+                }
             }
+
+            DB::commit();
+
+            $this->dispatch('success_save');
+            $this->reset('selected_tags');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            $this->dispatch('something-went-wrong');
         }
     }
 
@@ -219,8 +359,12 @@ class Events extends Component
                     ) AS event_date
                 ")
             )
-            ->orderBy('event_date', 'desc')
+            ->orderBy('event_date', 'asc')
             ->paginate(10);
+
+        foreach ($events as $event) {
+            $event->client_served_count = ClientRiderTaggingModel::where('id_event', $event->id)->count();
+        }
 
         $total_no_of_events = EventModel::all()->count();
         $ongoing = EventModel::whereDate('event_date', Carbon::today())->count();
@@ -240,6 +384,7 @@ class Events extends Component
             ->join('individual_information', 'individual_information.user_id', '=', 'client_rider_tagging.id_individual')
             ->select(
                 'client_rider_tagging.id',
+                // 'tbl_number_messages.sms_trans_id',
                 DB::raw("
                     CONCAT(
                         client_information.first_name, ' ',
@@ -255,6 +400,12 @@ class Events extends Component
                         individual_information.last_name, 
                         IF(TRIM(IFNULL(individual_information.ext_name, '')) != '', CONCAT(', ', individual_information.ext_name), '')
                     ) AS individual_full_name
+                "),
+                DB::raw("
+                    CASE
+                        WHEN client_rider_tagging.is_message_sent = '0' THEN 'pending'
+                        WHEN client_rider_tagging.is_message_sent = '1' THEN 'sent'
+                    END AS message_status
                 "),
                 DB::raw("
                     DATE_FORMAT(client_rider_tagging.created_at, '%h:%i %p') AS time

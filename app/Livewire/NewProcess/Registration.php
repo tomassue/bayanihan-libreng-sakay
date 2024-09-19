@@ -100,7 +100,7 @@ class Registration extends Component
     {
         $rules = [
             'account_type' => 'required',
-            'contactNumber' => 'required',
+            'contactNumber' => 'required|digits:11',
             'address' => 'required'
         ];
 
@@ -123,7 +123,7 @@ class Registration extends Component
             $rules['user_type'] = 'required';
             $rules['birthday'] = 'required';
             $rules['guardian_name'] = 'required';
-            $rules['guardian_contact_number'] = 'required';
+            $rules['guardian_contact_number'] = 'required|digits:11';
 
             if ($this->user_type == 'student' || $this->user_type == 'school_staff') {
                 $rules['id_school'] = 'required';
@@ -135,7 +135,7 @@ class Registration extends Component
             $rules['date_established'] = 'required';
             $rules['representative_name'] = 'required';
             $rules['representative_position'] = 'required';
-            $rules['representative_contact_number'] = 'required';
+            $rules['representative_contact_number'] = 'required|digits:11';
         }
 
         return $rules;
