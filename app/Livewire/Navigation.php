@@ -108,15 +108,17 @@ class Navigation extends Component
                         </a>
                     </li>
 
+                    @if(Auth::user()->email == 'superadmin@mail.com')
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('np/events') ? '' : 'collapsed' }}" href="{{ route('np_events') }}" style="border-radius: unset;" wire:navigate>
-                            <span class="fs-5 fw-bold">Events (NP)</span>
+                            <span class="fs-5 fw-bold">Events (BETA)</span>
 
                             <span class="ms-auto">
                                 @livewire('SidebarNotificationIndicators.eventsnotificationindicator')
                             </span>
                         </a>
                     </li>
+                    @endif
                     
                     <!-- /* -------------------------------------------------------------------------- */
                     /*                                 NEW PROCESS                                */

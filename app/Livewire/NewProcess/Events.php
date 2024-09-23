@@ -23,6 +23,11 @@ class Events extends Component
 {
     use WithPagination;
 
+    public $tag = '0';
+    public $event_done;
+
+    /* --------------------------------- FILTER --------------------------------- */
+
     public $event_name;
     public $event_date;
     public $event_location;
@@ -47,7 +52,8 @@ class Events extends Component
         $data = [
             'events' => $loadEvents['events'],
             'total_no_of_events' => $loadEvents['total_no_of_events'],
-            'ongoing' => $loadEvents['ongoing'],
+            'upcoming' => $loadEvents['upcoming'],
+            // 'ongoing' => $loadEvents['ongoing'],
             'done' => $loadEvents['done'],
             'tags' => $this->loadTags(),
             'clients' => $this->loadClients(), // Client-select
@@ -98,7 +104,7 @@ class Events extends Component
 
     public function clear()
     {
-        $this->reset();
+        $this->resetExcept('tag');
         $this->resetValidation();
     }
 
@@ -338,6 +344,7 @@ class Events extends Component
             $event = EventModel::findOrFail($id);
             $this->event_name = $event->event_name;
             $this->id_event = $id;
+            $this->event_done = $event->tag;
 
             $this->dispatch('show_eventDetailsModal');
         } catch (\Exception $e) {
@@ -349,7 +356,9 @@ class Events extends Component
     public function loadEvents()
     {
         $events = EventModel::where('status', 1)
-            ->where('tag', 0)
+            ->when($this->tag != null, function ($query) {
+                $query->where('tag', $this->tag);
+            })
             ->select(
                 'id',
                 'event_name',
@@ -359,7 +368,7 @@ class Events extends Component
                     ) AS event_date
                 ")
             )
-            ->orderBy('event_date', 'asc')
+            ->orderBy('event_date', 'desc')
             ->paginate(10);
 
         foreach ($events as $event) {
@@ -367,13 +376,15 @@ class Events extends Component
         }
 
         $total_no_of_events = EventModel::all()->count();
-        $ongoing = EventModel::whereDate('event_date', Carbon::today())->count();
+        $upcoming = EventModel::where('tag', 0)->count();
+        // $ongoing = EventModel::whereDate('event_date', Carbon::today())->count();
         $done = EventModel::where('tag', 1)->count();
 
         return [
             'events' => $events,
             'total_no_of_events' => $total_no_of_events,
-            'ongoing' => $ongoing,
+            'upcoming' => $upcoming,
+            // 'ongoing' => $ongoing,
             'done' => $done
         ];
     }

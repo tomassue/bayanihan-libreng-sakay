@@ -9,7 +9,7 @@
                                 <div class="row justify-content-center">
 
                                     <div class="col-sm-12 col-md-12 col-lg-4 col-xl-3 mb-1" style="padding-right: 0px; padding-left: 0px;">
-                                        <div class="card m-3 border border-secondary" style="cursor: pointer;">
+                                        <div class="card m-3 border border-secondary" style="cursor: pointer;" wire:click="$set('tag', null)">
                                             <div class="card-header h-100" style="border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">TOTAL NO. OF EVENTS</h1>
                                             </div>
@@ -35,19 +35,19 @@
                                     </div>
 
                                     <div class="col-sm-12 col-md-12 col-lg-4 col-xl-3 mb-1" style="padding-right: 0px; padding-left: 0px;">
-                                        <div class="card m-3 border border-secondary" style="cursor: pointer; height:86%;">
+                                        <div class="card m-3 border border-secondary" style="cursor: pointer; height:86%;" wire:click="$set('tag', '0')">
                                             <div class="card-header h-100" style="border: unset;">
-                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">ONGOING</h1>
+                                                <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">UPCOMING</h1>
                                             </div>
                                             <div class="card-body">
                                                 <h6 class="text-center fs-1">
-                                                    {{ $ongoing }}
+                                                    {{ $upcoming }}
                                                 </h6>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-12 col-lg-4 col-xl-3 mb-1" style="padding-right: 0px; padding-left: 0px;">
-                                        <div class="card m-3 border border-secondary" style="cursor: pointer; height:86%;">
+                                        <div class="card m-3 border border-secondary" style="cursor: pointer; height:86%;" wire:click="$set('tag', '1')">
                                             <div class="card-header h-100" style="border: unset;">
                                                 <h1 class="card-title text-center" style="font-size: 23px; font-weight: 1000 !important;">DONE</h1>
                                             </div>
@@ -80,7 +80,7 @@
                             <tr>
                                 <th scope="col" style="width: 30%;">EVENT NAME</th>
                                 <th scope="col">DATE</th>
-                                <th scope="col">NO. OF CLIENTS SERVED</th>
+                                <th scope="col">NO. OF <br> CLIENTS SERVED</th>
                                 <th scope="col">ACTION</th>
                             </tr>
                         </thead>
@@ -211,7 +211,7 @@
         <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #0A335D; color: #FFFFFF  ">
-                    <h1 class="modal-title fs-5 fw-bolder" id="eventDetailsModalLabel">{{ $event_name }}</h1>
+                    <h1 class="modal-title fs-5 fw-bolder" id="eventDetailsModalLabel">{{ $event_name }} <br> <span class="badge bg-info text-dark" style="display: {{ $event_done == 1 ? 'display' : 'none' }}"><i class="bi bi-info-circle me-1"></i> This event is done.</span></h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="color: white !important;" wire:click="clear"></button>
                 </div>
                 <div class="modal-body">
@@ -223,7 +223,7 @@
                                 <div class="mb-4">
                                     <form data-bitwarden-watching="1">
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-4" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
                                                 <label for="inputEmail3" class="col-lg-2 col-form-label">Client</label>
                                                 <div class="col-lg-10">
                                                     <div id="client-select" wire:ignore></div>
@@ -234,7 +234,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-4" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
                                                 <label for="inputEmail3" class="col-lg-2 col-form-label">Rider</label>
                                                 <div class="col-lg-10">
                                                     <div id="rider-select" wire:ignore></div>
@@ -245,9 +245,10 @@
                                                     @enderror
                                                 </div>
                                             </div>
+
                                             <div class="col-md-4 d-flex justify-content-start align-items-end g-3">
-                                                <button type="button" class="btn btn-success" wire:click="$dispatch('confirm_tagging')" wire:loading.attr="disabled" wire:target="selected_tag, select_all, tag">Tag</button> &nbsp;
-                                                <button type="reset" class="btn btn-secondary ml-2" wire:loading.attr="disabled">Reset</button>
+                                                <button type="button" class="btn btn-success" style="display: {{ $event_done == 1 ? 'none' : 'display' }}" wire:click="$dispatch('confirm_tagging')" wire:loading.attr="disabled" wire:target="selected_tag, select_all, tag">Tag</button> &nbsp;
+                                                <button type="reset" class="btn btn-secondary ml-2" style="display: {{ $event_done == 1 ? 'none' : 'display' }}" wire:loading.attr="disabled">Reset</button>
                                             </div>
 
                                         </div>
@@ -255,7 +256,7 @@
                                 </div>
                                 <div class="row mb-2 gy-3">
                                     <div class="col-md-6">
-                                        <button type="button" class="btn btn-primary" wire:click="sendMessageToMany" {{ empty($selected_tags) ? 'disabled' : '' }}>Send Message ({{ count($selected_tags) }})</button>
+                                        <button type="button" class="btn btn-primary" style="display: {{ $event_done == 1 ? 'none' : 'display' }}" wire:click="sendMessageToMany" {{ empty($selected_tags) ? 'disabled' : '' }}>Send Message ({{ count($selected_tags) }})</button>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="pagination-info pb-2 text-end">
@@ -267,7 +268,7 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th scope="col" width="3%">
+                                                <th scope="col" width="3%" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" wire:model.live="select_all" wire:loading.attr="disabled"> ({{ count($selected_tags) }})
                                                     </div>
@@ -275,13 +276,13 @@
                                                 <th scope="col" width="24.25%">Client</th>
                                                 <th scope="col" width="24.25%">Rider</th>
                                                 <th scope="col" width="24.25%">Time</th>
-                                                <th scope="col" width="24.25%">Action</th>
+                                                <th scope="col" width="24.25%" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse($tags as $item)
                                             <tr wire:key="{{ $item->id }}">
-                                                <th scope="row" class="align-middle">
+                                                <th scope="row" class="align-middle" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" wire:model.live="selected_tags" value="{{ $item->id }}" @if(in_array($item->id, $selected_tags)) checked @endif wire:loading.attr="disabled">
                                                     </div>
@@ -289,7 +290,7 @@
                                                 <td class="align-middle">{{ $item->client_full_name }}</td>
                                                 <td class="align-middle">{{ $item->individual_full_name }}</td>
                                                 <td class="align-middle">{{ $item->time }}</td>
-                                                <td>
+                                                <td style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
                                                     <button type="button" class="btn btn-success" style="display: {{ $item->message_status == 'pending' ? 'block' : 'none' }};" title="Send a message" wire:loading.attr="disabled" wire:click="sendMessage({{ $item->id }})"><i class="ri-mail-line"></i></button>
                                                     <button type="button" class="btn btn-secondary" style="display: {{ $item->message_status !== 'pending' ? 'block' : 'none' }};" title="Already sent a message" disabled><i class="ri-mail-check-line"></i></button>
                                                 </td>
