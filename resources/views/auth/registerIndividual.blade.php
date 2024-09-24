@@ -25,7 +25,7 @@
         /* background-size: contain, contain; */
         background-size: 80%, 80%;
         background-position: center top, left bottom;
-        height: 1180px !important;
+        height: 1300px !important;
     }
 
     /* Right Div */
@@ -34,7 +34,7 @@
         background-repeat: no-repeat;
         background-size: cover;
         /* background-position: center; */
-        height: 1180px !important;
+        height: 1300px !important;
     }
 
     /* Ensure equal heights for right and left divs */
@@ -47,13 +47,13 @@
         flex: 1;
     }
 
-    @media screen and (max-width: 425px) {
+    @media screen and (max-width: 1030px) {
         .left-div {
             display: none;
         }
 
         .right-div {
-            height: 1490px !important;
+            height: 1900px !important;
         }
 
         #footer {
@@ -196,6 +196,25 @@
                         <input inputmode="numeric" oninput="this.value = this.value.replace(/\D+/g, '').substring(0, 11)" name="contactNumber" class="form-control @error('contactNumber') is-invalid @enderror" id="contactNumber" value="{{ old('contactNumber') }}" autocomplete="contactNumber" autofocus>
 
                         @error('contactNumber')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="inputAddress" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Barangay</label>
+                    <div class="col-sm-7">
+                        <select name="id_barangay" id="id_barangay" class="form-select @error('id_barangay') is-invalid @enderror" autocomplete="id_barangay" autofocus aria-label="Default select example">
+                            <option value="" disabled {{ old('id_barangay') ? '' : 'selected' }}>Select...</option>
+                            @foreach(\App\Models\RefBarangayModel::select('id AS id_barangay', 'barangay')
+                            ->get() as $barangay)
+                            <option value="{{ $barangay['id_barangay'] }}" {{ old('id_barangay') == $barangay['id_barangay'] ? 'selected' : '' }}>{{ $barangay['barangay'] }}</option>
+                            @endforeach
+                        </select>
+
+                        @error('id_barangay')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

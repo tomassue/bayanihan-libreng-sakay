@@ -87,6 +87,7 @@ class RegisterController extends Controller
                 'middleName'            => ['string', 'nullable'],
                 'sex'                   => ['required'],
                 'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
+                'id_barangay'           => ['required'],
                 'address'               => ['required'],
                 'organization'          => ['required'],
 
@@ -179,6 +180,7 @@ class RegisterController extends Controller
                 'middle_name'           => $data['middleName'],
                 'sex'                   => $data['sex'],
                 'ext_name'              => $data['extensionName'],
+                'id_barangay'           => $data['id_barangay'],
                 'address'               => $data['address'],
                 'id_organization'       => $data['organization'],
             ]);

@@ -25,6 +25,7 @@ use App\Livewire\Events;
 use App\Livewire\IndiReports;
 use App\Livewire\NewProcess\Events as NewProcessEvents;
 use App\Livewire\NewProcess\Registration as NewProcessRegistration;
+use App\Livewire\NewProcess\RegistrationRider;
 use App\Livewire\References;
 use App\Livewire\Reports;
 use App\Livewire\RidersReports;
@@ -50,12 +51,11 @@ Route::get('/', function () {
 
 // This is somehow the 'landing page' of registration. Users are asked what account type they are going to register, then they will be routed to the registration form associated with the account type they prefer.
 // Route::post('/registration', [RegistrationAccountTypeController::class, 'index'])->name('registration');
+Route::get('/registration/ind', [RegistrationAccountTypeController::class, 'registerInd'])->name('register.ind');
 // Route::get('/registration/org', [RegistrationAccountTypeController::class, 'registerOrg'])->name('register.org');
 // Route::get('/registration/client', [RegistrationAccountTypeController::class, 'registerClient'])->name('register.client');
 
 Route::group(['middleware' => ['auth', 'BlockAccess']], function () {
-    Route::get('/registration/ind', [RegistrationAccountTypeController::class, 'registerInd'])->name('register.ind');
-
     Route::get('/qr/{ClientUserID}', [GenerateClientQRController::class, 'generateQRPage'])->name('qr'); // QR PAGE
     Route::get('/get-my-qr/client/{ClientUserID}', [GenerateClientQRController::class, 'index'])->name('get-my-qr'); // GENERATE QR
 });
@@ -116,6 +116,7 @@ Route::group(['middleware' => ['auth', Admin::class, UpdatedPassword::class]], f
 
 Route::group(['middleware' => ['auth', AdminAndOrg::class, UpdatedPassword::class]], function () {
     Route::get('/np/registration', NewProcessRegistration::class)->name('np_registration');
+    Route::get('/np/register-rider', RegistrationRider::class)->name('register-rider');
     Route::get('/np/events', NewProcessEvents::class)->name('np_events');
 });
 

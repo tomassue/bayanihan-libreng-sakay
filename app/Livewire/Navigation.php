@@ -110,6 +110,16 @@ class Navigation extends Component
 
                     @if(Auth::user()->email == 'superadmin@mail.com')
                     <li class="nav-item">
+                        <a class="nav-link {{ request()->is('np/register-rider') ? '' : 'collapsed' }}" href="{{ route('register-rider') }}" style="border-radius: unset;" wire:navigate>
+                            <span class="fs-5 fw-bold">Rider (Approval)</span>
+                            
+                            <span class="ms-auto">
+                                @livewire('SidebarNotificationIndicators.registrationnotificationindicator')
+                            </span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
                         <a class="nav-link {{ request()->is('np/events') ? '' : 'collapsed' }}" href="{{ route('np_events') }}" style="border-radius: unset;" wire:navigate>
                             <span class="fs-5 fw-bold">Events (BETA)</span>
 

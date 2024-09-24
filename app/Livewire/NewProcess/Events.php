@@ -23,10 +23,13 @@ class Events extends Component
 {
     use WithPagination;
 
+    /* --------------------------------- FILTER --------------------------------- */
+
     public $tag = '0';
     public $event_done;
+    public $search;
 
-    /* --------------------------------- FILTER --------------------------------- */
+    /* --------------------------------- MODELS --------------------------------- */
 
     public $event_name;
     public $event_date;
@@ -368,6 +371,7 @@ class Events extends Component
                     ) AS event_date
                 ")
             )
+            ->where('event_name', 'like', '%' . $this->search . '%')
             ->orderBy('event_date', 'desc')
             ->paginate(10);
 
@@ -472,6 +476,7 @@ class Events extends Component
     {
         $riders = IndividualInformationModel::join('tbl_ref_barangay', 'tbl_ref_barangay.id', '=', 'individual_information.id_barangay')
             ->join('organization_information', 'organization_information.id', '=', 'individual_information.id_organization')
+            ->join('users', 'users.user_id', '=', 'individual_information.user_id')
             ->select(
                 'individual_information.user_id',
                 DB::raw("
@@ -485,8 +490,9 @@ class Events extends Component
                 ) AS full_name
             "),
                 'tbl_ref_barangay.barangay',
-                'organization_information.organization_name'
+                'organization_information.organization_name',
             )
+            ->where('users.status', 1)
             ->get()
             ->map(
                 function ($item) {
