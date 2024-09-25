@@ -2,6 +2,7 @@
 
 namespace App\Livewire\NewProcess;
 
+use App\Livewire\Navigation;
 use App\Models\IndividualInformationModel;
 use App\Models\OrganizationInformationModel;
 use App\Models\User;
@@ -85,6 +86,7 @@ class RegistrationRider extends Component
             DB::commit();
 
             $this->dispatch('hide_riderModal');
+            $this->dispatch('rider_approval_count')->to(Navigation::class);
             $this->clear();
             $this->dispatch('success_update');
         } catch (\Exception $e) {

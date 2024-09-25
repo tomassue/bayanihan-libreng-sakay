@@ -425,7 +425,7 @@
                                         </p>
                                         <p>
                                             <br />
-                                            <strong>Developed by:</strong> CMISID Team / Rustom C. Abella
+                                            <strong>Developed by:</strong> CMISID Team / Devs - Rustom C. Abella, Jevonie M. Villarin / PM - Christine B. Daguplo
                                             </span>
                                         </p>
                                         {{-- <p class="fw-bold pb-3">The City Planning and Development Office (CPDO)</p>
@@ -544,6 +544,30 @@
                     title: "Entry Already Exists!",
                     text: "Oops! This entry seems to be a duplicate. Kindly double-check your data and submit again.",
                     icon: "error"
+                });
+            });
+
+            Livewire.on('client_already_tagged', (event) => {
+                Swal.fire({
+                    title: "Client already tagged!",
+                    text: "Oops! Clients can only be tagged once in every event.",
+                    icon: "error"
+                });
+            });
+
+            Livewire.on('rider_tagged_more_than_twice', (event) => {
+                Swal.fire({
+                    title: "Rider is already tagged twice!",
+                    text: "Oops! Riders can't be tagged more than twice.",
+                    icon: "error"
+                });
+            });
+
+            Livewire.on('events_not_today', (event) => {
+                Swal.fire({
+                    title: "Event not available.",
+                    text: "Unfortunately, the event cannot be accessed today because the event date is not today.",
+                    icon: "info"
                 });
             });
         });

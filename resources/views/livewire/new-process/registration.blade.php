@@ -58,7 +58,7 @@
                         <label class="col-sm-1 col-form-label text-start">Filter</label>
                         <div class="col-sm-3">
                             <select class="form-select" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model.live="filter_accountType">
-                                <option selected="" value="">Account type</option>
+                                <option selected="" value="">Account type (All)</option>
                                 @foreach ($accountType as $item)
                                 <option value="{{ $item->id }}">{{ $item->account_type_name }}</option>
                                 @endforeach

@@ -105,7 +105,7 @@
                                 <select class="form-select @error('status') is-invalid @enderror" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model="status">
                                     <option value="">Status</option>
                                     <option value="0">Pending</option>
-                                    <option value="1">Active</option>
+                                    <option value="1">Approve</option>
                                 </select>
                                 @error('status')
                                 <div class="invalid-feedback">

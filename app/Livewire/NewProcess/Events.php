@@ -166,29 +166,59 @@ class Events extends Component
         $this->validate($rules, [], $attributes);
 
         try {
-            $check_duplicate_tag = ClientRiderTaggingModel::where('id_event', $this->id_event)->where('id_client', $this->id_client)->where('id_individual', $this->id_individual)->exists();
+            // Check if the combination of event, client, and individual already exists
+            $check_duplicate_tag = ClientRiderTaggingModel::where('id_event', $this->id_event)
+                ->where('id_client', $this->id_client)
+                ->where('id_individual', $this->id_individual)
+                ->exists();
 
-            if (!$check_duplicate_tag) {
-                DB::beginTransaction();
-
-                ClientRiderTaggingModel::create([
-                    'id_event' => $this->id_event,
-                    'id_client' => $this->id_client,
-                    'id_individual' => $this->id_individual
-                ]);
-
-                $this->dispatch('reset_plugins');
-                $this->dispatch('success_save');
-
-                DB::commit();
-            } else {
-                DB::rollBack();
-
+            if ($check_duplicate_tag) {
+                // Dispatch duplicate entry event
                 $this->dispatch('duplicate_entry');
+            } else {
+                // Check if the client has already been tagged for the event
+                $client_duplicate = ClientRiderTaggingModel::where('id_event', $this->id_event)
+                    ->where('id_client', $this->id_client)
+                    ->count();
+
+                if ($client_duplicate >= 1) {
+                    // Dispatch client already tagged event
+                    $this->dispatch('client_already_tagged');
+                } else {
+                    // Check if the individual has been tagged less than twice for the event
+                    $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
+                        ->where('id_individual', $this->id_individual)
+                        ->count();
+
+                    if ($tag_count >= 2) {
+                        // Dispatch rider tagged more than twice event
+                        $this->dispatch('rider_tagged_more_than_twice');
+                    } else {
+                        // Begin transaction since all checks have passed
+                        DB::beginTransaction();
+
+                        // Create a new tagging entry
+                        ClientRiderTaggingModel::create([
+                            'id_event' => $this->id_event,
+                            'id_client' => $this->id_client,
+                            'id_individual' => $this->id_individual
+                        ]);
+
+                        // Dispatch success and reset events
+                        $this->dispatch('reset_plugins');
+                        $this->dispatch('success_save');
+
+                        // Commit the transaction
+                        DB::commit();
+                    }
+                }
             }
         } catch (\Exception $e) {
-            DB::rollBack();
-
+            // Rollback the transaction only if it was started
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
+            // Dispatch the error event
             $this->dispatch('something_went_wrong');
         }
     }
@@ -369,10 +399,16 @@ class Events extends Component
                     DATE_FORMAT(
                         event_date, '%b %d, %Y'
                     ) AS event_date
+                "),
+                DB::raw("
+                    CASE
+                        WHEN event_date = '" . Carbon::today()->toDateString() . "' THEN 'today'
+                        ELSE 'not today'
+                    END AS event_date_status
                 ")
             )
             ->where('event_name', 'like', '%' . $this->search . '%')
-            ->orderBy('event_date', 'desc')
+            ->orderBy('event_date', 'asc')
             ->paginate(10);
 
         foreach ($events as $event) {
@@ -383,6 +419,8 @@ class Events extends Component
         $upcoming = EventModel::where('tag', 0)->count();
         // $ongoing = EventModel::whereDate('event_date', Carbon::today())->count();
         $done = EventModel::where('tag', 1)->count();
+
+        // dd($ongoing);
 
         return [
             'events' => $events,

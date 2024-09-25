@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\IndividualInformationModel;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Navigation extends Component
@@ -110,11 +112,11 @@ class Navigation extends Component
 
                     @if(Auth::user()->email == 'superadmin@mail.com')
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->is('np/register-rider') ? '' : 'collapsed' }}" href="{{ route('register-rider') }}" style="border-radius: unset;" wire:navigate>
+                        <a class="nav-link {{ request()->is('np/register-rider') ? '' : 'collapsed' }}" href="{{ route('register-rider') }}" style="border-radius: unset;" wire:navigate wire:ignore.self>
                             <span class="fs-5 fw-bold">Rider (Approval)</span>
                             
                             <span class="ms-auto">
-                                @livewire('SidebarNotificationIndicators.registrationnotificationindicator')
+                            <span class="badge bg-white text-primary" style="color: rgb(10, 51, 93) !important; background-color: rgb(238, 238, 238) !important; display: {{ $this->loadRiderApproval() == '0' ? 'none' : 'inline-block' }}">{{ $this->loadRiderApproval() }}</span>
                             </span>
                         </a>
                     </li>
@@ -124,7 +126,7 @@ class Navigation extends Component
                             <span class="fs-5 fw-bold">Events (BETA)</span>
 
                             <span class="ms-auto">
-                                @livewire('SidebarNotificationIndicators.eventsnotificationindicator')
+                                
                             </span>
                         </a>
                     </li>
@@ -250,5 +252,20 @@ class Navigation extends Component
             <script src="{{ asset('assets/js/main.js') }}"></script>
         </div>
         HTML;
+    }
+
+    public function boot()
+    {
+        $this->loadRiderApproval();
+    }
+
+    #[On('rider_approval_count')]
+    public function loadRiderApproval()
+    {
+        $riderApprovalCount = IndividualInformationModel::join('users', 'users.user_id', '=', 'individual_information.user_id')
+            ->where('users.status', 0)
+            ->count();
+
+        return $riderApprovalCount;
     }
 }
