@@ -289,7 +289,7 @@
                         @endif
 
                         @if ($account_type == 'organization')
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <label for="inputOrganizationName" class="form-label">Organization Name</label>
                             <input type="text" class="form-control @error('organization_name') is-invalid @enderror" id="inputOrganizationName" data-ddg-inputtype="identities.organization_name" wire:model="organization_name">
                             @error('organization_name')
@@ -298,7 +298,7 @@
                             </div>
                             @enderror
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <label for="inputDateEstablished" class="form-label">Date Established</label>
                             <input type="date" class="form-control @error('date_established') is-invalid @enderror" id="inputDateEstablished" data-ddg-inputtype="identities.date_established" wire:model="date_established">
                             @error('date_established')
@@ -307,7 +307,7 @@
                             </div>
                             @enderror
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <label for="inputOrganizationContactNumber" class="form-label">Organization's Contact Number</label>
                             <input type="text" maxlength="11" oninput="this.value = '09' + this.value.slice(2).replace(/\D/g, '');" placeholder="09XXXXXXXXX" class="form-control @error('contactNumber') is-invalid @enderror" id="inputOrganizationContactNumber" data-ddg-inputtype="identities.organization_contact_number" wire:model="contactNumber">
                             @error('contactNumber')
