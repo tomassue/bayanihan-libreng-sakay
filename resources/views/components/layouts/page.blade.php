@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ $title ?? 'Page Title' }}</title>
-    <meta content="" name="description" />
-    <meta content="" name="keywords" />
+    <meta name="description" content="The Bayanihan Libreng Sakay System and Mobile Application is a system designed and developed for volunteer riders and organization for the libreng sakay program.">
+    <meta name="keywords" content="Bayanihan Libreng Sakay">
 
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>

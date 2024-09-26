@@ -13,6 +13,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Bayanihan Libreng Sakay') }}</title>
+    <meta name="description" content="The Bayanihan Libreng Sakay System and Mobile Application is a system designed and developed for volunteer riders and organization for the libreng sakay program.">
+    <meta name="keywords" content="Bayanihan Libreng Sakay">
 
     <!-- Fonts -->
     <!-- <link rel="dns-prefetch" href="//fonts.bunny.net"> -->
