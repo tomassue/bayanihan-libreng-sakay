@@ -727,7 +727,8 @@ class Registration extends Component
                 'users.contactNumber',
                 'users.created_at',
                 DB::raw("'Client' AS type")
-            );
+            )
+            ->where('users.status', '1');
 
         $riders = IndividualInformationModel::join('users', 'users.user_id', '=', 'individual_information.user_id')
             // ->join('tbl_ref_barangay', 'tbl_ref_barangay.id_barangay', '=', 'individual_information.id_barangay')
@@ -747,7 +748,8 @@ class Registration extends Component
                 'users.contactNumber',
                 'users.created_at',
                 DB::raw("'Rider' AS type")
-            );
+            )
+            ->where('users.status', '1');
 
         $organizations = OrganizationInformationModel::join('users', 'users.user_id', '=', 'organization_information.user_id')
             ->select(
@@ -766,7 +768,8 @@ class Registration extends Component
                 'users.contactNumber',
                 'users.created_at',
                 DB::raw("'Organization' AS type")
-            );
+            )
+            ->where('users.status', '1');
 
         // Filters
         if ($this->search) {
