@@ -617,6 +617,16 @@ class Registration extends Component
                         }
                     }
 
+                    if (isset($changes['status'])) {
+                        if ($changes['status'] == '1') {
+                            $changes['approve'] = 'Approved';
+                            unset($changes['status']);
+                        } elseif ($changes['status'] == '0') {
+                            $changes['pending'] = 'Pending';
+                            unset($changes['status']);
+                        }
+                    }
+
                     $log->changes = json_encode($changes);  // Encode changes back to JSON
                 }
 

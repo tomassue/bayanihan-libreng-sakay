@@ -110,7 +110,6 @@ class Navigation extends Component
                         </a>
                     </li>
 
-                    @if(Auth::user()->email == 'superadmin@mail.com')
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('np/register-rider') ? '' : 'collapsed' }}" href="{{ route('register-rider') }}" style="border-radius: unset;" wire:navigate wire:ignore.self>
                             <span class="fs-5 fw-bold">Rider (Approval)</span>
@@ -123,13 +122,16 @@ class Navigation extends Component
                     
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('np/events') ? '' : 'collapsed' }}" href="{{ route('np_events') }}" style="border-radius: unset;" wire:navigate>
-                            <span class="fs-5 fw-bold">Events (BETA)</span>
+                            <span class="fs-5 fw-bold">Events</span>
 
                             <span class="ms-auto">
                                 
                             </span>
                         </a>
                     </li>
+
+                    @if(Auth::user()->email == 'superadmin@mail.com')
+                    <!-- LINKS FOR SUPER ADMIN TESTING HERE -->
                     @endif
                     
                     <!-- /* -------------------------------------------------------------------------- */

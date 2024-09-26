@@ -71,6 +71,11 @@
                     <input type="text" class="form-control form-control-lg" aria-label="Search" aria-describedby="basic-addon1" placeholder="Events" wire:model.live="search">
                 </div>
 
+                <div class="text-end mt-2">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" wire:click="$dispatch('show_eventSaveModal')">ADD EVENT</button>
+                </div>
+
                 <div class="col text-center table-responsive">
                     <div class="pagination-info pb-2 text-start">
                         Page {{ $events->currentPage() }} out of {{ $events->lastPage() }}, Total Records: {{ $events->total() }}
@@ -112,10 +117,6 @@
                         </tbody>
                     </table>
                     {{ $events->links('vendor.livewire.custom-pagination') }}
-                </div>
-                <div class="text-end mt-2">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" wire:click="$dispatch('show_eventSaveModal')">ADD EVENT</button>
                 </div>
             </div>
         </div>

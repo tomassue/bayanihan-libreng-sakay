@@ -55,8 +55,8 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label class="col-sm-1 col-form-label text-start">Filter</label>
-                        <div class="col-sm-3">
+                        <label class="col-lg-1 col-form-label text-start">Filter</label>
+                        <div class="col-lg-3">
                             <select class="form-select" aria-label="Default select example" data-ddg-inputtype="unknown" wire:model.live="filter_accountType">
                                 <option selected="" value="">Account type (All)</option>
                                 @foreach ($accountType as $item)
@@ -66,7 +66,12 @@
                         </div>
                     </div>
 
-                    <div class="pagination-info pb-2 text-end">
+                    <div class="text-end mt-2 mb-3">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" wire:click="$dispatch('show_addModal')">ADD RECORD</button>
+                    </div>
+
+                    <div class="pagination-info pb-2 text-start">
                         Page {{ $combined->currentPage() }} out of {{ $combined->lastPage() }}, Total Records: {{ $combined->total() }}
                     </div>
 
@@ -112,11 +117,6 @@
                         </tbody>
                     </table>
                     {{ $combined->links('vendor.livewire.custom-pagination') }}
-                    <div class="text-end mt-2 mb-3">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary fs-5 fw-bold" style="width: 160px; background-color: #0A335D;" wire:click="$dispatch('show_addModal')">ADD RECORD</button>
-                    </div>
-
                 </div>
             </div>
         </div>

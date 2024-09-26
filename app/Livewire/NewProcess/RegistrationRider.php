@@ -3,9 +3,11 @@
 namespace App\Livewire\NewProcess;
 
 use App\Livewire\Navigation;
+use App\Models\ActionLogModel;
 use App\Models\IndividualInformationModel;
 use App\Models\OrganizationInformationModel;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -76,12 +78,23 @@ class RegistrationRider extends Component
         $this->validate();
 
         try {
+            // Capture original state
+            $originalUser = User::where('user_id', $this->user_id)->first()->getAttributes();
+
             DB::beginTransaction();
 
             User::where('user_id', $this->user_id)
                 ->update([
                     'status' => $this->status
                 ]);
+
+            // Re-fetch the updated models
+            $updatedUser = User::where('user_id', $this->user_id)->first();
+            // Manually determine changes
+            $userChanges = array_diff_assoc($updatedUser->getAttributes(), $originalUser);
+
+            // Manually determine changes
+            $this->logUserAction('update', $updatedUser, $this->user_id, $userChanges);
 
             DB::commit();
 
@@ -136,5 +149,28 @@ class RegistrationRider extends Component
         $organizations = OrganizationInformationModel::select('id', 'organization_name')->get();
 
         return $organizations;
+    }
+
+    // This function will be called on CRUD processes.
+    public function logUserAction($action, $model, $user_id, $changes = [])
+    {
+        try {
+            // Ensure $model is an Eloquent model instance
+            $modelType = get_class($model);
+            $modelId = $model->id;
+
+            ActionLogModel::create([
+                'user_id' => Auth::user()->id,
+                'action' => $action,
+                'model_type' => $modelType,
+                'model_id' => $modelId,
+                'model_user_id' => $user_id, // Log shared user_id like the user_id of the updated record.
+                'changes' => json_encode($changes), // Log only the changed attributes and save it in json format
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent()
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
     }
 }
