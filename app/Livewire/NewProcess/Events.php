@@ -8,6 +8,7 @@ use App\Models\EventModel;
 use App\Models\IndividualInformationModel;
 use App\Models\NumberMessageModel;
 use App\Models\SmsSenderModel;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
@@ -109,6 +110,7 @@ class Events extends Component
     {
         $this->resetExcept('tag');
         $this->resetValidation();
+        $this->dispatch('reset_plugins');
     }
 
     public function add()
@@ -185,31 +187,65 @@ class Events extends Component
                     // Dispatch client already tagged event
                     $this->dispatch('client_already_tagged');
                 } else {
-                    // Check if the individual has been tagged less than twice for the event
-                    $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
-                        ->where('id_individual', $this->id_individual)
-                        ->count();
+                    // Check if the rider or car
+                    $check_rider_or_car = User::where('user_id', $this->id_individual)->select('id_account_type')->first();
 
-                    if ($tag_count >= 2) {
-                        // Dispatch rider tagged more than twice event
-                        $this->dispatch('rider_tagged_more_than_twice');
+                    if ($check_rider_or_car->id_account_type == '2') {
+                        // Check if the individual has been tagged less than twice for the event
+                        $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
+                            ->where('id_individual', $this->id_individual)
+                            ->count();
+
+                        if ($tag_count >= 2) {
+                            // Dispatch rider tagged more than twice event
+                            $this->dispatch('rider_tagged_more_than_twice');
+                        } else {
+                            // Begin transaction since all checks have passed
+                            DB::beginTransaction();
+
+                            // Create a new tagging entry
+                            ClientRiderTaggingModel::create([
+                                'id_event' => $this->id_event,
+                                'id_client' => $this->id_client,
+                                'id_individual' => $this->id_individual
+                            ]);
+
+                            // Dispatch success and reset events
+                            $this->dispatch('reset_plugins');
+                            $this->dispatch('success_save');
+
+                            // Commit the transaction
+                            DB::commit();
+                        }
+                    } elseif ($check_rider_or_car->id_account_type == '4') {
+                        // Check if the individual (car) has been tagged less than eighth for the event
+                        $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
+                            ->where('id_individual', $this->id_individual)
+                            ->count();
+
+                        if ($tag_count >= 8) {
+                            // Dispatch rider tagged more than eighth event
+                            $this->dispatch('rider_tagged_more_than_eighth');
+                        } else {
+                            // Begin transaction since all checks have passed
+                            DB::beginTransaction();
+
+                            // Create a new tagging entry
+                            ClientRiderTaggingModel::create([
+                                'id_event' => $this->id_event,
+                                'id_client' => $this->id_client,
+                                'id_individual' => $this->id_individual
+                            ]);
+
+                            // Dispatch success and reset events
+                            $this->dispatch('reset_plugins');
+                            $this->dispatch('success_save');
+
+                            // Commit the transaction
+                            DB::commit();
+                        }
                     } else {
-                        // Begin transaction since all checks have passed
-                        DB::beginTransaction();
-
-                        // Create a new tagging entry
-                        ClientRiderTaggingModel::create([
-                            'id_event' => $this->id_event,
-                            'id_client' => $this->id_client,
-                            'id_individual' => $this->id_individual
-                        ]);
-
-                        // Dispatch success and reset events
-                        $this->dispatch('reset_plugins');
-                        $this->dispatch('success_save');
-
-                        // Commit the transaction
-                        DB::commit();
+                        $this->dispatch('something_went_wrong');
                     }
                 }
             }

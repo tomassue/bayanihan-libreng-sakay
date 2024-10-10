@@ -92,9 +92,16 @@
                 <div class="mb-1 row">
                     <label for="inputOrganizationName" class="col-sm-3 col-md-4 col-lg-4 col-xl-3 col-form-label">Account Type</label>
                     <div class="col-sm-7">
-                        <select class="form-select" name="accountType" id="accountType" aria-label="Account Type" style="pointer-events: none; background-color: #f4f4f4;">
+                        <!-- <select class="form-select" name="accountType" id="accountType" aria-label="Account Type" style="pointer-events: none; background-color: #f4f4f4;">
                             <option value="2">Rider</option>
+                        </select> -->
+
+                        <select class="form-select" name="accountType" id="accountType" aria-label="Account Type">
+                            <option value="" {{ old('accountType') == '' ? 'selected' : '' }}>Select...</option>
+                            <option value="4" {{ old('accountType') == '4' ? 'selected' : '' }}>Rider (Car)</option>
+                            <option value="2" {{ old('accountType') == '2' ? 'selected' : '' }}>Rider (Motorcycle)</option>
                         </select>
+
                     </div>
                 </div>
 

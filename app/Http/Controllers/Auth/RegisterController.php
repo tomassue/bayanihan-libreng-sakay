@@ -102,6 +102,30 @@ class RegisterController extends Controller
 
                 'g-recaptcha-response' => ['required', new ReCaptchaV3('submitRegistration')],
             ]);
+        } elseif ($data['accountType'] == '4') {
+            // INDIVIDUAL (CAR)
+            return Validator::make($data, [
+                'accountType'           => ['required', 'string', 'max:1'],
+                'lastName'              => ['required', 'string'],
+                'firstName'             => ['required', 'string'],
+                'middleName'            => ['string', 'nullable'],
+                'sex'                   => ['required'],
+                'contactNumber'         => ['required', 'numeric', 'digits:11', 'unique:users'],
+                'id_barangay'           => ['required'],
+                'address'               => ['required'],
+                'organization'          => ['required'],
+
+                'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
+                    'confirmed'
+                ],
+
+                'g-recaptcha-response' => ['required', new ReCaptchaV3('submitRegistration')],
+            ]);
         } elseif ($data['accountType'] == '3') {
             // dd('WAKA WAKA 3');
             // CLIENT
@@ -184,9 +208,29 @@ class RegisterController extends Controller
                 'address'               => $data['address'],
                 'id_organization'       => $data['organization'],
             ]);
-            // SAVE to client information if the account type is 3.
-        } elseif ($data['accountType'] == '3') {
+        } elseif ($data['accountType'] == '4') {
+            // SAVE to individual information (CAR) if the account type is 4.
+            $user = User::create([
+                'user_id'           =>      $user_id,
+                'email'             =>      $data['email'],
+                'contactNumber'     =>      $data['contactNumber'],
+                'id_account_type'   =>      $data['accountType'],
+                'password'          =>      Hash::make($data['password']),
+            ]);
 
+            IndividualInformationModel::create([
+                'user_id'               => $user_id,
+                'last_name'             => $data['lastName'],
+                'first_name'            => $data['firstName'],
+                'middle_name'           => $data['middleName'],
+                'sex'                   => $data['sex'],
+                'ext_name'              => $data['extensionName'],
+                'id_barangay'           => $data['id_barangay'],
+                'address'               => $data['address'],
+                'id_organization'       => $data['organization'],
+            ]);
+        } elseif ($data['accountType'] == '3') {
+            // SAVE to client information if the account type is 3.
             $user = User::create([
                 'user_id'           =>      $user_id,
                 'email'             =>      $data['email'],

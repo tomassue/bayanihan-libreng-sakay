@@ -563,6 +563,14 @@
                 });
             });
 
+            Livewire.on('rider_tagged_more_than_eighth', (event) => {
+                Swal.fire({
+                    title: "Rider is already tagged eighth times!",
+                    text: "Oops! Riders with cars can't be tagged more than eighth times.",
+                    icon: "error"
+                });
+            });
+
             Livewire.on('events_not_today', (event) => {
                 Swal.fire({
                     title: "Event not available.",

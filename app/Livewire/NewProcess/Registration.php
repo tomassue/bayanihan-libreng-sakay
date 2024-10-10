@@ -104,18 +104,18 @@ class Registration extends Component
             'address' => 'required'
         ];
 
-        if ($this->account_type == 'rider' || $this->account_type == 'client') {
+        if ($this->account_type == 'rider' || $this->account_type == 'car' || $this->account_type == 'client') {
             $rules['first_name'] = 'required';
             $rules['last_name'] = 'required';
             $rules['sex'] = 'required';
             $rules['id_barangay'] = 'required';
         }
 
-        if ($this->account_type == 'rider' || $this->account_type == 'organization') {
+        if ($this->account_type == 'rider' || $this->account_type == 'car' || $this->account_type == 'organization') {
             $rules['email'] = ['required', 'email:rfc,dns', Rule::unique('users', 'email')->ignore($this->user_id, 'user_id')]; // prevent the unique validation rule from being triggered when updating a record
         }
 
-        if ($this->account_type == 'rider') {
+        if ($this->account_type == 'rider' || $this->account_type == 'car') {
             $rules['id_organization'] = 'required';
         }
 
@@ -198,6 +198,46 @@ class Registration extends Component
                 // dd($e->getMessage());
                 $this->dispatch('something_went_wrong');
             }
+        } elseif ($this->account_type == 'car') {
+            $this->validate($this->rules(), [], $this->attributes());
+
+            // dd($this->account_type);
+
+            try {
+                DB::beginTransaction();
+
+                User::create([
+                    'user_id' => $user_id,
+                    'email' => $this->email,
+                    'contactNumber' => $this->contactNumber,
+                    'id_account_type' => '4',
+                    'password' => Hash::make('password'),
+                    'status' => '1'
+                ]);
+
+                $model = IndividualInformationModel::create([
+                    'user_id' => $user_id,
+                    'last_name' => $this->last_name,
+                    'first_name' => $this->first_name,
+                    'middle_name' => $this->middle_name,
+                    'ext_name' => $this->ext_name,
+                    'sex' => $this->sex,
+                    'id_barangay' => $this->id_barangay,
+                    'address' => $this->address,
+                    'id_organization' => $this->id_organization
+                ]);
+
+                $this->logUserAction('register', $model, $user_id);
+
+                DB::commit();
+
+                $this->dispatch('success_save');
+                $this->reset();
+                $this->resetValidation();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                $this->dispatch('something_went_wrong');
+            }
         } elseif ($this->account_type == 'client') {
             $this->validate($this->rules(), [], $this->attributes());
 
@@ -241,7 +281,7 @@ class Registration extends Component
                 DB::rollBack();
 
                 $this->dispatch('something_went_wrong');
-                dd($e->getMessage());
+                // dd($e->getMessage());
             }
         } elseif ($this->account_type == 'organization') {
             $this->validate($this->rules(), [], $this->attributes());
@@ -344,6 +384,24 @@ class Registration extends Component
             $this->guardian_contact_number = $client->guardian_contact_number;
 
             $this->dispatch('show_addModal');
+        } elseif ($check_user_account->id_account_type == '4') {
+            $this->account_type = 'car';
+
+            $rider = IndividualInformationModel::join('users', 'users.user_id', '=', 'individual_information.user_id')->where('individual_information.user_id', $id)->first();
+            $this->first_name = $rider->first_name;
+            $this->middle_name = $rider->middle_name;
+            $this->last_name = $rider->last_name;
+            $this->ext_name = $rider->ext_name;
+            $this->sex = $rider->sex;
+            $this->contactNumber = $rider->contactNumber;
+            $this->id_barangay = $rider->id_barangay;
+            $this->address = $rider->address;
+            $this->id_organization = $rider->id_organization;
+            $this->email = $rider->email;
+
+            $this->dispatch('show_addModal');
+        } else {
+            $this->dispatch('something_went_wrong');
         }
     }
 
@@ -525,6 +583,65 @@ class Registration extends Component
                     $this->dispatch('something_went_wrong');
                 }
             }
+        } elseif ($check_user_account->id_account_type == '4') {
+            // RIDER (CAR)
+            $this->account_type = 'rider';
+
+            $this->validate($this->rules(), [], $this->attributes());
+
+            $check_rider = IndividualInformationModel::where('user_id', $this->user_id)->exists();
+
+            if ($check_rider) {
+                try {
+                    // Capture original state
+                    $originalIndividual = IndividualInformationModel::where('user_id', $this->user_id)->first()->getAttributes();
+                    $originalUser = User::where('user_id', $this->user_id)->first()->getAttributes();
+
+                    DB::beginTransaction();
+
+                    IndividualInformationModel::where('user_id', $this->user_id)
+                        ->update([
+                            'last_name' => $this->last_name,
+                            'first_name' => $this->first_name,
+                            'middle_name' => $this->middle_name,
+                            'ext_name' => $this->ext_name,
+                            'sex' => $this->sex,
+                            'id_barangay' => $this->id_barangay,
+                            'address' => $this->address,
+                            'id_organization' => $this->id_organization
+                        ]);
+
+                    User::where('user_id', $this->user_id)
+                        ->update([
+                            'email' => $this->email
+                        ]);
+
+                    // Re-fetch the updated models
+                    $updatedIndividual = IndividualInformationModel::where('user_id', $this->user_id)->first();
+                    $updatedUser = User::where('user_id', $this->user_id)->first();
+
+                    // Manually determine changes
+                    $individualChanges = array_diff_assoc($updatedIndividual->getAttributes(), $originalIndividual);
+                    $userChanges = array_diff_assoc($updatedUser->getAttributes(), $originalUser);
+
+                    // Create a custom log entry (BOTH MODELS)
+                    $this->logUserAction('update', $updatedIndividual, $this->user_id, $individualChanges);
+                    $this->logUserAction('update', $updatedUser, $this->user_id, $userChanges);
+
+                    DB::commit();
+
+                    $this->reset();
+                    $this->dispatch('hide_addModal');
+                    $this->dispatch('success_update');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $this->dispatch('something_went_wrong');
+                }
+            } else {
+                $this->dispatch('something_went_wrong');
+            }
+        } else {
+            $this->dispatch('something_went_wrong');
         }
     }
 
@@ -690,6 +807,74 @@ class Registration extends Component
                 $this->status_history = $client;
 
                 $this->dispatch('show_statusHistoryModal');
+            } elseif ($check_account_type->id_account_type == '4') {
+                // Rider (Car)
+                $rider = IndividualInformationModel::join('users', 'users.user_id', '=', 'individual_information.user_id')
+                    ->join('action_logs', 'action_logs.model_user_id', '=', 'individual_information.user_id')
+                    ->join('admin_information', 'admin_information.user_id', '=', 'action_logs.user_id')
+                    ->select(
+                        'action_logs.user_id',
+                        'admin_information.name AS admin',
+                        DB::raw("
+                            CASE
+                                WHEN action_logs.action = 'register' THEN 'registered'
+                                WHEN action_logs.action = 'update' THEN 'updated'
+                                ELSE ''
+                            END
+                            AS 'action'
+                        "),
+                        'action_logs.changes',
+                        DB::raw("
+                            CASE
+                                WHEN TIMESTAMPDIFF(HOUR, action_logs.created_at, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, action_logs.created_at, NOW()), ' hours ago')
+                                WHEN TIMESTAMPDIFF(DAY, action_logs.created_at, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, action_logs.created_at, NOW()), ' days ago')
+                                ELSE DATE_FORMAT(action_logs.created_at, '%b %d, %Y')
+                            END as formatted_created_at
+                        ")
+                    )
+                    ->where('individual_information.user_id', $user_id)
+                    ->orderBy('action_logs.created_at', 'desc')
+                    ->get();
+
+                // Modify the changes to replace reference key with their names.
+                foreach ($rider as $log) {
+                    $changes = json_decode($log->changes, true);
+
+                    // Replace id_organization
+                    if (isset($changes['id_organization'])) {
+                        $organization = OrganizationInformationModel::where('id', $changes['id_organization'])->first();
+                        if ($organization) {
+                            $changes['organization_name'] = $organization->organization_name;
+                            unset($changes['id_organization']);
+                        }
+                    }
+
+                    if (isset($changes['id_barangay'])) {
+                        $barangay = RefBarangayModel::where('id', $changes['id_barangay'])->first();
+                        if ($barangay) {
+                            $changes['barangay'] = $barangay->barangay;
+                            unset($changes['id_barangay']);
+                        }
+                    }
+
+                    if (isset($changes['status'])) {
+                        if ($changes['status'] == '1') {
+                            $changes['approve'] = 'Approved';
+                            unset($changes['status']);
+                        } elseif ($changes['status'] == '0') {
+                            $changes['pending'] = 'Pending';
+                            unset($changes['status']);
+                        }
+                    }
+
+                    $log->changes = json_encode($changes);  // Encode changes back to JSON
+                }
+
+                $this->status_history = $rider;
+
+                $this->dispatch('show_statusHistoryModal');
+            } else {
+                $this->dispatch('something_went_wrong');
             }
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -698,7 +883,7 @@ class Registration extends Component
 
     public function clear()
     {
-        $this->reset();
+        $this->resetExcept('search', 'filter_accountType');
         $this->resetValidation();
     }
 
@@ -707,7 +892,8 @@ class Registration extends Component
     {
         /**
          * NOTE 
-         * SQLSTATE[21000]: Cardinality violation: 1222, is caused by the SELECT statements in the union() having a different number of columns. When using union(), all queries involved must return the same number of columns and in the same order.
+         * SQLSTATE[21000]: Cardinality violation: 1222, is caused by the SELECT statements in the union() having a different number of columns. 
+         * When using union(), all queries involved must return the same number of columns and in the same order.
          */
 
         $clients = ClientInformationModel::join('users', 'users.user_id', '=', 'client_information.user_id')
@@ -721,6 +907,7 @@ class Registration extends Component
                     WHEN users.id_account_type = '1' THEN 'Organization'
                     WHEN users.id_account_type = '2' THEN 'Rider'
                     WHEN users.id_account_type = '3' THEN 'Client'
+                    WHEN users.id_account_type = '4' THEN 'Rider (Car)'
                     ELSE ''
                 END AS account_type
                 "),
@@ -751,6 +938,7 @@ class Registration extends Component
                     WHEN users.id_account_type = '1' THEN 'Organization'
                     WHEN users.id_account_type = '2' THEN 'Rider'
                     WHEN users.id_account_type = '3' THEN 'Client'
+                    WHEN users.id_account_type = '4' THEN 'Rider (Car)'
                     ELSE ''
                 END AS account_type
                 "),
@@ -771,6 +959,7 @@ class Registration extends Component
                     WHEN users.id_account_type = '1' THEN 'Organization'
                     WHEN users.id_account_type = '2' THEN 'Rider'
                     WHEN users.id_account_type = '3' THEN 'Client'
+                    WHEN users.id_account_type = '4' THEN 'Rider (Car)'
                     ELSE ''
                 END AS account_type
                 "),
