@@ -224,27 +224,32 @@
                     <div class="row">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Client-Rider Tagging</h5>
-
+                                <h5 class="card-title">Rider-Client Tagging</h5>
                                 <div class="mb-4">
                                     <form data-bitwarden-watching="1">
                                         <div class="row">
                                             <div class="col-md-4" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
-                                                <label for="inputEmail3" class="col-lg-2 col-form-label">Client</label>
+                                                <label for="inputEmail3" class="col-lg-2 col-form-label">Rider</label>
                                                 <div class="col-lg-10">
-                                                    <div id="client-select" wire:ignore></div>
-                                                    @error('id_client')
+                                                    <div id="rider-select" wire:ignore></div>
+                                                    @error('id_individual')
                                                     <div class="custom-error-message">
                                                         {{ $message }}
                                                     </div>
                                                     @enderror
                                                 </div>
                                             </div>
+
                                             <div class="col-md-4" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
-                                                <label for="inputEmail3" class="col-lg-2 col-form-label">Rider</label>
+                                                <label for="inputEmail3" class="col-lg-2 col-form-label">Client</label>
                                                 <div class="col-lg-10">
-                                                    <div id="rider-select" wire:ignore></div>
-                                                    @error('id_individual')
+                                                    <div style="display: {{ $client_select_max == 2 ? '' : 'none' }}">
+                                                        <div id="client-select" wire:ignore></div>
+                                                    </div>
+                                                    <div style="display: {{ $client_select_max == 8 ? '' : 'none'}}">
+                                                        <div id="client-select_max_8" wire:ignore></div>
+                                                    </div>
+                                                    @error('selected_id_clients')
                                                     <div class="custom-error-message">
                                                         {{ $message }}
                                                     </div>
@@ -279,8 +284,8 @@
                                                         <input class="form-check-input" type="checkbox" wire:model.live="select_all" wire:loading.attr="disabled"> ({{ count($selected_tags) }})
                                                     </div>
                                                 </th>
-                                                <th scope="col" width="24.25%">Client</th>
                                                 <th scope="col" width="24.25%">Rider</th>
+                                                <th scope="col" width="24.25%">Client</th>
                                                 <th scope="col" width="24.25%">Time</th>
                                                 <th scope="col" width="24.25%" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">Action</th>
                                             </tr>
@@ -293,8 +298,8 @@
                                                         <input class="form-check-input" type="checkbox" wire:model.live="selected_tags" value="{{ $item->id }}" @if(in_array($item->id, $selected_tags)) checked @endif wire:loading.attr="disabled">
                                                     </div>
                                                 </th>
-                                                <td class="align-middle">{{ $item->client_full_name }}</td>
                                                 <td class="align-middle">{{ $item->individual_full_name }}</td>
+                                                <td class="align-middle">{{ $item->client_full_name }}</td>
                                                 <td class="align-middle">{{ $item->time }}</td>
                                                 <td style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
                                                     <button type="button" class="btn btn-success" style="display: {{ $item->message_status == 'pending' ? 'block' : 'none' }};" title="Send a message" wire:loading.attr="disabled" wire:click="sendMessage({{ $item->id }})"><i class="ri-mail-line"></i></button>
@@ -345,16 +350,41 @@
     VirtualSelect.init({
         ele: '#client-select',
         maxWidth: '100%',
-        search: true,
         markSearchResults: true,
         options: @json($clients),
-        hasOptionDescription: true
+        hasOptionDescription: true,
+        multiple: true,
+        maxValues: 2,
+        showSelectedOptionsFirst: true
     });
 
-    let id_client = document.querySelector('#client-select');
-    id_client.addEventListener('change', () => {
-        let data = id_client.value;
-        @this.set('id_client', data);
+    let selected_id_clients = document.querySelector('#client-select');
+    selected_id_clients.addEventListener('change', () => {
+        let data = selected_id_clients.value;
+        @this.set('selected_id_clients', data);
+    });
+
+    VirtualSelect.init({
+        ele: '#client-select_max_8',
+        maxWidth: '100%',
+        markSearchResults: true,
+        options: @json($clients),
+        hasOptionDescription: true,
+        multiple: true,
+        maxValues: 8,
+        showSelectedOptionsFirst: true
+    });
+
+    let selected_id_clients2 = document.querySelector('#client-select_max_8');
+    selected_id_clients2.addEventListener('change', () => {
+        let data = selected_id_clients2.value;
+        @this.set('selected_id_clients', data);
+    });
+
+    // There's a condition where tagged clients should not appear as one of the options
+    $wire.on('refresh_client_select', (refresh_client_select) => {
+        document.querySelector('#client-select').setOptions(refresh_client_select[0]);
+        document.querySelector('#client-select_max_8').setOptions(refresh_client_select[0]);
     });
 
     /* -------------------------------------------------------------------------- */
@@ -397,6 +427,11 @@
     $wire.on('reset_plugins', () => {
         document.querySelector('#client-select').reset();
         document.querySelector('#rider-select').reset();
+    });
+
+    $wire.on('reset_client_select', () => {
+        document.querySelector('#client-select').reset();
+        document.querySelector('#client-select_max_8').reset();
     });
 </script>
 @endscript
