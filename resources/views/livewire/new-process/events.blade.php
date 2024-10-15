@@ -265,9 +265,17 @@
                                         </div>
                                     </form>
                                 </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <label for="inputEmail3" class="col-lg-2 col-form-label">Filter</label>
+                                        <div class="col-md-6">
+                                            <div id="filter-untagged" wire:ignore></div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row mb-2 gy-3">
                                     <div class="col-md-6">
-                                        <button type="button" class="btn btn-primary" style="display: {{ $event_done == 1 ? 'none' : 'display' }}" wire:click="sendMessageToMany" {{ empty($selected_tags) ? 'disabled' : '' }}>Send Message ({{ count($selected_tags) }})</button>
+                                        <button type="button" class="btn btn-primary" style="display: {{ $event_done == 1 ? 'none' : 'display' }}" wire:click="sendMessageToMany" {{ (empty($selected_tags) || ($filter_status == 'untagged')) ? 'disabled' : '' }}>Send Message ({{ count($selected_tags) }})</button>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="pagination-info pb-2 text-end">
@@ -281,13 +289,13 @@
                                             <tr>
                                                 <th scope="col" width="3%" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" wire:model.live="select_all" wire:loading.attr="disabled"> ({{ count($selected_tags) }})
+                                                        <input class="form-check-input" type="checkbox" wire:model.live="select_all" wire:loading.attr="disabled" {{ $filter_status == 'untagged' ? 'disabled' : '' }}> ({{ count($selected_tags) }})
                                                     </div>
                                                 </th>
-                                                <th scope="col" width="24.25%">Rider</th>
-                                                <th scope="col" width="24.25%">Client</th>
-                                                <th scope="col" width="24.25%">Time</th>
-                                                <th scope="col" width="24.25%" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">Action</th>
+                                                <th scope="col">Rider</th>
+                                                <th scope="col">Client</th>
+                                                <th scope="col">Time</th>
+                                                <th scope="col" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -295,15 +303,25 @@
                                             <tr wire:key="{{ $item->id }}">
                                                 <th scope="row" class="align-middle" style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" wire:model.live="selected_tags" value="{{ $item->id }}" @if(in_array($item->id, $selected_tags)) checked @endif wire:loading.attr="disabled">
+                                                        <input class="form-check-input" type="checkbox" wire:model.live="selected_tags" value="{{ $item->id }}" @if(in_array($item->id, $selected_tags)) checked @endif wire:loading.attr="disabled" {{ $item->filter_status == 'untagged' ? 'disabled' : '' }}>
                                                     </div>
                                                 </th>
                                                 <td class="align-middle">{{ $item->individual_full_name }}</td>
                                                 <td class="align-middle">{{ $item->client_full_name }}</td>
                                                 <td class="align-middle">{{ $item->time }}</td>
                                                 <td style="display: {{ $event_done == 1 ? 'none' : 'display' }}">
-                                                    <button type="button" class="btn btn-success" style="display: {{ $item->message_status == 'pending' ? 'block' : 'none' }};" title="Send a message" wire:loading.attr="disabled" wire:click="sendMessage({{ $item->id }})"><i class="ri-mail-line"></i></button>
-                                                    <button type="button" class="btn btn-secondary" style="display: {{ $item->message_status !== 'pending' ? 'block' : 'none' }};" title="Already sent a message" disabled><i class="ri-mail-check-line"></i></button>
+                                                    @if ($item->filter_status == 'untagged')
+                                                    <span class="badge rounded-pill bg-secondary">Untagged</span>
+                                                    @else
+                                                    <button type="button" class="btn btn-success" style="display: {{ $item->message_status == 'pending' ? 'inline-block' : 'none' }};" title="Send a message" wire:loading.attr="disabled" wire:click="sendMessage({{ $item->id }})"><i class="ri-mail-line"></i></button>
+                                                    <button type="button" class="btn btn-secondary" style="display: {{ $item->message_status !== 'pending' ? 'inline-block' : 'none' }};" title="Already sent a message" disabled><i class="ri-mail-check-line"></i></button>
+                                                    <button type="button" class="btn btn-warning" style="color: #000;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#000'" wire:click="$dispatch('confirm-untag', {{ $item->id }})">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x" viewBox="0 0 16 16">
+                                                            <path fill-rule="evenodd" d="M6.146 5.146a.5.5 0 0 1 .708 0L8 6.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 7l1.147 1.146a.5.5 0 0 1-.708.708L8 7.707 6.854 8.854a.5.5 0 1 1-.708-.708L7.293 7 6.146 5.854a.5.5 0 0 1 0-.708" />
+                                                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+                                                        </svg>
+                                                    </button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             @empty
@@ -404,6 +422,29 @@
         @this.set('id_individual', data);
     });
 
+    /* --------------------------------- FILTER --------------------------------- */
+
+    VirtualSelect.init({
+        ele: '#filter-untagged',
+        maxWidth: '100%',
+        placeholder: 'Status (All)',
+        options: [{
+                label: 'Tagged',
+                value: 'tagged'
+            },
+            {
+                label: 'Untagged',
+                value: 'untagged'
+            }
+        ]
+    });
+
+    let filter_status = document.querySelector('#filter-untagged');
+    filter_status.addEventListener('change', () => {
+        let data = filter_status.value;
+        @this.set('filter_status', data);
+    });
+
     /* -------------------------------------------------------------------------- */
 
     $wire.on('confirm_tagging', () => {
@@ -427,11 +468,40 @@
     $wire.on('reset_plugins', () => {
         document.querySelector('#client-select').reset();
         document.querySelector('#rider-select').reset();
+        document.querySelector('#filter-untagged').reset();
     });
 
     $wire.on('reset_client_select', () => {
         document.querySelector('#client-select').reset();
         document.querySelector('#client-select_max_8').reset();
     });
+
+    /* ----------------- CONFIRMATION ALERT FOR UNTAGGING RECORD ---------------- */
+
+    $wire.on('confirm-untag', (id) => {
+        Swal.fire({
+            title: "Are you sure you want to proceed?",
+            text: "Once untagged, you won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, untag it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Untagged!",
+                    text: "The client and rider has been untagged successfully.",
+                    icon: "success"
+                });
+
+                $wire.dispatch('untag', {
+                    id: id
+                });
+            }
+        });
+    });
+
+    /* -------------------------------------------------------------------------- */
 </script>
 @endscript

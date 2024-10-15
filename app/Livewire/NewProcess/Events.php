@@ -30,6 +30,8 @@ class Events extends Component
     public $event_done;
     public $search;
 
+    public $filter_status; // Filter the tagged and untagged client-riders (details())
+
     /* --------------------------------- MODELS --------------------------------- */
 
     public $event_name;
@@ -204,182 +206,115 @@ class Events extends Component
                 $check_rider_or_car = User::where('user_id', $this->id_individual)->select('id_account_type')->first();
 
                 if ($check_rider_or_car->id_account_type == '2') {
-                    $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
-                        ->where('id_individual', $this->id_individual)
-                        ->count();
+                    // $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
+                    //     ->where('id_individual', $this->id_individual)
+                    //     ->count();
 
-                    if ($tag_count >= 2) {
-                        // Dispatch rider tagged more than twice event
-                        $this->dispatch('rider_tagged_more_than_twice');
-                    } else {
-                        try {
-                            // Begin transaction since all checks have passed
-                            DB::beginTransaction();
+                    // if ($tag_count >= 2) {
+                    //     // Dispatch rider tagged more than twice event
+                    //     $this->dispatch('rider_tagged_more_than_twice');
+                    // } else {
+                    try {
+                        // Begin transaction since all checks have passed
+                        DB::beginTransaction();
 
-                            foreach ($this->selected_id_clients as $id_client) {
-                                // Create a new tagging entry
-                                ClientRiderTaggingModel::create([
-                                    'id_event' => $this->id_event,
-                                    'id_client' => $id_client,
-                                    'id_individual' => $this->id_individual
-                                ]);
-                            }
-
-                            $refresh_client_select = $this->loadClients(); // Refresh client-select for new values, dispatch success and reset events
-                            $this->dispatch('refresh_client_select', $refresh_client_select);
-                            $this->dispatch('reset_plugins');
-                            $this->dispatch('success_save');
-
-                            // Commit the transaction
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-
-                            $this->dispatch('something_went_wrong');
+                        foreach ($this->selected_id_clients as $id_client) {
+                            // Create a new tagging entry
+                            ClientRiderTaggingModel::create([
+                                'id_event' => $this->id_event,
+                                'id_client' => $id_client,
+                                'id_individual' => $this->id_individual
+                            ]);
                         }
+
+                        $refresh_client_select = $this->loadClients(); // Refresh client-select for new values, dispatch success and reset events
+                        $this->dispatch('refresh_client_select', $refresh_client_select);
+                        $this->dispatch('reset_plugins');
+                        $this->dispatch('success_save');
+
+                        // Commit the transaction
+                        DB::commit();
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+
+                        $this->dispatch('something_went_wrong');
                     }
+                    // }
                 } elseif ($check_rider_or_car->id_account_type == '4') {
-                    $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
-                        ->where('id_individual', $this->id_individual)
-                        ->count();
+                    // $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
+                    //     ->where('id_individual', $this->id_individual)
+                    //     ->count();
 
-                    if ($tag_count >= 8) {
-                        // Dispatch rider tagged more than eighth event
-                        $this->dispatch('rider_tagged_more_than_eighth');
-                    } else {
-                        try {
-                            // Begin transaction since all checks have passed
-                            DB::beginTransaction();
+                    // if ($tag_count >= 8) {
+                    //     // Dispatch rider tagged more than eighth event
+                    //     $this->dispatch('rider_tagged_more_than_eighth');
+                    // } else {
+                    try {
+                        // Begin transaction since all checks have passed
+                        DB::beginTransaction();
 
-                            foreach ($this->selected_id_clients as $id_client) {
-                                // Create a new tagging entry
-                                ClientRiderTaggingModel::create([
-                                    'id_event' => $this->id_event,
-                                    'id_client' => $id_client,
-                                    'id_individual' => $this->id_individual
-                                ]);
-                            }
-
-                            $refresh_client_select = $this->loadClients(); // Refresh client-select for new values, dispatch success and reset events
-                            $this->dispatch('refresh_client_select', $refresh_client_select);
-                            $this->dispatch('reset_plugins');
-                            $this->dispatch('success_save');
-
-                            // Commit the transaction
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-
-                            $this->dispatch('something_went_wrong');
+                        foreach ($this->selected_id_clients as $id_client) {
+                            // Create a new tagging entry
+                            ClientRiderTaggingModel::create([
+                                'id_event' => $this->id_event,
+                                'id_client' => $id_client,
+                                'id_individual' => $this->id_individual
+                            ]);
                         }
+
+                        $refresh_client_select = $this->loadClients(); // Refresh client-select for new values, dispatch success and reset events
+                        $this->dispatch('refresh_client_select', $refresh_client_select);
+                        $this->dispatch('reset_plugins');
+                        $this->dispatch('success_save');
+
+                        // Commit the transaction
+                        DB::commit();
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+
+                        $this->dispatch('something_went_wrong');
                     }
+                    // }
                 }
             }
         }
+    }
 
-        // try {
-        //     // Check if the combination of event, client, and individual already exists
-        //     $check_duplicate_tag = ClientRiderTaggingModel::where('id_event', $this->id_event)
-        //         ->where('id_client', $this->id_client)
-        //         ->where('id_individual', $this->id_individual)
-        //         ->exists();
+    public function details($id)
+    {
+        try {
+            $event = EventModel::findOrFail($id);
+            $this->event_name = $event->event_name;
+            $this->id_event = $id;
+            $this->event_done = $event->tag;
 
-        //     if ($check_duplicate_tag) {
-        //         // Dispatch duplicate entry event
-        //         $this->dispatch('duplicate_entry');
-        //     } else {
-        //         // Check if the client has already been tagged for the event
-        //         $client_duplicate = ClientRiderTaggingModel::where('id_event', $this->id_event)
-        //             ->where('id_client', $this->id_client)
-        //             ->count();
+            $refresh_client_select = $this->loadClients();
+            $this->dispatch('refresh_client_select', $refresh_client_select);
 
-        //         if ($client_duplicate >= 1) {
-        //             // Dispatch client already tagged event
-        //             $this->dispatch('client_already_tagged');
-        //         } else {
-        //             // Check if the rider or car
-        //             $check_rider_or_car = User::where('user_id', $this->id_individual)->select('id_account_type')->first();
+            $this->dispatch('show_eventDetailsModal');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            $this->dispatch('something_went_wrong');
+        }
+    }
 
-        //             if ($check_rider_or_car->id_account_type == '2') {
-        //                 // Check if the individual has been tagged less than twice for the event
-        //                 $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
-        //                     ->where('id_individual', $this->id_individual)
-        //                     ->count();
+    #[On('untag')]
+    public function untag($id)
+    {
+        try {
+            DB::beginTransaction();
 
-        //                 if ($tag_count >= 2) {
-        //                     // Dispatch rider tagged more than twice event
-        //                     $this->dispatch('rider_tagged_more_than_twice');
-        //                 } else {
-        //                     // Begin transaction since all checks have passed
-        //                     DB::beginTransaction();
+            // We are using Laravel's SoftDeletes to soft delete a record. But for this function, we are untagging a record through soft deletes.
+            $tagging = ClientRiderTaggingModel::find($id);
+            $tagging->delete();
 
-        //                     foreach ($this->selected_id_clients as $id_client) {
-        //                         // Create a new tagging entry
-        //                         ClientRiderTaggingModel::create([
-        //                             'id_event' => $this->id_event,
-        //                             'id_client' => $id_client,
-        //                             'id_individual' => $this->id_individual
-        //                         ]);
-        //                     }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-        //                     // Refresh client-select for new values, dispatch success and reset events
-        //                     $refresh_client_select = $this->loadClients();
-        //                     $this->dispatch('refresh_client_select', $refresh_client_select);
-        //                     $this->dispatch('reset_plugins');
-        //                     $this->dispatch('success_save');
-
-        //                     // Commit the transaction
-        //                     DB::commit();
-        //                 }
-        //             } elseif ($check_rider_or_car->id_account_type == '4') {
-        //                 // Check if the individual (car) has been tagged less than eighth for the event
-        //                 $tag_count = ClientRiderTaggingModel::where('id_event', $this->id_event)
-        //                     ->where('id_individual', $this->id_individual)
-        //                     ->count();
-
-        //                 if ($tag_count >= 8) {
-        //                     // Dispatch rider tagged more than eighth event
-        //                     $this->dispatch('rider_tagged_more_than_eighth');
-        //                 } else {
-        //                     // Begin transaction since all checks have passed
-        //                     DB::beginTransaction();
-
-        //                     // Create a new tagging entry
-        //                     // ClientRiderTaggingModel::create([
-        //                     //     'id_event' => $this->id_event,
-        //                     //     'id_client' => $this->id_client,
-        //                     //     'id_individual' => $this->id_individual
-        //                     // ]);
-
-        //                     foreach ($this->selected_id_clients as $id_client) {
-        //                         // Create a new tagging entry
-        //                         ClientRiderTaggingModel::create([
-        //                             'id_event' => $this->id_event,
-        //                             'id_client' => $id_client,
-        //                             'id_individual' => $this->id_individual
-        //                         ]);
-        //                     }
-
-        //                     // Dispatch success and reset events
-        //                     $this->dispatch('reset_plugins');
-        //                     $this->dispatch('success_save');
-
-        //                     // Commit the transaction
-        //                     DB::commit();
-        //                 }
-        //             } else {
-        //                 $this->dispatch('something_went_wrong');
-        //             }
-        //         }
-        //     }
-        // } catch (\Exception $e) {
-        //     // Rollback the transaction only if it was started
-        //     if (DB::transactionLevel() > 0) {
-        //         DB::rollBack();
-        //     }
-        //     // Dispatch the error event
-        //     $this->dispatch('something_went_wrong');
-        // }
+            $this->dispatch('something_went_wrong');
+            // dd($e->getMessage());
+        }
     }
 
     // When sending a Message for only one record
@@ -530,24 +465,6 @@ class Events extends Component
         $this->select_all = count($this->selected_tags) === $this->loadTags()->count();
     }
 
-    public function details($id)
-    {
-        try {
-            $event = EventModel::findOrFail($id);
-            $this->event_name = $event->event_name;
-            $this->id_event = $id;
-            $this->event_done = $event->tag;
-
-            $refresh_client_select = $this->loadClients();
-            $this->dispatch('refresh_client_select', $refresh_client_select);
-
-            $this->dispatch('show_eventDetailsModal');
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-            $this->dispatch('something_went_wrong');
-        }
-    }
-
     public function loadEvents()
     {
         $events = EventModel::where('status', 1)
@@ -574,7 +491,7 @@ class Events extends Component
             ->paginate(10);
 
         foreach ($events as $event) {
-            $event->client_served_count = ClientRiderTaggingModel::where('id_event', $event->id)->count();
+            $event->client_served_count = ClientRiderTaggingModel::where('id_event', $event->id)->whereNull('deleted_at')->count();
         }
 
         $total_no_of_events = EventModel::all()->count();
@@ -624,9 +541,27 @@ class Events extends Component
                 "),
                 DB::raw("
                     DATE_FORMAT(client_rider_tagging.created_at, '%h:%i %p') AS time
+                "),
+                DB::raw("
+                    CASE
+                        WHEN client_rider_tagging.deleted_at IS NOT NULL THEN 'untagged'
+                        ELSE 'tagged'
+                    END AS filter_status
                 ")
             )
-            ->where('id_event', $this->id_event)
+            ->where('client_rider_tagging.id_event', $this->id_event) // Make sure to use the correct table prefix
+            ->when($this->filter_status === 'untagged', function ($query) {
+                // When filter status is 'untagged', include only soft-deleted records
+                $query->onlyTrashed();
+            })
+            ->when($this->filter_status === 'tagged', function ($query) {
+                // When filter status is 'tagged', include only non-deleted records
+                $query->whereNull('client_rider_tagging.deleted_at');
+            })
+            ->when($this->filter_status !== 'untagged' && $this->filter_status !== 'tagged', function ($query) {
+                // For any other status, always show non-deleted records
+                $query->whereNull('client_rider_tagging.deleted_at');
+            })
             ->orderBy('client_rider_tagging.created_at', 'desc')
             ->paginate(10, pageName: 'tags');
 
