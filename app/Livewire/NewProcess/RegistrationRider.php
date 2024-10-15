@@ -12,11 +12,14 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('components.layouts.page')]
 #[Title('Registration')]
 class RegistrationRider extends Component
 {
+    use WithPagination;
+
     public $editMode = false;
     public $user_id;
     public $status;
